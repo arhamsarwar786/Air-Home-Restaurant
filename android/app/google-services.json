@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1087846574976",
+    "project_id": "airhomerestaurant-27fcb",
+    "storage_bucket": "airhomerestaurant-27fcb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087846574976:android:34e00d05f4cb9ab2662f65",
+        "android_client_info": {
+          "package_name": "com.stepinnsolution.air_home_retaurant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1087846574976-9r5h0kgvf7kqqpe74orl64bsmv9mik7o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stepinnsolution.air_home_retaurant",
+            "certificate_hash": "cdc32cededda857051e8ed8cc352252fd0541002"
+          }
+        },
+        {
+          "client_id": "1087846574976-ihpdfi3ahes7f3iq1ig6b249s50ocn7f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stepinnsolution.air_home_retaurant",
+            "certificate_hash": "c0b74a98397e767bdb22220e2da9231e41e4fbb7"
+          }
+        },
+        {
+          "client_id": "1087846574976-9agumpab0gilkr8pnp8p675jih0rg1rj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3wGhgG9SBtWOeInScY9UK917ZHXoFbuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1087846574976-9agumpab0gilkr8pnp8p675jih0rg1rj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
