@@ -1,15 +1,16 @@
 import 'dart:convert';
-import 'dart:developer';
-
-import 'package:air_home_retaurant/UI/E_Restaurant2.dart';
-import 'package:air_home_retaurant/UI/E_Restaurant3.dart';
-import 'package:air_home_retaurant/UI/E_Restaurant4.dart';
+import 'package:air_home_retaurant/UI/MyReservations.dart';
+import  'package:givestarreviews/givestarreviews.dart';
+import 'package:intl/intl.dart';
+import 'package:air_home_retaurant/ModelClasses/ReviewModal.dart';
+import 'package:air_home_retaurant/UI/Allergies.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'PaymentERestaurant.dart';
 import 'chat.dart';
 
 class ERestaurant extends StatefulWidget {
@@ -21,12 +22,18 @@ class ERestaurant extends StatefulWidget {
 
 class _ERestaurant extends State<ERestaurant> {
   MyWidget _myWidget;
-
+  int _currentPage = 0;
+  final PageController _pageController = PageController();
   @override
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
     getHostInfo();
+    getReview();
+    // _pageController.animateToPage(
+    //   _currentPage,
+    //   duration: const Duration(milliseconds: 350)
+    // );
   }
 
   var value1 = 1;
@@ -37,7 +44,7 @@ class _ERestaurant extends State<ERestaurant> {
   var toggleButton = Constants.E_RESTAURANT_BUTTON1;
 
   ////  Getting HostInfo
-  dynamic hostInfo;
+  dynamic hostInfo, reviewInfo;
 
   getHostInfo() async {
     var data = await http
@@ -47,7 +54,17 @@ class _ERestaurant extends State<ERestaurant> {
       hostInfo = hostInfo['data'][0];
     }
     setState(() {});
-    // print(hostInfo['data']);
+    // print(hostInfo['daa']);
+  }
+
+  getReview() async {
+    // widget.categoryPosts.tipoeventoId
+    http.Response data =
+        await http.get(Uri.parse(Constants.REVIEW + '${1018}'));
+    reviewInfo = ReviewModal.fromJson(jsonDecode(data.body));
+
+    setState(() {});
+    // print("%%%%%%%%%%%%%%%%%% ${datap.data}");
   }
 
   ////  Getting Book List
@@ -62,10 +79,16 @@ class _ERestaurant extends State<ERestaurant> {
     print(bookList);
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(     
-      appBar: _myWidget.myAppBar(Constants.E_RESTAURANT_TITLE, () {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print(widget.categoryPosts.foto);
+        },
+      ),
+      appBar: _myWidget.myAppBar(widget.categoryPosts.nome, () {
         Navigator.pop(context);
       }),
       body: ListView(
@@ -78,20 +101,42 @@ class _ERestaurant extends State<ERestaurant> {
               height: MediaQuery.of(context).size.width - 50,
               child: Stack(
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 50.0),
-                         
-                    decoration:  
-                    BoxDecoration(
-                        image:DecorationImage(
-                            image: 
-                            NetworkImage(
-                                "${widget.categoryPosts.foto.isEmpty  ?'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg' : widget.categoryPosts.foto.elementAt(0).urlFoto}"),
-                            fit: BoxFit.cover),
-                        color: Colors.black38,
-                        borderRadius: BorderRadius.circular(10),
+              widget.categoryPosts.foto.isEmpty ? Container(
+                          margin: EdgeInsets.only(bottom: 50.0),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(                                    
+                                    'https://i.stack.imgur.com/y9DpT.jpg'
+                                    ),
+                                fit: BoxFit.cover),
+                            color: Colors.black38,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ) :  PageView.builder(
+                    controller: _pageController,
+                    itemCount: widget.categoryPosts.foto.length,
+                    onPageChanged: (int value) {
+                      _currentPage = value;
+                    },
+                    itemBuilder: (context, index) => GestureDetector(
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 50.0),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(                                    
+                                   
+                                    widget.categoryPosts.foto
+                                        .elementAt(index)
+                                        .urlFoto
+                                    ),
+                                fit: BoxFit.cover),
+                            color: Colors.black38,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
+                        onTap: () {}),
                   ),
+                  
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Wrap(
@@ -204,7 +249,7 @@ class _ERestaurant extends State<ERestaurant> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 5.0),
                                             child: _myWidget.myText(
-                                                "4.0",
+                                                "${widget.categoryPosts.valutazione}",
                                                 12,
                                                 FontWeight.normal,
                                                 1,
@@ -329,7 +374,7 @@ class _ERestaurant extends State<ERestaurant> {
                                                           .symmetric(
                                                       horizontal: 5.0),
                                                   child: _myWidget.myText(
-                                                      "4.0",
+                                                      "${hostInfo == null ? '' : hostInfo['Valutazione']}",
                                                       12,
                                                       FontWeight.normal,
                                                       1,
@@ -436,7 +481,11 @@ class _ERestaurant extends State<ERestaurant> {
             ),
           ),
           eRestaurant2(),
-          eRestaurant3(),
+          reviewInfo == null
+              ? CircularProgressIndicator(
+                  color: Colors.red,
+                )
+              : eRestaurant3(),
           eRestaurant4(),
         ],
       ),
@@ -473,7 +522,10 @@ class _ERestaurant extends State<ERestaurant> {
                       height: 40.0,
                       width: 120.0,
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) => Allergies()));
+                        },
                         child: Container(
                             decoration: BoxDecoration(
                                 color: Color(0xFFFF7878),
@@ -521,12 +573,13 @@ class _ERestaurant extends State<ERestaurant> {
                         ),
                       ),
                     ),
+                    // Culinary Courses
                     Expanded(
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         physics: ScrollPhysics(),
-                        itemCount: 3,
+                        itemCount: widget.categoryPosts.menu.length,
                         itemBuilder: (context, position) {
                           return Card(
                             child: Container(
@@ -541,6 +594,11 @@ class _ERestaurant extends State<ERestaurant> {
                                   Expanded(
                                       child: Container(
                                     decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                              "${widget.categoryPosts.menu.elementAt(position).urlFoto == '' ? 'https://i.stack.imgur.com/y9DpT.jpg' : widget.categoryPosts.menu.elementAt(position).urlFoto}",
+                                            ),
+                                            fit: BoxFit.cover),
                                         color: Colors.black26,
                                         borderRadius:
                                             BorderRadius.circular(5.0)),
@@ -556,7 +614,7 @@ class _ERestaurant extends State<ERestaurant> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               _myWidget.myText(
-                                                  "Starter",
+                                                  "${widget.categoryPosts.menu.elementAt(position).categoria}",
                                                   12,
                                                   FontWeight.bold,
                                                   1,
@@ -566,14 +624,14 @@ class _ERestaurant extends State<ERestaurant> {
                                                     const EdgeInsets.symmetric(
                                                         vertical: 5.0),
                                                 child: _myWidget.myText(
-                                                    "Product Title",
+                                                    "${widget.categoryPosts.menu.elementAt(position).portata}",
                                                     12,
                                                     FontWeight.bold,
                                                     1,
                                                     Colors.black),
                                               ),
                                               _myWidget.myText(
-                                                  "10.0",
+                                                  "${widget.categoryPosts.menu.elementAt(position).prezzo}€",
                                                   12,
                                                   FontWeight.bold,
                                                   1,
@@ -630,143 +688,186 @@ class _ERestaurant extends State<ERestaurant> {
                 Container(
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: _myWidget.myText(Constants.E_RESTAURANT3_LABEL2,
-                        15.0, FontWeight.bold, 1, Colors.black),
+                    child: _myWidget.myText(
+                        Constants.E_RESTAURANT3_LABEL2 +
+                            " (${reviewInfo.data.length})",
+                        15.0,
+                        FontWeight.bold,
+                        1,
+                        Colors.black),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 50.0),
-                  child: ListView.builder(
-                    itemCount: 3,
-                    shrinkWrap: true,
-                    physics: ScrollPhysics(),
-                    itemBuilder: (context, position) {
-                      return Container(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Container(
-                            // decoration: BoxDecoration(color: Colors.black12),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 80.0,
-                                    width: 80.0,
-                                    decoration: BoxDecoration(
-                                        color: Colors.black38,
-                                        borderRadius:
-                                            BorderRadius.circular(40.0)),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: reviewInfo.data.isEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Center(child:  _myWidget.myText(
+                                                  "No Reviews",
+                                                  15,
+                                                  FontWeight.bold,
+                                                  1,
+                                                  Colors.black38),),
+                        )
+                      : ListView.builder(
+                          itemCount: reviewInfo.data.length,
+                          shrinkWrap: true,
+                          physics: ScrollPhysics(),
+                          itemBuilder: (context, position) {
+                            return Container(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                child: Container(
+                                  // decoration: BoxDecoration(color: Colors.black12),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Container(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                        Container(
+                                          height: 80.0,
+                                          width: 80.0,
+                                          decoration: BoxDecoration(
+                                              color: Colors.black38,
+                                              borderRadius:
+                                                  BorderRadius.circular(40.0)),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisSize: MainAxisSize.max,
                                                 children: [
-                                                  _myWidget.myText(
-                                                      "Title $position",
-                                                      12,
-                                                      FontWeight.bold,
-                                                      1,
-                                                      Colors.black),
-                                                  _myWidget.myText(
-                                                      "Bercelona, Spagna",
+                                                  Container(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        _myWidget.myText(
+                                                            "${reviewInfo.data.elementAt(position).nomeEvento}",
+                                                            12,
+                                                            FontWeight.bold,
+                                                            1,
+                                                            Colors.black),
+                                                        Container(
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                            children: [
+                                                              _myWidget.myText(
+                                                                  "${reviewInfo.data.elementAt(position).mittenteNome}, ${reviewInfo.data.elementAt(position).mittenteCognome}",
+                                                                  10,
+                                                                  FontWeight.bold,
+                                                                  1,
+                                                                  Colors.black38),
+
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.symmetric(horizontal: 29),
+                                                                      child: Container(
+                                                                        child: _myWidget.myText(
+                                                      "${DateFormat('yMMMMd').format(reviewInfo.data.elementAt(position).dataInizioEvento)}",
                                                       10,
                                                       FontWeight.bold,
                                                       1,
                                                       Colors.black38),
-                                                ],
-                                              ),
-                                            ),
-                                            _myWidget.myText(
-                                                "6 hourse ago",
-                                                10,
-                                                FontWeight.bold,
-                                                1,
-                                                Colors.black38),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5.0),
-                                          child: Container(
-                                            color: Colors.black,
-                                            height: 30.0,
-                                            width: 150.0,
-                                          ),
-                                        ),
-                                        Container(
-                                          // padding: EdgeInsets.symmetric(horizontal: 10),
-                                          child: _myWidget.myText(
-                                              "Lorem Ipsum is simply dummy text ",
-                                              10,
-                                              FontWeight.bold,
-                                              null,
-                                              Colors.black38),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 5.0),
-                                                    child: Container(
-                                                      height: 20.0,
-                                                      width: 20.0,
-                                                      color: Colors.black38,
+                                                                      ),
+                                                                    ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                  Container(
-                                                    child: _myWidget.myText(
-                                                        "Likes",
-                                                        12,
-                                                        FontWeight.bold,
-                                                        1,
-                                                        Colors.black38),
-                                                  ),
+                                                
                                                 ],
                                               ),
-                                              Row(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 5.0),
-                                                    child: Container(
-                                                      height: 20.0,
-                                                      width: 20.0,
-                                                      color: Colors.black38,
+                                              
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 5.0),
+                                                child: Container(
+                                                  // color: Colors.black,
+                                                  height: 30.0,
+                                                  width: 150.0,
+                                                  child: Row(children: [
+                                                    for(int i =1 ; i <= reviewInfo.data.elementAt(position).voto ; i++)
+                                                    Icon(Icons.star,color : Colors.yellow),
+                                                  ],),
+                                                ),
+                                              ),
+                                              Container(
+                                                // padding: EdgeInsets.symmetric(horizontal: 10),
+                                                child: _myWidget.myText(
+                                                    "${reviewInfo.data.elementAt(position).testo}",
+                                                    10,
+                                                    FontWeight.bold,
+                                                    null,
+                                                    Colors.black38),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 5.0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        5.0),
+                                                            child: Icon(
+                                                              Icons.thumb_up,
+                                                              color: Colors.red,
+                                                            )),
+                                                        Container(
+                                                          child: _myWidget.myText(
+                                                              "${reviewInfo.data.elementAt(position).voto} Likes",
+                                                              12,
+                                                              FontWeight.bold,
+                                                              1,
+                                                              Colors.red),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    child: _myWidget.myText(
-                                                        "Share",
-                                                        12,
-                                                        FontWeight.bold,
-                                                        1,
-                                                        Colors.black38),
-                                                  ),
-                                                ],
+                                                    Row(
+                                                      children: [
+                                                        Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        5.0),
+                                                            child: Image.network("https://cdn.icon-icons.com/icons2/1372/PNG/512/share-1_90899.png",height: 12,)),
+                                                        Container(
+                                                          child:
+                                                              _myWidget.myText(
+                                                                  "Share",
+                                                                  12,
+                                                                  FontWeight
+                                                                      .bold,
+                                                                  1,
+                                                                  Colors
+                                                                      .black38),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -774,14 +875,11 @@ class _ERestaurant extends State<ERestaurant> {
                                       ],
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ],
             ),
@@ -887,14 +985,15 @@ class _ERestaurant extends State<ERestaurant> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Container(
-                    color: Colors.black,
-                    height: 30.0,
-                    width: 150.0,
-                  ),
-                ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              // color: Colors.red,
+              child: GiveStarReviews(  
+                spaceBetween: 0,
+                starData: [
+    GiveStarData(onChanged: (rate) {},text: ''),
+ ],),
+            ),
                 GestureDetector(
                   onTap: () {},
                   child: Container(
@@ -931,11 +1030,11 @@ class _ERestaurant extends State<ERestaurant> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                  child: _myWidget.myText(Constants.E_RESTAURANT4_LABEL3, 20,
+                  child: _myWidget.myText(widget.categoryPosts.nome, 20,
                       FontWeight.bold, 1, Colors.red),
                 ),
                 _myWidget.myText(
-                    "CITY", 15, FontWeight.bold, 1, Colors.black38),
+                    "${widget.categoryPosts.luogoCitta}", 15, FontWeight.bold, 1, Colors.black38),
               ],
             ),
           ),
@@ -945,7 +1044,9 @@ class _ERestaurant extends State<ERestaurant> {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_)=>  PaymentERestaurant()));
+              },
               child: Container(
                   width: double.infinity,
                   height: 40.0,
@@ -1014,4 +1115,7 @@ class _ERestaurant extends State<ERestaurant> {
       ],
     );
   }
+
+
+  
 }

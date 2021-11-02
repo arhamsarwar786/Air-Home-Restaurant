@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
 import 'package:air_home_retaurant/Utils/BaseClass.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
@@ -33,7 +35,7 @@ class _AddNewEvent extends State<AddNewEvent> {
   TextEditingController addCookingClassEvent3Controller3 =
       TextEditingController();
 
-  int value1, value2;
+  int value1=0 , value2=0;
 
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
   ListItem _selectedItem;
@@ -748,14 +750,14 @@ class _AddNewEvent extends State<AddNewEvent> {
                                                   ),
                                                  child:  imageFileList.isNotEmpty ?  ListView.builder(
                                                     scrollDirection: Axis.horizontal,
-                                                    itemCount: 2,                                                    
+                                                    itemCount: imageFileList.length,                                                    
                                                     itemBuilder: (context,i){
                                                     return Padding(
                                                       padding: const EdgeInsets.all(8.0),
                                                       child: Container(
                                                         height: 100,
                                                         width: 100,
-                                                        child: Image.asset("assets/images/camera.png"),
+                                                        child: Image.file(File(imageFileList[i].path)),
                                                       ),
                                                     );
                                                   })

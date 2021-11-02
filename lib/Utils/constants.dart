@@ -565,6 +565,7 @@ class Constants {
   static const String SendChatMessage_API = BASE_URL+"chatadd/";
   static const String TEMP_IMAGE_URL = "https://airhomerestaurant.com/img/users/temp.jpg";
   static const String GET_USER_REVIEW = "https://airhomerestaurant.com/api/v1/recensioni/";
+  static const String REVIEW = BASE_URL + 'recensioni/';
 
 
   // Vendor Info API 
