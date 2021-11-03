@@ -37,6 +37,7 @@ class GlobalState {
   
   static FavoriteModel myFavorites;
   static ReviewModal myReview;
+  static List allergies = [];
 
   static List<Message> messageChatList;
   static List<MessageRooms> messageChatRoomsList = null;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:air_home_retaurant/UI/MyReservations.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import  'package:givestarreviews/givestarreviews.dart';
 import 'package:intl/intl.dart';
 import 'package:air_home_retaurant/ModelClasses/ReviewModal.dart';
@@ -30,10 +31,6 @@ class _ERestaurant extends State<ERestaurant> {
     _myWidget = new MyWidget();
     getHostInfo();
     getReview();
-    // _pageController.animateToPage(
-    //   _currentPage,
-    //   duration: const Duration(milliseconds: 350)
-    // );
   }
 
   var value1 = 1;
@@ -54,17 +51,14 @@ class _ERestaurant extends State<ERestaurant> {
       hostInfo = hostInfo['data'][0];
     }
     setState(() {});
-    // print(hostInfo['daa']);
   }
 
   getReview() async {
-    // widget.categoryPosts.tipoeventoId
     http.Response data =
         await http.get(Uri.parse(Constants.REVIEW + '${1018}'));
     reviewInfo = ReviewModal.fromJson(jsonDecode(data.body));
 
     setState(() {});
-    // print("%%%%%%%%%%%%%%%%%% ${datap.data}");
   }
 
   ////  Getting Book List
@@ -83,11 +77,7 @@ class _ERestaurant extends State<ERestaurant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print(widget.categoryPosts.foto);
-        },
-      ),
+     
       appBar: _myWidget.myAppBar(widget.categoryPosts.nome, () {
         Navigator.pop(context);
       }),
@@ -771,7 +761,7 @@ class _ERestaurant extends State<ERestaurant> {
                                                                   Colors.black38),
 
                                                                     Padding(
-                                                                      padding: const EdgeInsets.symmetric(horizontal: 29),
+                                                                      padding: const EdgeInsets.symmetric(horizontal: 20),
                                                                       child: Container(
                                                                         child: _myWidget.myText(
                                                       "${DateFormat('yMMMMd').format(reviewInfo.data.elementAt(position).dataInizioEvento)}",

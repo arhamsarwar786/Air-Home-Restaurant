@@ -101,7 +101,7 @@ class CategoryPostsList {
   String lingue;
   bool nobambini;
   bool perFamiglie;
-  Cucina cucina;
+  String cucina;
   String allergie;
   String luogo;
   String luogoNoteIt;
@@ -148,7 +148,7 @@ class CategoryPostsList {
     lingue: json["Lingue"],
     nobambini: json["Nobambini"],
     perFamiglie: json["PerFamiglie"],
-    cucina: cucinaValues.map[json["Cucina"]],
+    cucina: json["Cucina"],
     allergie: json["Allergie"],
     luogo: json["Luogo"],
     luogoNoteIt: json["LuogoNote_it"],
@@ -196,7 +196,7 @@ class CategoryPostsList {
     "Lingue": lingue,
     "Nobambini": nobambini,
     "PerFamiglie": perFamiglie,
-    "Cucina": cucinaValues.reverse[cucina],
+    "Cucina": cucina,
     "Allergie": allergie,
     "Luogo": luogo,
     "LuogoNote_it": luogoNoteIt,
@@ -224,15 +224,15 @@ class CategoryPostsList {
   };
 }
 
-enum Cucina { MEDITERRANEA_SPAGNOLA, ITALIANA_MEDITERRANEA, EMPTY, ITALIANA, ITALIANA_MEDITERRANEA_VEGETERIANA }
+// enum Cucina { MEDITERRANEA_SPAGNOLA, ITALIANA_MEDITERRANEA, EMPTY, ITALIANA, ITALIANA_MEDITERRANEA_VEGETERIANA }
 
-final cucinaValues = EnumValues({
-  "": Cucina.EMPTY,
-  "Italiana": Cucina.ITALIANA,
-  "Italiana,Mediterranea": Cucina.ITALIANA_MEDITERRANEA,
-  "Italiana,Mediterranea,Vegeteriana": Cucina.ITALIANA_MEDITERRANEA_VEGETERIANA,
-  "Mediterranea,Spagnola": Cucina.MEDITERRANEA_SPAGNOLA
-});
+// final cucinaValues = EnumValues({
+//   "": Cucina.EMPTY,
+//   "Italiana": Cucina.ITALIANA,
+//   "Italiana,Mediterranea": Cucina.ITALIANA_MEDITERRANEA,
+//   "Italiana,Mediterranea,Vegeteriana": Cucina.ITALIANA_MEDITERRANEA_VEGETERIANA,
+//   "Mediterranea,Spagnola": Cucina.MEDITERRANEA_SPAGNOLA
+// });
 
 class Date {
   Date({

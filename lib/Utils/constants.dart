@@ -338,6 +338,10 @@ class Constants {
   static const String EMPTY_LIST_INFO_ERROR = "PLease Select Language First";
   static const String ALREADY_IN_LIST_INFO_ERROR = "Already Selected";
 
+
+  ///  Allergies Success
+  static const String SAVED_ALLERGIES = "Successfully Saved Allergies ";
+
   /** CorsoCusinaOnline3 Class */
   static const String CORSO_CUSINA_ONLINE3_TITLE = "Corso di Cusina Online";
 

@@ -18,6 +18,9 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
+import 'CorsoCusina.dart';
+import 'TourGastronomico2.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomeScreen();
@@ -43,14 +46,14 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
+     
       key: _scaffoldKey,
       drawer: MenuHamBurger(),
       appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.white,
           leading: GestureDetector(
-            onTap: () {              
+            onTap: () {
               _scaffoldKey.currentState.openDrawer();
             },
             child: Container(
@@ -118,16 +121,17 @@ class _HomeScreen extends State<HomeScreen> {
                               padding: const EdgeInsets.all(5.0),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeRestaurant()),
-                                  );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => HomeRestaurant()),
+                                  // );
                                 },
                                 child: Container(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                         height: 60.0,
@@ -176,7 +180,8 @@ class _HomeScreen extends State<HomeScreen> {
                                 child: Container(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                         height: 60.0,
@@ -226,7 +231,8 @@ class _HomeScreen extends State<HomeScreen> {
                                 child: Container(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                         height: 60.0,
@@ -275,7 +281,8 @@ class _HomeScreen extends State<HomeScreen> {
                                 child: Container(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                         height: 60.0,
@@ -320,7 +327,7 @@ class _HomeScreen extends State<HomeScreen> {
               Column(
                 children: [
                   // This is Home Restaurant
-                    Container(
+                  Container(
                     width: double.infinity,
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -328,8 +335,8 @@ class _HomeScreen extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          _myWidget.myText("Home Restaurant", 15, FontWeight.bold,
-                              1, Colors.black),
+                          _myWidget.myText("Home Restaurant", 15,
+                              FontWeight.bold, 1, Colors.black),
                           _myWidget.myText(
                               "Learn the secret of cooking and take part in our course!",
                               12,
@@ -353,13 +360,23 @@ class _HomeScreen extends State<HomeScreen> {
                                     itemBuilder: (context, position) {
                                       return InkWell(
                                         onTap: () async {
-                                          Navigator.push(
+                                        // Navigator.push(
+                                        //       context,
+                                        //       MaterialPageRoute(
+                                        //           builder: (context) =>
+                                                      // ERestaurant(categoryPosts
+                                                      //     .data
+                                                      //     .elementAt(
+                                                      //         position))));
+
+                                         Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ERestaurant(categoryPosts
+                                         HomeRestaurant(categoryPosts
                                                           .data
-                                                          .elementAt(position))));
+                                                          .elementAt(
+                                                              position))));
                                         },
                                         child: itemView(
                                             context: context,
@@ -371,7 +388,8 @@ class _HomeScreen extends State<HomeScreen> {
                                 }
                                 if (snapshot == null) {
                                   return Center(
-                                    child: Text("Corsi si cusina Post list Null"),
+                                    child:
+                                        Text("Corsi si cusina Post list Null"),
                                   );
                                 }
                                 if (snapshot.hasError) {
@@ -386,7 +404,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       Container(
                                           height: 50.0,
                                           width: 50.0,
-                                          child: CircularProgressIndicator()),
+                                          child: CircularProgressIndicator(color: Colors.red,)),
                                     ],
                                   ));
                                 }
@@ -398,7 +416,7 @@ class _HomeScreen extends State<HomeScreen> {
                     ),
                   ),
                   // This is the Corsi di Cusina
-                  
+
                   Container(
                     width: double.infinity,
                     child: Padding(
@@ -407,8 +425,8 @@ class _HomeScreen extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          _myWidget.myText("Corsi di Cusina", 15, FontWeight.bold,
-                              1, Colors.black),
+                          _myWidget.myText("Corsi di Cusina", 15,
+                              FontWeight.bold, 1, Colors.black),
                           _myWidget.myText(
                               "Learn the secret of cooking and take part in our course!",
                               12,
@@ -438,9 +456,10 @@ class _HomeScreen extends State<HomeScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ERestaurant(categoryPosts
+                                                      CorsoCusina(categoryPosts
                                                           .data
-                                                          .elementAt(position))));
+                                                          .elementAt(
+                                                              position))));
                                         },
                                         child: itemView(
                                             context: context,
@@ -452,7 +471,8 @@ class _HomeScreen extends State<HomeScreen> {
                                 }
                                 if (snapshot == null) {
                                   return Center(
-                                    child: Text("Corsi si cusina Post list Null"),
+                                    child:
+                                        Text("Corsi si cusina Post list Null"),
                                   );
                                 }
                                 if (snapshot.hasError) {
@@ -467,7 +487,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       Container(
                                           height: 50.0,
                                           width: 50.0,
-                                          child: CircularProgressIndicator()),
+                                          child: CircularProgressIndicator(color:Colors.red),),
                                     ],
                                   ));
                                 }
@@ -520,7 +540,8 @@ class _HomeScreen extends State<HomeScreen> {
                                                   builder: (context) =>
                                                       ERestaurant(categoryPosts
                                                           .data
-                                                          .elementAt(position))));
+                                                          .elementAt(
+                                                              position))));
                                         },
                                         child: itemView(
                                             context: context,
@@ -532,7 +553,8 @@ class _HomeScreen extends State<HomeScreen> {
                                 }
                                 if (snapshot == null) {
                                   return Center(
-                                    child: Text("Corsi si cusina Post list Null"),
+                                    child:
+                                        Text("Corsi si cusina Post list Null"),
                                   );
                                 }
                                 if (snapshot.hasError) {
@@ -547,7 +569,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       Container(
                                           height: 50.0,
                                           width: 50.0,
-                                          child: CircularProgressIndicator()),
+                                          child: CircularProgressIndicator(color:Colors.red)),
                                     ],
                                   ));
                                 }
@@ -600,7 +622,8 @@ class _HomeScreen extends State<HomeScreen> {
                                                   builder: (context) =>
                                                       ERestaurant(categoryPosts
                                                           .data
-                                                          .elementAt(position))));
+                                                          .elementAt(
+                                                              position))));
                                         },
                                         child: itemView(
                                             context: context,
@@ -612,7 +635,8 @@ class _HomeScreen extends State<HomeScreen> {
                                 }
                                 if (snapshot == null) {
                                   return Center(
-                                    child: Text("Corsi si cusina Post list Null"),
+                                    child:
+                                        Text("Corsi si cusina Post list Null"),
                                   );
                                 }
                                 if (snapshot.hasError) {
@@ -627,7 +651,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       Container(
                                           height: 50.0,
                                           width: 50.0,
-                                          child: CircularProgressIndicator()),
+                                          child: CircularProgressIndicator(color:Colors.red)),
                                     ],
                                   ));
                                 }
@@ -647,8 +671,8 @@ class _HomeScreen extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          _myWidget.myText("E-Restaurant", 15, FontWeight.bold, 1,
-                              Colors.black),
+                          _myWidget.myText("E-Restaurant", 15, FontWeight.bold,
+                              1, Colors.black),
                           _myWidget.myText(
                               "Learn the secret of cooking and take part in our course!",
                               12,
@@ -680,7 +704,8 @@ class _HomeScreen extends State<HomeScreen> {
                                                   builder: (context) =>
                                                       ERestaurant(categoryPosts
                                                           .data
-                                                          .elementAt(position))));
+                                                          .elementAt(
+                                                              position))));
                                         },
                                         child: itemView(
                                             context: context,
@@ -692,7 +717,8 @@ class _HomeScreen extends State<HomeScreen> {
                                 }
                                 if (snapshot == null) {
                                   return Center(
-                                    child: Text("Corsi si cusina Post list Null"),
+                                    child:
+                                        Text("Corsi si cusina Post list Null"),
                                   );
                                 }
                                 if (snapshot.hasError) {
@@ -707,7 +733,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       Container(
                                           height: 50.0,
                                           width: 50.0,
-                                          child: CircularProgressIndicator()),
+                                          child: CircularProgressIndicator(color:Colors.red)),
                                     ],
                                   ));
                                 }
@@ -758,9 +784,10 @@ class _HomeScreen extends State<HomeScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ERestaurant(categoryPosts
+                                                      TourGastronomico2(categoryPosts
                                                           .data
-                                                          .elementAt(position))));
+                                                          .elementAt(
+                                                              position))));
                                         },
                                         child: itemView(
                                             context: context,
@@ -772,7 +799,8 @@ class _HomeScreen extends State<HomeScreen> {
                                 }
                                 if (snapshot == null) {
                                   return Center(
-                                    child: Text("Corsi si cusina Post list Null"),
+                                    child:
+                                        Text("Corsi si cusina Post list Null"),
                                   );
                                 }
                                 if (snapshot.hasError) {
@@ -787,7 +815,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       Container(
                                           height: 50.0,
                                           width: 50.0,
-                                          child: CircularProgressIndicator()),
+                                          child: CircularProgressIndicator(color:Colors.red)),
                                     ],
                                   ));
                                 }
@@ -872,8 +900,8 @@ class _HomeScreen extends State<HomeScreen> {
     var response = await http.Response.fromStream(_streamedResponse);
     if (response.statusCode == 200) {
       var responseList = CategoryPostsModel.fromJson(jsonDecode(response.body));
-      if (responseList != null) {    
-        GlobalState.postsList = responseList;            
+      if (responseList != null) {
+        GlobalState.postsList = responseList;
         log("response list length = ${responseList.data.length}");
         list = responseList;
       } else {
@@ -886,12 +914,10 @@ class _HomeScreen extends State<HomeScreen> {
     return list;
   }
 
-
-
-    ///////////////////////
-    ///  GET HOME RESTAURANT 
-    Future<CategoryPostsModel> callGetHomeRestaurant()async{
-  HttpServices httpServices = new HttpServices();
+  ///////////////////////
+  ///  GET HOME RESTAURANT
+  Future<CategoryPostsModel> callGetHomeRestaurant() async {
+    HttpServices httpServices = new HttpServices();
 
     var res1 = await httpServices.getFutureJsonWithBody(
         url: Constants.GET_POSTS_API + '1');
@@ -907,17 +933,17 @@ class _HomeScreen extends State<HomeScreen> {
     var resDec1 = jsonDecode(response1.body);
     var resDec2 = jsonDecode(response2.body);
     var resDec3 = jsonDecode(response3.body);
-    
+
     resDec1['data'] = resDec1['data'] + resDec2['data'] + resDec3['data'];
     print(resDec1['data'].length);
-  CategoryPostsModel list;
+    CategoryPostsModel list;
     Map<String, String> bodyMap = new HashMap();
     var response = resDec1;
     print(response);
     if (response1.statusCode == 200) {
       var responseList = CategoryPostsModel.fromJson(response);
-      if (responseList != null) {    
-        GlobalState.postsList = responseList;            
+      if (responseList != null) {
+        GlobalState.postsList = responseList;
         log("response list length = ${responseList.data.length}");
         list = responseList;
       } else {
@@ -928,7 +954,7 @@ class _HomeScreen extends State<HomeScreen> {
       list = null;
     }
     return list;
-    }
+  }
 
   CategoryPostsModel callExistingCategoryPostsApi(
       {@required BuildContext context,
@@ -1064,7 +1090,11 @@ class _HomeScreen extends State<HomeScreen> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 5.0),
                             child: _myWidget.myText(
-                                "4.0", 12, FontWeight.normal, 1, Colors.white),
+                                "${categoryPosts.data.elementAt(position).valutazione}",
+                                12,
+                                FontWeight.normal,
+                                1,
+                                Colors.white),
                           ),
                           Padding(
                             padding:
@@ -1089,8 +1119,10 @@ class _HomeScreen extends State<HomeScreen> {
                   const EdgeInsets.symmetric(vertical: 3.0, horizontal: 5.0),
               child: Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  if(categoryPosts.data.elementAt(position).cucina != "")
+                   for (var i = 0; i < getCousinoList(categoryPosts.data.elementAt(position).cucina.toString()).length; i++)                    
+                   Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 1.0),
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.0),
@@ -1099,31 +1131,51 @@ class _HomeScreen extends State<HomeScreen> {
                         padding: const EdgeInsets.all(3.0),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: _myWidget.myText("Spagnola", 12,
+                          child: _myWidget.myText("${getCousinoList(categoryPosts.data.elementAt(position).cucina.toString())[i]}", 11,
                               FontWeight.normal, 1, Colors.black),
                         ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: Colors.black26),
-                      child: Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: _myWidget.myText("Mediterranea", 12,
-                              FontWeight.normal, 1, Colors.black),
-                        ),
-                      ),
-                    ),
-                  ),
+                   
+                  
+
+                    
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  //   child: Container(
+                  //     decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.circular(5.0),
+                  //         color: Colors.black26),
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.all(3.0),
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  //         child: _myWidget.myText("Spagnola", 12,
+                  //             FontWeight.normal, 1, Colors.black),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  //   child: Container(
+                  //     decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.circular(5.0),
+                  //         color: Colors.black26),
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.all(3.0),
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  //         child: _myWidget.myText("Mediterranea", 12,
+                  //             FontWeight.normal, 1, Colors.black),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Expanded(
                       child: Text(
-                    "90,0000",
+                    "${categoryPosts.data.elementAt(position).prezzoOndemand}",
                     textAlign: TextAlign.end,
                     style:
                         TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
@@ -1136,10 +1188,6 @@ class _HomeScreen extends State<HomeScreen> {
       ),
     );
   }
-
-
-
-
 
   Widget itemView2(int position) {
     return Card(
@@ -1233,14 +1281,14 @@ class _HomeScreen extends State<HomeScreen> {
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: (){
+                                  onTap: () {
                                     Navigator.pop(context);
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(5.0),
                                     child: Container(
-                                      child:
-                                          Image.asset("assets/images/delete.png"),
+                                      child: Image.asset(
+                                          "assets/images/delete.png"),
                                     ),
                                   ),
                                 ),
@@ -1248,8 +1296,8 @@ class _HomeScreen extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                         Container(
-                          child:  Row(
+                        Container(
+                          child: Row(
                             children: <Widget>[
                               Container(
                                 child: _myWidget.myRadioButton(
@@ -1619,24 +1667,20 @@ class _HomeScreen extends State<HomeScreen> {
         });
   }
 
-
-
-
-
 //// Refresh Indicator Function Definition
-Future refreshFunction(){
-  print("Refreshed");
-  // callGetCategoryPostsApi(categoryId: '3', context: context);
-  // callGetCategoryPostsApi(categoryId: '5', context: context);
-  // callGetCategoryPostsApi(categoryId: '6', context: context);
-  // callGetCategoryPostsApi(categoryId: '7', context: context);
-  // callGetCategoryPostsApi(categoryId: '8', context: context);
- return callGetCategoryPostsApi(categoryId: '7', context: context);
+  Future refreshFunction() {
+    print("Refreshed");
+    // callGetCategoryPostsApi(categoryId: '3', context: context);
+    // callGetCategoryPostsApi(categoryId: '5', context: context);
+    // callGetCategoryPostsApi(categoryId: '6', context: context);
+    // callGetCategoryPostsApi(categoryId: '7', context: context);
+    // callGetCategoryPostsApi(categoryId: '8', context: context);
+    return callGetCategoryPostsApi(categoryId: '7', context: context);
 
-  // GlobalState.postsList.data.clear();
+    // GlobalState.postsList.data.clear();
 //  return callGetCategoryApi(context: context);
+  }
 
-}
   Future<void> deleteFavorite(
       {@required BuildContext context,
       @required int idUser,
@@ -1661,5 +1705,15 @@ Future refreshFunction(){
         onFailure: (_streamedResponse) {
           log("favorite delete onFailure");
         });
+  }
+
+  ///  Cusino get Form API
+  getCousinoList(String cousino) {
+ 
+     if (cousino != "") {
+      var cousinoList = cousino.split(',');
+    return cousinoList;
+                   
+    }
   }
 }

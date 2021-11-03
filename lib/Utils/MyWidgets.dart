@@ -273,10 +273,15 @@ class MyWidget {
                               //     FontWeight.bold, 1, Colors.red),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Container(
-                              child: Image.asset("assets/images/delete.png"),
+                          InkWell(
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Container(
+                                child: Image.asset("assets/images/delete.png"),
+                              ),
                             ),
                           ),
                         ],

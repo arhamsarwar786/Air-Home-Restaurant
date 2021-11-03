@@ -430,7 +430,8 @@ class _Login extends State<Login> {
         onSuccess: (_streamedResponse) async {
           var response = await http.Response.fromStream(_streamedResponse);
           print(response);
-
+          print("this is in Login Success ${response.body}");
+            
           if (response != null) {
 
             var user = LogInResponce.fromJson(jsonDecode(response.body));
@@ -467,6 +468,7 @@ class _Login extends State<Login> {
           _progressDialog.dismissProgressDialog(context);
           var response = await http.Response.fromStream(_streamedResponse);
           var user = LogInResponce.fromJson(jsonDecode(response.body));
+          print("This is %%%%%%%%%%%%%%%%%%%%%% ${response.body}");
           BaseClass.showSB(
               msg: user.message,
               context: context,
@@ -583,6 +585,7 @@ class _Login extends State<Login> {
           // here FB Already Member Login
           // if (_streamedResponse.statusCode == 100) {
           callLoginApi(email: email, password: password, context: context);
+          print("this is in SignUp Failure $email $password");
           // }
           _progressDialog.dismissProgressDialog(context);
           print(
@@ -656,7 +659,7 @@ class _Login extends State<Login> {
           fnam: GlobalState.firebaseUser.displayName,
           lname: "",
           email: GlobalState.firebaseUser.email,
-          password: GlobalState.userId.toString(),
+          password: GlobalState.firebaseUser.uid,
           social: "F",
           context: context);
     } else {
