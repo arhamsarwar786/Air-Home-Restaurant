@@ -223,8 +223,8 @@ class _MyHomePageState extends State<MyHomePage> {
           else
             Navigator.push(
             context,
-            // MaterialPageRoute(builder: (context) => Login()),
-              MaterialPageRoute(builder: (context) => AddPostBlog()),
+            MaterialPageRoute(builder: (context) => Login()),
+            //   MaterialPageRoute(builder: (context) => AddPostBlog()),
           );
         } else {
           setState(() {
