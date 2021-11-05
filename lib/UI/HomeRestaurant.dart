@@ -9,7 +9,6 @@ import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:expandable/expandable.dart';
 
 class HomeRestaurant extends StatefulWidget {
   final categoryPosts;
@@ -879,9 +878,8 @@ class _HomeRestaurant extends State<HomeRestaurant> {
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: GestureDetector(
                         onTap: () {
-                          var data = getAllergies(widget.categoryPosts.allergie);
-                          print(data);
-                          // _myWidget.allergiesIntorancesBottomSheet(context,getAllergies(allergies));
+                          var allergiesList = getAllergies(widget.categoryPosts.allergie);
+                          _myWidget.allergiesIntorancesBottomSheet(context,allergiesList);
                         },
                         child: Center(
                           child: Container(
@@ -1447,7 +1445,7 @@ class _HomeRestaurant extends State<HomeRestaurant> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PaymentERestaurant()),
+                                  builder: (context) => PaymentERestaurant(widget.categoryPosts)),
                             );
                           },
                           child: Container(

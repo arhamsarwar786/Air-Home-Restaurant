@@ -8,6 +8,7 @@ class MyWidget {
 
   Widget myAppBar(String text, Function() clickListener) {
     return new AppBar(
+      elevation: 0,
       centerTitle: true,
       backgroundColor: Colors.red,
       leading: GestureDetector(
@@ -114,9 +115,9 @@ class MyWidget {
   }
 
   Widget myText(String text, double fontSize, FontWeight weight, int lines,
-      Color colorVal , [overflow]) {
+      Color colorVal,
+      [overflow]) {
     return Text(
-      
       text,
       maxLines: lines,
       style: TextStyle(
@@ -245,14 +246,14 @@ class MyWidget {
     );
   }
 
-  void allergiesIntorancesBottomSheet(context) {
+  void allergiesIntorancesBottomSheet(context, allergiesList) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return Container(
             child: ListView(
               children: [
-                new ListTile(
+                ListTile(
                     // leading: new Icon(Icons.music_note),
                     title: Container(
                       height: 30.0,
@@ -274,7 +275,7 @@ class MyWidget {
                             ),
                           ),
                           InkWell(
-                            onTap: (){
+                            onTap: () {
                               Navigator.pop(context);
                             },
                             child: Padding(
@@ -289,61 +290,51 @@ class MyWidget {
                     ),
                     onTap: () => {}),
                 Divider(),
-                new ListTile(
-                  // leading: new Icon(Icons.videocam),
-                  title: myText(
-                      "Arachidi", 15.0, FontWeight.normal, 1, Colors.black38),
-                  onTap: () => {},
-                ),
-                Divider(),
-                new ListTile(
-                  // leading: new Icon(Icons.videocam),
-                  title: myText(
-                      "Solfiti", 15.0, FontWeight.normal, 1, Colors.black38),
-                  onTap: () => {},
-                ),
-                Divider(),
-                new ListTile(
-                  // leading: new Icon(Icons.videocam),
-                  title: myText("Metasolfiti e bisolfiti", 15.0,
-                      FontWeight.normal, 1, Colors.black38),
-                  onTap: () => {},
-                ),
-                Divider(),
-                new ListTile(
-                  // leading: new Icon(Icons.videocam),
-                  title: myText(
-                      "Celiachia", 15.0, FontWeight.normal, 1, Colors.black38),
-                  onTap: () => {},
-                ),
-                Divider(),
-                new ListTile(
-                  // leading: new Icon(Icons.videocam),
-                  title: myText(
-                      "Lieviti", 15.0, FontWeight.normal, 1, Colors.black38),
-                  onTap: () => {},
-                ),
-                Divider(),
-                new ListTile(
-                  // leading: new Icon(Icons.videocam),
-                  title: myText(
-                      "Lattosio", 15.0, FontWeight.normal, 1, Colors.black38),
-                  onTap: () => {},
-                ),
-                Divider(),
-                new ListTile(
-                  // leading: new Icon(Icons.videocam),
-                  title: myText("Frutta e verdura", 15.0, FontWeight.normal, 1,
-                      Colors.black38),
-                  onTap: () => {},
-                ),
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: allergiesList.length,
+                    itemBuilder: (context, i) {
+                      return Column(
+                        children: [
+                          ListTile(
+                              // leading: new Icon(Icons.music_note),
+                              title: Container(
+                                height: 30.0,
+                                child: new Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        child: ListTile(
+                                          title: myText(
+                                              "${allergiesList[i]}",
+                                              15.0,
+                                              FontWeight.normal,
+                                              1,
+                                              Colors.black38),
+                                          onTap: () => {},
+                                        ),
+                                      ),
+
+                                      // child: myText("Allergies and intolerances", 15.0,
+                                      //     FontWeight.bold, 1, Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () => {}),
+                          Divider(),
+                        ],
+                      );
+                      // Divider(),
+                    }),
               ],
             ),
           );
         });
   }
 
-  Widget myRadioButton({int value,int groupValue, Function onChanged}) {
+  Widget myRadioButton({int value, int groupValue, Function onChanged}) {
     return Radio(
       value: value,
       activeColor: Colors.red,
@@ -352,24 +343,27 @@ class MyWidget {
     );
   }
 
-  showLoaderDialog(BuildContext context){
-    AlertDialog alert=AlertDialog(
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
       backgroundColor: Colors.transparent,
       content: Center(
         child: Wrap(
           children: [
             Container(
-              height: 50.0,
+                height: 50.0,
                 width: 50.0,
-                child: CircularProgressIndicator(color: Colors.pink,)),
+                child: CircularProgressIndicator(
+                  color: Colors.pink,
+                )),
           ],
         ),
       ),
     );
-    return showDialog(barrierDismissible: false,
-      context:context,
-      builder:(BuildContext context){
-      return alert;
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
       },
     );
   }

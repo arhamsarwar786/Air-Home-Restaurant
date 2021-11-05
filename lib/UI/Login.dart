@@ -453,11 +453,16 @@ class _Login extends State<Login> {
               msg: Constants.SUCCESSFULLY_LOGGIN,
               context: context,
               type: Constants.SUCCESS);
-              getFavorites(
-                  context: context,
-                  userId: GlobalState.userId == null
-                      ? int.parse(Hive.box('userIdBox').get('userID'))
-                      : GlobalState.userId);
+              Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MainScreen(),
+                    ));
+              // getFavorites(
+              //     context: context,
+              //     userId: GlobalState.userId == null
+              //         ? int.parse(Hive.box('userIdBox').get('userID'))
+              //         : GlobalState.userId);
             }
           } else {
             //empty response
@@ -566,11 +571,16 @@ class _Login extends State<Login> {
               if (response == "0") {
                 _progressDialog.dismissProgressDialog(context);
               } else {
-                getFavorites(
-                    context: context,
-                    userId: GlobalState.userId == null
-                        ? int.parse(Hive.box('userIdBox').get('userID'))
-                        : GlobalState.userId);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MainScreen(),
+                    ));
+                // getFavorites(
+                //     context: context,
+                //     userId: GlobalState.userId == null
+                //         ? int.parse(Hive.box('userIdBox').get('userID'))
+                //         : GlobalState.userId);
               }
             } else {
               _progressDialog.dismissProgressDialog(context);
@@ -593,10 +603,12 @@ class _Login extends State<Login> {
         });
   }
 
-  Future<CategoryPostsModel> getFavorites({
+  Future<CategoryPostsModel> getFavorites(
+    {
     @required BuildContext context,
     @required int userId,
-  }) async {
+  }) async 
+  {
     HttpServices httpServices = new HttpServices();
     Map<String, int> bodyMap = new HashMap();
     bodyMap['i'] = GlobalState.userId;

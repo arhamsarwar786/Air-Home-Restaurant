@@ -660,6 +660,7 @@ class _ERestaurant extends State<ERestaurant> {
               ),
             ),
           ),
+        
         ],
       ),
     );
@@ -1035,7 +1036,7 @@ class _ERestaurant extends State<ERestaurant> {
             padding: const EdgeInsets.all(10.0),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_)=>  PaymentERestaurant()));
+                Navigator.push(context, MaterialPageRoute(builder: (_)=>  PaymentERestaurant(widget.categoryPosts)));
               },
               child: Container(
                   width: double.infinity,

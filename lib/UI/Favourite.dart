@@ -32,6 +32,11 @@ class _Favourite extends State<Favourite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: (){
+      //  myFavorites.data.forEach((val)=> print(val.data));
+      print(GlobalState.postsList.data.length);
+        // print("Cliked");
+      },),
       appBar: _myWidget.myAppBar(Constants.FAVOURITE_TITLE, () {
         // Navigator.pop(context);
       }),
@@ -39,18 +44,7 @@ class _Favourite extends State<Favourite> {
           height: double.infinity,
           width: double.infinity,
           color: Color(0xFFF5F5F5),
-          child: myFavorites != null
-              ? ListView.builder(
-                  itemCount: myFavorites.data.length,
-                  itemBuilder: (context, position) {
-                    print("Global State Favorite Call");
-                    return listItem(
-                        context: context,
-                        position: position,
-                        favorites: myFavorites.data.elementAt(position));
-                  },
-                )
-              : FutureBuilder(
+          child:FutureBuilder(
                   future: getFavorites(context: context),
                   builder: (context, snapshot) {
                     print("Global State Favorite null");
@@ -60,6 +54,9 @@ class _Favourite extends State<Favourite> {
                       return ListView.builder(
                         itemCount: myFavorites.data.length,
                         itemBuilder: (context, position) {
+                          // return Container(
+                          //   child: Text(myFavorites.data.elementAt(position).data.toString()),
+                          // );
                           return listItem(
                               context: context,
                               position: position,
@@ -96,7 +93,8 @@ class _Favourite extends State<Favourite> {
   Widget listItem(
       {@required int position,
       @required BuildContext context,
-      @required FavoriteItem favorites}) {
+      @required FavoriteItem favorites}) 
+      {
     MyWidget _myWidget = new MyWidget();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -289,7 +287,8 @@ class _Favourite extends State<Favourite> {
 
   Future<FavoriteModel> getFavorites({
     @required BuildContext context,
-  }) async {
+  }) async 
+  {
     FavoriteModel favoriteModel;
     HttpServices httpServices = new HttpServices();
     Map<String, int> bodyMap = new HashMap();
@@ -316,7 +315,8 @@ class _Favourite extends State<Favourite> {
   }
 
   Future<void> deleteFavorite(
-      {@required BuildContext context, @required FavoriteItem item}) async {
+      {@required BuildContext context, @required FavoriteItem item}) async 
+      {
     HttpServices httpServices = new HttpServices();
     log("URL = " +
         APIServices.DELETE_FAVORITES_API +

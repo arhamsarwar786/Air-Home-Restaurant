@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import '../Utils/constants.dart';
+import 'PaymentCorsoCusina.dart';
 import 'PaymentERestaurant.dart';
 
 class CorsoCusina extends StatefulWidget {
@@ -299,7 +300,7 @@ class _CorsoCusina extends State<CorsoCusina> {
                                                     1,
                                                     Colors.black),
                                                 _myWidget.myText(
-                                                    "99,00 p.p",
+                                                    "${widget.categoryPosts.date.elementAt(0).prezzoAdulti}",
                                                     12,
                                                     FontWeight.bold,
                                                     1,
@@ -687,7 +688,8 @@ class _CorsoCusina extends State<CorsoCusina> {
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: GestureDetector(
                         onTap: () {
-                          _myWidget.allergiesIntorancesBottomSheet(context);
+                            var allergiesList = getAllergies(widget.categoryPosts.allergie);
+                          _myWidget.allergiesIntorancesBottomSheet(context,allergiesList);
                         },
                         child: Center(
                           child: Container(
@@ -1192,10 +1194,15 @@ class _CorsoCusina extends State<CorsoCusina> {
                         padding: const EdgeInsets.all(10.0),
                         child: GestureDetector(
                           onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => PaymentCorsoCusina()),
+                            // );
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PaymentERestaurant()),
+                                  builder: (context) => PaymentCorsoCusina(widget.categoryPosts)),
                             );
                           },
                           child: Container(
@@ -1413,6 +1420,12 @@ class _CorsoCusina extends State<CorsoCusina> {
       var languageList = language.split(',');
     return languageList;
                    
+    }
+  }
+    getAllergies(String allergies) {
+    if (allergies != "") {
+      var allergiesList = allergies.split(',');
+      return allergiesList;
     }
   }
 }

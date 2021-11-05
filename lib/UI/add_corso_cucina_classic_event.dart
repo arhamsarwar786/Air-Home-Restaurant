@@ -412,7 +412,7 @@ class _AddCookingClassEvent extends State<AddCookingClassEvent> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Container(
                       child: _myWidget.btnMain("Continue", () {
-                        _myWidget.allergiesIntorancesBottomSheet(context);
+                        // _myWidget.allergiesIntorancesBottomSheet(context);
                         // Navigator.push(
                         //   context,
                         //   MaterialPageRoute(

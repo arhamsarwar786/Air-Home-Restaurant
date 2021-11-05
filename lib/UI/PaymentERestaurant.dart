@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
@@ -7,11 +8,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PaymentERestaurant extends StatefulWidget {
+  final categoryPosts;
+  PaymentERestaurant(this.categoryPosts);
   @override
   State<StatefulWidget> createState() => _PaymentERestaurant();
 }
 
 class _PaymentERestaurant extends State<PaymentERestaurant> {
+
+
+
+  var _selectedDate = "Date - Time";
   MyWidget _myWidget;
   bool cbValue1;
   bool cbValue2;
@@ -60,9 +67,14 @@ class _PaymentERestaurant extends State<PaymentERestaurant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        // print(widget.categoryPosts.date.length);
+                               widget.categoryPosts.date.forEach((Date item)=> print(item.inizio));
+
+      },),
       appBar: _myWidget
           .myAppBar(Constants.PAYMENT_E_RESTAURANT_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: Container(
         child: ListView(
@@ -93,7 +105,7 @@ class _PaymentERestaurant extends State<PaymentERestaurant> {
                     children: <Widget>[
                       Container(
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.only(left: 10,top: 20,),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,28 +113,41 @@ class _PaymentERestaurant extends State<PaymentERestaurant> {
                                 Container(
                                   height: 80.0,
                                   width: 100.0,
-                                  color: Colors.black38,
+                                  child: Image.network("${widget.categoryPosts.foto.elementAt(0).urlFoto}",fit: BoxFit.cover,),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0),
+                                  padding: const EdgeInsets.only(left: 10),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
                                         padding:
-                                        const EdgeInsets.only(bottom: 30.0),
+                                        const EdgeInsets.only(bottom: 10.0),
                                         child: Text(
-                                          Constants
-                                              .PAYMENT_E_RESTAURANT_LABEL1,
+                                         "${widget.categoryPosts.nome}",
                                           textAlign: TextAlign.start,
                                           maxLines: 1,
+                                          overflow: TextOverflow.clip,
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
+                                      Padding(
+                                        padding:
+                                        const EdgeInsets.only(bottom: 10.0),
+                                        child: Text(
+                                         "${widget.categoryPosts.luogoCitta}",
+                                          textAlign: TextAlign.start,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ),
+                                      
                                       Container(
                                         decoration: BoxDecoration(
                                             borderRadius:
@@ -140,7 +165,7 @@ class _PaymentERestaurant extends State<PaymentERestaurant> {
                                                 const EdgeInsets.symmetric(
                                                     horizontal: 5.0),
                                                 child: _myWidget.myText(
-                                                    "4.0",
+                                                    "${widget.categoryPosts.valutazione}",
                                                     12,
                                                     FontWeight.normal,
                                                     1,
@@ -182,15 +207,38 @@ class _PaymentERestaurant extends State<PaymentERestaurant> {
                             height: 40.0,
                             color: Colors.white,
                             child: DropdownButtonHideUnderline(
-                              child: DropdownButton<ListItem>(
-                                value: _selectedItem,
-                                items: _dropdownMenuItems,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedItem = value;
-                                  });
-                                },
+                              child: DropdownButton(
+                              hint: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  _selectedDate,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
+                              onChanged: ( newValue) {
+                                print("In On Change Screen");
+                                setState(() {
+                                  _selectedDate = newValue;
+                                });
+                              },
+                              // items: widget.categoryPosts.date.forEach((Date item)=> DropdownMenuItem(
+                              //     value: item.id,
+                              //     child: Text("${item.id}"),
+                              //   ),),
+
+                                items:  widget.categoryPosts.date.map((Date item)=> DropdownMenuItem<dynamic>(
+                                  value: "${item.id}",
+                                  child: Text("${item.id}"),
+                                ),).toList(),
+                              // items: widget.categoryPosts.date.map((Date item) {
+                                // return DropdownMenuItem<dynamic>(
+                                //   value: "${item.id}",
+                                //   child: Text("${item.id}"),
+                                // );
+                              // }).toList(),
+                            ),
                             ),
                           ),
                         ),
@@ -221,38 +269,127 @@ class _PaymentERestaurant extends State<PaymentERestaurant> {
             Padding(
               padding:
               const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              child: Expanded(
-                child: Container(
-                  decoration: BoxDecoration(color: Color(0xFFF1F1F1)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
+              child:   Container(
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                height: 250.0,
+                child: Column(
+                  children: [
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 5.0),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: _myWidget.myText(
-                              Constants.PAYMENT_E_RESTAURANT_LABEL6,
+                              Constants.E_RESTAURANT2_LABEL2,
                               15.0,
                               FontWeight.bold,
                               1,
                               Colors.black),
                         ),
                       ),
-                      Container(
-                        height: 180.0,
-                        child: ListView.builder(
-                          itemCount: 3,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, position) {
-                            return listItem(position);
-                          },
-                        ),
+                    ),
+                    // Culinary Courses
+                    Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(),
+                        itemCount: widget.categoryPosts.menu.length,
+                        itemBuilder: (context, position) {
+                          return Card(
+                            child: Container(
+                              height: 250.0,
+                              width: 250.0,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                              "${widget.categoryPosts.menu.elementAt(position).urlFoto == '' ? 'https://i.stack.imgur.com/y9DpT.jpg' : widget.categoryPosts.menu.elementAt(position).urlFoto}",
+                                            ),
+                                            fit: BoxFit.cover),
+                                        color: Colors.black26,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                  )),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 5.0, horizontal: 10.0),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              _myWidget.myText(
+                                                  "${widget.categoryPosts.menu.elementAt(position).categoria}",
+                                                  12,
+                                                  FontWeight.bold,
+                                                  1,
+                                                  Colors.black38),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 5.0),
+                                                child: _myWidget.myText(
+                                                    "${widget.categoryPosts.menu.elementAt(position).portata}",
+                                                    12,
+                                                    FontWeight.bold,
+                                                    1,
+                                                    Colors.black),
+                                              ),
+                                              _myWidget.myText(
+                                                  "${widget.categoryPosts.menu.elementAt(position).prezzo}€",
+                                                  12,
+                                                  FontWeight.bold,
+                                                  1,
+                                                  Colors.black),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          child: _myWidget.selectValue(
+                                              () {
+                                                setState(() {
+                                                  value1++;
+                                                  print("$value1");
+                                                });
+                                              },
+                                              value1,
+                                              () {
+                                                setState(() {
+                                                  value1--;
+                                                  print("$value1");
+                                                });
+                                              }),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
+            ),
+          ),
+        
             ),
           ],
         ),

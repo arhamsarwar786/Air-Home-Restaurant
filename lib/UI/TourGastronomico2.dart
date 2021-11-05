@@ -688,7 +688,9 @@ class _TourGastronomico2 extends State<TourGastronomico2> {
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: GestureDetector(
                         onTap: () {
-                          _myWidget.allergiesIntorancesBottomSheet(context);
+                              var allergiesList = getAllergies(widget.categoryPosts.allergie);
+                              print(allergiesList);
+                          _myWidget.allergiesIntorancesBottomSheet(context,allergiesList);
                         },
                         child: Center(
                           child: Container(
@@ -1156,6 +1158,13 @@ class _TourGastronomico2 extends State<TourGastronomico2> {
       var languageList = language.split(',');
     return languageList;
                    
+    }
+  }
+
+    getAllergies(String allergies) {
+    if (allergies != "") {
+      var allergiesList = allergies.split(',');
+      return allergiesList;
     }
   }
 }

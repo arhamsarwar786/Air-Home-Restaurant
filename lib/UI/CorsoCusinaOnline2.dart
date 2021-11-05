@@ -176,7 +176,7 @@ class _CorsoCusinaOnline2 extends State<CorsoCusinaOnline2> {
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: GestureDetector(
                   onTap: () {
-                    _myWidget.allergiesIntorancesBottomSheet(context);
+                    // _myWidget.allergiesIntorancesBottomSheet(context);
                   },
                   child: Center(
                     child: Container(

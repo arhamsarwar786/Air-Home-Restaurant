@@ -213,11 +213,16 @@ class _MyHomePageState extends State<MyHomePage> {
           _timer.cancel();
           var userBox = Hive.box('userIdBox');
           if(userBox.get("userID") != null)
-             getFavorites(
-                  context: context,
-                  userId: GlobalState.userId == null
-                      ? int.parse(Hive.box('userIdBox').get('userID'))
-                      : GlobalState.userId);
+            //  getFavorites(
+            //       context: context,
+            //       userId: GlobalState.userId == null
+            //           ? int.parse(Hive.box('userIdBox').get('userID'))
+            //           : GlobalState.userId);
+               Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MainScreen(),
+                    ));
           else
             Navigator.push(
             context,

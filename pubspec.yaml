@@ -49,7 +49,9 @@ dependencies:
   firebase_storage: ^10.0.6
   givestarreviews: ^1.0.2
   google_maps_flutter:
-  expandable: ^5.0.1
+  flutter_neat_and_clean_calendar: ^0.2.3+11
+  flutter_calendar_carousel: ^2.0.3
+  table_calendar: ^3.0.3
 
 dev_dependencies:
   flutter_test:

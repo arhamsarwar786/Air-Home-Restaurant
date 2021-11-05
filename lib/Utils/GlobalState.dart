@@ -18,6 +18,13 @@ class GlobalState {
 
   GlobalState._internal();
 
+
+  /// Favorites List of All POSTS
+  static CategoryPostsModel corsiDiCusinaFavorites;
+  static CategoryPostsModel homeRestaurantFavorites;
+  static CategoryPostsModel chefDomicilioFavorites;
+  static CategoryPostsModel tourGastronomiciFavorites;
+
   static MyUser currentUser;
   static FbUser fbUser;
 
@@ -27,6 +34,8 @@ class GlobalState {
   static int userId;
   static PostCategories categoriesPosts;
   static CategoryPostsModel postsList;
+  static dynamic allPostData ;  /// for Delete
+  
   
     ///  Used To Handle the Data in Posts
   // static CategoryPostsModel corsiPostsList;
