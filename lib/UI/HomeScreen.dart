@@ -19,7 +19,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-
 import 'ChefDomicilioDetailScreen.dart';
 import 'CorsoCusina.dart';
 import 'HomeRestaurantDetailScreen.dart';
@@ -50,10 +49,7 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     floatingActionButton: FloatingActionButton(onPressed: (){
-//  GlobalState.postsList.data.forEach((val)=> print(val));
-       print(GlobalState.postsList.data.length);
-     },),
+
       key: _scaffoldKey,
       drawer: MenuHamBurger(),
       appBar: AppBar(
@@ -358,7 +354,27 @@ class _HomeScreen extends State<HomeScreen> {
                             Container(
                               height: 220.0,
                               width: double.infinity,
-                              child: FutureBuilder(
+                              child: GlobalState.corsiDiCusinaPosts != null ?  ListView.builder(
+                                      itemCount: GlobalState.corsiDiCusinaPosts.data.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, position) {
+                                        return InkWell(
+                                          onTap: () async {
+                                            // print(await categoryPosts.data.elementAt(position).hostId);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CorsoCusina(GlobalState.corsiDiCusinaPosts.data.elementAt(position))));
+                                          },
+                                          child: itemView(
+                                              context: context,
+                                              position: position,
+                                              categoryPosts: GlobalState.corsiDiCusinaPosts),
+                                        );
+                                      },
+                                    )
+                                  : FutureBuilder(
                                 future: getCategoryPostsApiCorsiDiCusina(context: context),
                                 builder: (context, snapshot) {
                                   // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
@@ -440,7 +456,27 @@ class _HomeScreen extends State<HomeScreen> {
                             Container(
                               height: 220.0,
                               width: double.infinity,
-                              child: FutureBuilder(
+                              child: GlobalState.homeRestaurantPosts != null ?  ListView.builder(
+                                      itemCount: GlobalState.homeRestaurantPosts.data.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, position) {
+                                        return InkWell(
+                                          onTap: () async {
+                                            // print(await categoryPosts.data.elementAt(position).hostId);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HomeRestaurant(GlobalState.homeRestaurantPosts.data.elementAt(position))));
+                                          },
+                                          child: itemView(
+                                              context: context,
+                                              position: position,
+                                              categoryPosts: GlobalState.homeRestaurantPosts),
+                                        );
+                                      },
+                                    )
+                                  : FutureBuilder(
                                 future: getCategoryPostsApiHomeRestaurant(context:context),
                                 builder: (context, snapshot) {
                                   // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
@@ -530,7 +566,27 @@ class _HomeScreen extends State<HomeScreen> {
                             Container(
                               height: 220.0,
                               width: double.infinity,
-                              child: FutureBuilder(
+                              child: GlobalState.chefDomicilioPosts != null ?  ListView.builder(
+                                      itemCount: GlobalState.chefDomicilioPosts.data.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, position) {
+                                        return InkWell(
+                                          onTap: () async {
+                                            // print(await categoryPosts.data.elementAt(position).hostId);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ERestaurant(GlobalState.chefDomicilioPosts.data.elementAt(position))));
+                                          },
+                                          child: itemView(
+                                              context: context,
+                                              position: position,
+                                              categoryPosts: GlobalState.chefDomicilioPosts),
+                                        );
+                                      },
+                                    )
+                                  :  FutureBuilder(
                                 future: getCategoryPostsApiChefDomicilio(context:context),
                                 builder: (context, snapshot) {
                                   // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
@@ -612,7 +668,27 @@ class _HomeScreen extends State<HomeScreen> {
                             Container(
                               height: 220.0,
                               width: double.infinity,
-                              child: FutureBuilder(
+                              child: GlobalState.tourGastronomiciPosts != null ?  ListView.builder(
+                                      itemCount: GlobalState.tourGastronomiciPosts.data.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, position) {
+                                        return InkWell(
+                                          onTap: () async {
+                                            // print(await categoryPosts.data.elementAt(position).hostId);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TourGastronomico2(GlobalState.tourGastronomiciPosts.data.elementAt(position))));
+                                          },
+                                          child: itemView(
+                                              context: context,
+                                              position: position,
+                                              categoryPosts: GlobalState.tourGastronomiciPosts),
+                                        );
+                                      },
+                                    )
+                                  :  FutureBuilder(
                                 future: getCategoryPostsApiTourGastronomici(context: context),
                                 builder: (context, snapshot) {
                                   // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
@@ -756,7 +832,6 @@ class _HomeScreen extends State<HomeScreen> {
         url: Constants.GET_POSTS_API + '8');
     var res3 = await httpServices.getFutureJsonWithBody(
         url: Constants.GET_POSTS_API + '9');
-    //     // var homeRestaurantResponse = res1 + res2 + res3;
     var response1 = await http.Response.fromStream(res1);
     var response2 = await http.Response.fromStream(res2);
     var response3 = await http.Response.fromStream(res3);
@@ -772,6 +847,10 @@ class _HomeScreen extends State<HomeScreen> {
     if (response1.statusCode == 200) {
       var responseList = CategoryPostsModel.fromJson(response);
       if (responseList != null) {
+        // For Save Posts in GlobalState 
+        GlobalState.corsiDiCusinaPosts = responseList;
+        // For Favourites
+        
         // GlobalState.allPostData = resDec1;
     // GlobalState.postsList = response;
         log("Corsi list length = ${responseList.data.length}");
@@ -815,6 +894,8 @@ class _HomeScreen extends State<HomeScreen> {
     if (response1.statusCode == 200) {
       var responseList = CategoryPostsModel.fromJson(response);
       if (responseList != null) {
+        GlobalState.homeRestaurantPosts = responseList;
+
         // GlobalState.allPostData = GlobalState.allPostData['data'] + resDec1['data'];
 
     // GlobalState.postsList.data =GlobalState.postsList.data + response['data'];
@@ -856,6 +937,8 @@ class _HomeScreen extends State<HomeScreen> {
     if (response1.statusCode == 200) {
       var responseList = CategoryPostsModel.fromJson(response);
       if (responseList != null) {
+        GlobalState.chefDomicilioPosts = responseList;
+
     // GlobalState.postsList.data =GlobalState.postsList.data + resDec1['data'];
         // GlobalState.postsList = responseList;
         log("chef list length = ${responseList.data.length}");
@@ -892,6 +975,8 @@ class _HomeScreen extends State<HomeScreen> {
     if (response1.statusCode == 200) {
       var responseList = CategoryPostsModel.fromJson(response);
       if (responseList != null) {
+        GlobalState.tourGastronomiciPosts = responseList;
+
     // GlobalState.postsList.data = GlobalState.postsList.data + resDec1['data'];
         // GlobalState.postsList = responseList;
         log("Tour list length = ${responseList.data.length}");

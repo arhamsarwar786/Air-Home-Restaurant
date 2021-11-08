@@ -1,7 +1,16 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'package:air_home_retaurant/ModelClasses/BloglistModel.dart';
+import 'package:air_home_retaurant/ModelClasses/ReservationsModel.dart';
+import 'package:air_home_retaurant/UI/AddPostBlog2.dart';
+import 'package:air_home_retaurant/Utils/BaseClass.dart';
+import 'package:air_home_retaurant/Utils/GlobalState.dart';
+import 'package:air_home_retaurant/Utils/HttpServices.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class AddPostBlog extends StatefulWidget {
   @override
@@ -21,6 +30,7 @@ class _AddPostBlog extends State<AddPostBlog> {
     addCookingClassEvent3Controller = new TextEditingController();
     addCookingClassEvent3Controller2 = new TextEditingController();
     addCookingClassEvent3Controller3 = new TextEditingController();
+    getBlogList(context: context);
   }
 
   @override
@@ -73,22 +83,15 @@ class _AddPostBlog extends State<AddPostBlog> {
                                   ),
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: _myWidget.dataColumn(
-                                          Constants.ADD_POST_BLOG_LABEL2,
-                                          "Post title")),
-                                  Expanded(
-                                      child: _myWidget.dataColumn(
-                                          Constants.ADD_POST_BLOG_LABEL3,
-                                          "30/04/2021")),
-                                  Expanded(
-                                      child: _myWidget.dataColumn(
-                                          Constants.ADD_POST_BLOG_LABEL4,
-                                          "15")),
-                                ],
-                              ),
+                              GlobalState.bloglistModel!=null
+                              ?ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: GlobalState.bloglistModel.data.length,
+                                itemBuilder: (context,index){
+                                  return itemContainer(data:GlobalState.bloglistModel.data[index]);
+                                },
+                              ):Container(),
                             ],
                           ),
                         ),
@@ -107,10 +110,19 @@ class _AddPostBlog extends State<AddPostBlog> {
                                       borderRadius: BorderRadius.circular(5.0)),
                                   child: Align(
                                     alignment: Alignment.center,
-                                    child: Text(
-                                      Constants.ADD_POST_BLOG_BUTTON1,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
+
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => AddPostBlog2()),
+                                        );
+                                      },
+                                      child: Text(
+                                        Constants.ADD_POST_BLOG_BUTTON1,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 12),
+                                      ),
                                     ),
                                   )),
                             ),
@@ -124,6 +136,47 @@ class _AddPostBlog extends State<AddPostBlog> {
             ],
           ),
         ),
+      ),
+    );
+  }
+  Future<BloglistModel> getBlogList(
+      {@required BuildContext context}) async {
+    HttpServices httpServices = new HttpServices();
+    BloglistModel list;
+    var _streamedResponse = await httpServices.getFutureJsonWithBody(
+      url: Constants.GET_ALL_Blog_API + "3491",);
+    var response = await http.Response.fromStream(_streamedResponse);
+    if (response != null) {
+      log("fetch all reservations succeed");
+      var blogs =
+      BloglistModel.fromJson(jsonDecode(response.body));
+      setState(() {
+      GlobalState.bloglistModel = blogs;
+      BaseClass.showSB(context: context,msg: "${GlobalState.bloglistModel.data.length}",type: Constants.SUCCESS);
+      });
+      list = blogs;
+    }
+    return list;
+  }
+
+  Widget itemContainer({@required BloglistIem data}) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        children: [
+          Expanded(
+              child: _myWidget.dataColumn(
+                  Constants.ADD_POST_BLOG_LABEL2,
+                  data.titolo!=null?data.titolo:"")),
+          Expanded(
+              child: _myWidget.dataColumn(
+                  Constants.ADD_POST_BLOG_LABEL3,
+                  data.data!=null?data.data.toString():"")),
+          Expanded(
+              child: _myWidget.dataColumn(
+                  Constants.ADD_POST_BLOG_LABEL4,
+                  "N/A")),
+        ],
       ),
     );
   }

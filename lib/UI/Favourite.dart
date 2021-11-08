@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FavoriteModel.dart';
 import 'package:air_home_retaurant/Utils/APIServies.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
@@ -27,74 +28,55 @@ class _Favourite extends State<Favourite> {
     super.initState();
     _myWidget = new MyWidget();
     myFavorites = GlobalState.myFavorites;
+    fetchAllPostsData();
+    getFavorites(context: context);
   }
 
+  fetchAllPostsData() {
+    if (GlobalState.postsList == null) {
+      GlobalState.postsList = GlobalState.corsiDiCusinaPosts;
+      GlobalState.postsList.data = GlobalState.postsList.data +
+          GlobalState.homeRestaurantPosts.data +
+          GlobalState.tourGastronomiciPosts.data;
+      print(GlobalState.postsList.data.length);
+    } else
+      print("DATA Full");
+  }
+
+  List<CategoryPostsList> demoList = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: (){
-      //  myFavorites.data.forEach((val)=> print(val.data));
-      print(GlobalState.postsList.data.length);
-        // print("Cliked");
-      },),
-      appBar: _myWidget.myAppBar(Constants.FAVOURITE_TITLE, () {
-        // Navigator.pop(context);
-      }),
-      body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: Color(0xFFF5F5F5),
-          child:FutureBuilder(
-                  future: getFavorites(context: context),
-                  builder: (context, snapshot) {
-                    print("Global State Favorite null");
-                    if (snapshot.hasData) {
-                      myFavorites = snapshot.data as FavoriteModel;
-                      log("list item = ${myFavorites.data.length}");
-                      return ListView.builder(
-                        itemCount: myFavorites.data.length,
-                        itemBuilder: (context, position) {
-                          // return Container(
-                          //   child: Text(myFavorites.data.elementAt(position).data.toString()),
-                          // );
-                          return listItem(
-                              context: context,
-                              position: position,
-                              favorites: myFavorites.data.elementAt(position));
-                        },
+      
+        appBar: _myWidget.myAppBar(Constants.FAVOURITE_TITLE, () {
+          Navigator.pop(context);
+        }),
+        body: Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Color(0xFFF5F5F5),
+            child: demoList.isEmpty ?  Center(child: Text("No Favourite Added Yet"),) :  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: demoList.length,
+                    itemBuilder: (context, position) {
+                      return  listItem(
+                        context: context,
+                        position: position,
+                        favorites: demoList[position],                    
                       );
-                    }
-                    if (snapshot == null) {
-                      return Center(
-                        child: Text("Corsi si cusina Post list Null"),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text("Snapshot has error"),
-                      );
-                    } else {
-                      print("state = ${snapshot.connectionState}");
-                      return Center(
-                          child: Wrap(
-                        children: [
-                          Container(
-                              height: 50.0,
-                              width: 50.0,
-                              child: CircularProgressIndicator()),
-                        ],
-                      ));
-                    }
-                  },
-                )),
-    );
+                    })
+               
+            )
+    
+        );
   }
 
   Widget listItem(
-      {@required int position,
+      {@required position,
       @required BuildContext context,
-      @required FavoriteItem favorites}) 
-      {
+      @required CategoryPostsList favorites
+      // @required  favorites,favoritesSaved
+      }) {
     MyWidget _myWidget = new MyWidget();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -113,22 +95,17 @@ class _Favourite extends State<Favourite> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5.0),
                       child: Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Colors.black26,
-                            borderRadius: BorderRadius.circular(5.0)),
-                        child: Image.network(
-                          GlobalState.postsList.data
-                              .firstWhere((element) {
-                                return element.id == favorites.idEvento;
-                              })
-                              .foto
-                              .elementAt(0)
-                              .urlFoto,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                          height: double.infinity,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.black26,
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: favorites.foto.isNotEmpty
+                              ? Image.network(
+                                  favorites.foto.elementAt(0).urlFoto,
+                                  fit: BoxFit.cover,
+                                )
+                              : Container()),
                     ),
                     Align(
                         alignment: Alignment.topRight,
@@ -136,7 +113,12 @@ class _Favourite extends State<Favourite> {
                           padding: const EdgeInsets.all(10.0),
                           child: InkWell(
                             onTap: () {
+                              // favoritesSaved.removeAt(position);
                               deleteFavorite(context: context, item: favorites);
+                              // setState(() {
+                              // GlobalState.favoruritesSaved.removeAt(position);
+
+                              // });
                             },
                             child: Container(
                                 height: 40.0,
@@ -158,27 +140,13 @@ class _Favourite extends State<Favourite> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2.0),
-                            child: _myWidget.myText(
-                                GlobalState.postsList.data
-                                    .firstWhere((element) {
-                                  return element.id == favorites.idEvento;
-                                }).nome,
-                                12,
-                                FontWeight.bold,
-                                1,
-                                Colors.black),
+                            child: _myWidget.myText(favorites.nome, 12,
+                                FontWeight.bold, 1, Colors.black),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2.0),
-                            child: _myWidget.myText(
-                                GlobalState.postsList.data
-                                    .firstWhere((element) {
-                                  return element.id == favorites.idEvento;
-                                }).luogoCitta,
-                                12,
-                                FontWeight.bold,
-                                1,
-                                Colors.black38),
+                            child: _myWidget.myText(favorites.luogoCitta, 12,
+                                FontWeight.bold, 1, Colors.black38),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -287,8 +255,7 @@ class _Favourite extends State<Favourite> {
 
   Future<FavoriteModel> getFavorites({
     @required BuildContext context,
-  }) async 
-  {
+  }) async {
     FavoriteModel favoriteModel;
     HttpServices httpServices = new HttpServices();
     Map<String, int> bodyMap = new HashMap();
@@ -303,6 +270,19 @@ class _Favourite extends State<Favourite> {
         if (responseList != null) {
           log("response list = ${responseList.message}");
           favoriteModel = responseList;
+          print(favoriteModel.data.length);
+
+          for (var i = 0; i < GlobalState.postsList.data.length; i++)
+            for (var j = 0; j < favoriteModel.data.length; j++)
+
+              if (GlobalState.postsList.data.elementAt(i).id ==  favoriteModel.data.elementAt(j).idEvento) {
+                
+                demoList.add(GlobalState.postsList.data.elementAt(i));
+                setState(() {
+                  
+                });
+              }
+
           GlobalState.myFavorites = responseList;
         } else {
           favoriteModel = null;
@@ -315,22 +295,19 @@ class _Favourite extends State<Favourite> {
   }
 
   Future<void> deleteFavorite(
-      {@required BuildContext context, @required FavoriteItem item}) async 
-      {
+      {@required BuildContext context,
+      @required CategoryPostsList item}) async {
     HttpServices httpServices = new HttpServices();
-    log("URL = " +
-        APIServices.DELETE_FAVORITES_API +
-        "?i=${item.idUser}&e=${item.idEvento}");
     await httpServices.getJsonWithOutBody(
         url: APIServices.DELETE_FAVORITES_API +
-            "?i=${item.idUser}&e=${item.idEvento}",
+            "?i=${GlobalState.userId}&e=${item.id}",
         onSuccess: (_streamedResponse) async {
           if (_streamedResponse.statusCode == 200) {
             var response = await http.Response.fromStream(_streamedResponse);
             log("favorite delete response list = ${response.body}");
             setState(() {
-              myFavorites.data.removeWhere((element) {
-                return element.idEvento == item.idEvento;
+              demoList.removeWhere((element) {
+                return element.id == item.id;
               });
             });
           }

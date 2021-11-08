@@ -52,6 +52,7 @@ dependencies:
   flutter_neat_and_clean_calendar: ^0.2.3+11
   flutter_calendar_carousel: ^2.0.3
   table_calendar: ^3.0.3
+  fluttertoast: ^8.0.8
 
 dev_dependencies:
   flutter_test:

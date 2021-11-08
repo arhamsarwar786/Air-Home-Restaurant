@@ -1,9 +1,18 @@
+import 'dart:collection';
+import 'dart:convert';
+
+import 'package:air_home_retaurant/ModelClasses/AddBlogPostResponseModel.dart';
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
+import 'package:air_home_retaurant/Utils/BaseClass.dart';
+import 'package:air_home_retaurant/Utils/CustomProgressDilogue.dart';
+import 'package:air_home_retaurant/Utils/GlobalState.dart';
+import 'package:air_home_retaurant/Utils/HttpServices.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import "package:http/http.dart" as http;
 
 class AddPostBlog2 extends StatefulWidget {
   @override
@@ -12,10 +21,12 @@ class AddPostBlog2 extends StatefulWidget {
 
 class _AddPostBlog2 extends State<AddPostBlog2> {
   MyWidget _myWidget;
-  TextEditingController addCookingClassEvent2Controller,
-      addCookingClassEvent2Controller2;
+  TextEditingController titletextcontroller,
+      subtitletextcontroller,
+      youtubetextcontroller,
+      descriptiontextcontroller;
   int value1, value2;
-
+  ProgressDialog _progressDialog;
   List<ListItem> _dropdownItems = [
     ListItem(1, "First Value"),
     ListItem(2, "Second Item"),
@@ -30,8 +41,10 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
-    addCookingClassEvent2Controller = new TextEditingController();
-    addCookingClassEvent2Controller2 = new TextEditingController();
+    _progressDialog = ProgressDialog();
+    titletextcontroller = new TextEditingController();
+    subtitletextcontroller = new TextEditingController();
+    youtubetextcontroller = new TextEditingController();
     value2 = 1;
     value1 = 1;
 
@@ -83,13 +96,17 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                             children: [
                               Container(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 5.0),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5.0),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Container(
-                                      child: _myWidget.myText(Constants.ADD_POST_BLOG2_LABEL1, 12,
-                                          FontWeight.bold, 1, Colors.black),
+                                      child: _myWidget.myText(
+                                          Constants.ADD_POST_BLOG2_LABEL1,
+                                          12,
+                                          FontWeight.bold,
+                                          1,
+                                          Colors.black),
                                     ),
                                   ),
                                 ),
@@ -105,9 +122,10 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0),
                                     child: _myWidget.myTextInput(
-                                        addCookingClassEvent2Controller,
+                                        titletextcontroller,
                                         1,
-                                        Constants.ADD_POST_BLOG2_TEXTFIELED1_HINT),
+                                        Constants
+                                            .ADD_POST_BLOG2_TEXTFIELED1_HINT),
                                   ),
                                 ),
                               ),
@@ -119,13 +137,17 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                             children: [
                               Container(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 5.0),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5.0),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Container(
-                                      child: _myWidget.myText(Constants.ADD_POST_BLOG2_LABEL2, 12,
-                                          FontWeight.bold, 1, Colors.black),
+                                      child: _myWidget.myText(
+                                          Constants.ADD_POST_BLOG2_LABEL2,
+                                          12,
+                                          FontWeight.bold,
+                                          1,
+                                          Colors.black),
                                     ),
                                   ),
                                 ),
@@ -141,9 +163,10 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0),
                                     child: _myWidget.myTextInput(
-                                        addCookingClassEvent2Controller,
+                                        subtitletextcontroller,
                                         1,
-                                        Constants.ADD_POST_BLOG2_TEXTFIELED2_HINT),
+                                        Constants
+                                            .ADD_POST_BLOG2_TEXTFIELED2_HINT),
                                   ),
                                 ),
                               ),
@@ -156,20 +179,23 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                             children: [
                               Container(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 5.0),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5.0),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Container(
-                                      child: _myWidget.myText(Constants.ADD_POST_BLOG2_LABEL3, 12,
-                                          FontWeight.bold, 1, Colors.black),
+                                      child: _myWidget.myText(
+                                          Constants.ADD_POST_BLOG2_LABEL3,
+                                          12,
+                                          FontWeight.bold,
+                                          1,
+                                          Colors.black),
                                     ),
                                   ),
                                 ),
                               ),
                               Padding(
-                                padding:
-                                const EdgeInsets.only(top: 10.0),
+                                padding: const EdgeInsets.only(top: 10.0),
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: Colors.white,
@@ -178,30 +204,38 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0),
                                     child: _myWidget.myTextInput(
-                                        addCookingClassEvent2Controller,
+                                        youtubetextcontroller,
                                         1,
-                                        Constants.ADD_POST_BLOG2_TEXTFIELED3_HINT),
+                                        Constants
+                                            .ADD_POST_BLOG2_TEXTFIELED3_HINT),
                                   ),
                                 ),
                               ),
                               Container(
                                 child: _myWidget.myText(
-                                    Constants.ADD_POST_BLOG2_TEXT1, 8, FontWeight.bold, 1, Colors.black),
+                                    Constants.ADD_POST_BLOG2_TEXT1,
+                                    8,
+                                    FontWeight.bold,
+                                    1,
+                                    Colors.black),
                               ),
                               Container(
                                 child: _myWidget.myText(
-                                    Constants.ADD_POST_BLOG2_TEXT2, 8, FontWeight.bold, 1, Colors.black),
+                                    Constants.ADD_POST_BLOG2_TEXT2,
+                                    8,
+                                    FontWeight.bold,
+                                    1,
+                                    Colors.black),
                               ),
                             ],
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: Container(
                             width: double.infinity,
-                            decoration:
-                            BoxDecoration(borderRadius: BorderRadius.circular(5.0)),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0)),
                             child: Container(
                               height: 40.0,
                               width: double.infinity,
@@ -220,7 +254,6 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                             ),
                           ),
                         ),
-
                         Container(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -229,7 +262,7 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                                 Container(
                                   child: Padding(
                                     padding:
-                                    const EdgeInsets.only(bottom: 10.0),
+                                        const EdgeInsets.only(bottom: 10.0),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Container(
@@ -268,8 +301,7 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                         ),
                         Container(
                           child: Padding(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 10.0),
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: Container(
                               decoration: BoxDecoration(
                                   color: Colors.white,
@@ -278,29 +310,41 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10.0),
                                 child: _myWidget.myTextInput(
-                                    addCookingClassEvent2Controller,
+                                    descriptiontextcontroller,
                                     5,
-                                   Constants.ADD_POST_BLOG2_TEXTFIELED4_HINT),
+                                    Constants.ADD_POST_BLOG2_TEXTFIELED4_HINT),
                               ),
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
                 ),
               ),
-              Container(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    child: _myWidget.btnMain("Publish", () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => AddNewEvent3()),
-                      // );
-                    }),
+              GestureDetector(
+                onTap: () {
+                  callAddBlogPost(
+                      context: context,
+                      Text: descriptiontextcontroller.text.toString(),
+                      CategoryID: 1,
+                      IDUser: GlobalState.userId,
+                      Subtitle: subtitletextcontroller.text.toString(),
+                      Title: titletextcontroller.text.toString(),
+                      TypeID: 1,
+                      Video: youtubetextcontroller.text.toString());
+                },
+                child: Container(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      child: _myWidget.btnMain("Publish", () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => AddNewEvent3()),
+                        // );
+                      }),
+                    ),
                   ),
                 ),
               ),
@@ -309,5 +353,74 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
         ),
       ),
     );
+  }
+
+  Future<void> callAddBlogPost(
+      {@required int IDUser,
+      @required int TypeID,
+      @required String Title,
+      @required String Text,
+      @required String Subtitle,
+      @required int CategoryID,
+      @required String Video,
+      @required BuildContext context}) async {
+    /*   {
+        "email": "khuwajahassan15@gmail.com",
+        "password": "abc123"
+    }*/
+    _progressDialog.showProgressDialog(context,
+        textToBeDisplayed: Constants.PLEASE_WAIT);
+    /*
+    *  "IDUser": 1,
+        "TipoID": 1,
+        "Titolo": "Titolo blog",
+        "Testo": "Testo blog",
+        "Sottotitolo": "Sottotitolo",
+        "IDCategoria": 1,
+        "Video": ""*/
+    Map<String, dynamic> _body_map = new HashMap();
+    _body_map['IDUser'] = IDUser;
+    _body_map['TipoID'] = TypeID;
+    _body_map['Titolo'] = Title;
+    _body_map['Testo'] = Text;
+    _body_map['Sottotitolo'] = Subtitle;
+    _body_map['IDCategoria'] = CategoryID;
+    _body_map['Video'] = Video;
+
+    HttpServices httpServices = new HttpServices();
+    await httpServices.postJson(
+        body: _body_map,
+        url: Constants.LOGIN_API,
+        onSuccess: (_streamedResponse) async {
+          var response = await http.Response.fromStream(_streamedResponse);
+          print(response);
+
+          if (response != null) {
+            var user =
+                AddBlogPostResponseModel.fromJson(jsonDecode(response.body));
+
+            if (response == "0") {
+              //email Or Password wrong
+              _progressDialog.dismissProgressDialog(context);
+              BaseClass.showSB(
+                  msg: Constants.LOGIN_INFO_ERROR,
+                  context: context,
+                  type: Constants.FAILURE);
+            } else {
+              _progressDialog.dismissProgressDialog(context);
+              BaseClass.showSB(
+                  msg: Constants.SUCCESSFULLY_LOGGIN,
+                  context: context,
+                  type: Constants.SUCCESS);
+            }
+          } else {
+            //empty response
+            _progressDialog.dismissProgressDialog(context);
+          }
+        },
+        onFailure: (_streamedResponse) async {
+          _progressDialog.dismissProgressDialog(context);
+          var response = await http.Response.fromStream(_streamedResponse);
+        });
   }
 }

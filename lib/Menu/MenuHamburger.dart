@@ -1,3 +1,4 @@
+import 'package:air_home_retaurant/Menu/AirChef-Menu.dart';
 import 'package:air_home_retaurant/Menu/AirGuid-Menu.dart';
 import 'package:air_home_retaurant/Menu/AirHost-Menu.dart';
 import 'package:air_home_retaurant/UI/Allergies.dart';
@@ -119,8 +120,7 @@ class _MenuHamBurger extends State<MenuHamBurger> {
             uri: "assets/images/star.png",
             text: Constants.MENU_HUMBERGER_LABEL3,
             onTap:  (){
-                // onMyReservationTap();
-              Navigator.push(context, MaterialPageRoute(builder: (_)=> MyProfile() ));
+                onMyReservationTap();
 
               }
           ),
@@ -395,7 +395,7 @@ class _MenuHamBurger extends State<MenuHamBurger> {
     print("onAirChefTap");
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AirHostMenu()),
+      MaterialPageRoute(builder: (context) => AirChefMenu()),
     );
   }
   GestureTapCallback onAirGuideTap() {

@@ -565,6 +565,9 @@ class Constants {
   static const String GET_POSTS_API = BASE_URL+"posts/?category="; ///?category=7
   static const String GET_ALL_POSTS_API = BASE_URL+"posts";
   static const String UPDATE_USER_PROFILE = BASE_URL+"UtenteAggiornaAvanzato";
+    static const String GET_ALL_Reservations_API = BASE_URL+"prenotalista/";
+  static const String GET_ALL_Blog_API = BASE_URL+"bloglista/";
+  static const String GET_ALL_Match_API = BASE_URL+"matchlista/";
   static const String GETChatListOfUser_API = BASE_URL+"chatlist/";
   static const String SendChatMessage_API = BASE_URL+"chatadd/";
   static const String TEMP_IMAGE_URL = "https://airhomerestaurant.com/img/users/temp.jpg";

@@ -51,7 +51,7 @@ class _HomeRestaurant extends State<HomeRestaurant> {
 
   getReview() async {
     http.Response data =
-        await http.get(Uri.parse(Constants.REVIEW + '${1018}'));
+        await http.get(Uri.parse(Constants.REVIEW + '${widget.categoryPosts.hostId}'));
     reviewInfo = ReviewModal.fromJson(jsonDecode(data.body));
 
     setState(() {});

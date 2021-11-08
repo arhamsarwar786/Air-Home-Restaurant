@@ -2,6 +2,7 @@ import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:air_home_retaurant/UI/Match.dart';
 
 class AirChefMenu extends StatefulWidget {
   @override
@@ -32,7 +33,9 @@ class _AirChefMenu extends State<AirChefMenu> {
           _createDrawerItem(uri:"assets/images/smile.png", text: Constants.AIR_CHEF_MENU_LABEL4,),
           _createDrawerItem(uri:"assets/images/plus.png", text: Constants.AIR_CHEF_MENU_LABEL5,),
           _createDrawerItem(uri:"assets/images/plus.png", text: Constants.AIR_CHEF_MENU_LABEL6,),
-          _createDrawerItem(uri:"assets/images/puzzle.png", text: Constants.AIR_CHEF_MENU_LABEL7,),
+          _createDrawerItem(uri:"assets/images/puzzle.png", text: Constants.AIR_CHEF_MENU_LABEL7,      onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> Match(),));
+            }),
 
 
           // _createDrawerItem(icon: Icons.collections_bookmark, text: 'Steps'),

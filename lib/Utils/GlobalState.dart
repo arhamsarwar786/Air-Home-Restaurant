@@ -1,9 +1,12 @@
+import 'package:air_home_retaurant/ModelClasses/BloglistModel.dart';
 import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FavoriteModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FbUser.dart';
+import 'package:air_home_retaurant/ModelClasses/MatchListResponseModel.dart';
 import 'package:air_home_retaurant/ModelClasses/Message.dart';
 import 'package:air_home_retaurant/ModelClasses/MessageRooms.dart';
 import 'package:air_home_retaurant/ModelClasses/PostCategories.dart';
+import 'package:air_home_retaurant/ModelClasses/ReservationsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/ReviewModal.dart';
 import 'package:air_home_retaurant/ModelClasses/User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,12 +21,19 @@ class GlobalState {
 
   GlobalState._internal();
 
-
   /// Favorites List of All POSTS
   static CategoryPostsModel corsiDiCusinaFavorites;
   static CategoryPostsModel homeRestaurantFavorites;
   static CategoryPostsModel chefDomicilioFavorites;
   static CategoryPostsModel tourGastronomiciFavorites;
+
+  /// SAVED FAVORITES MODAL
+
+  //// POSTS OF CATEGORIES
+  static CategoryPostsModel corsiDiCusinaPosts;
+  static CategoryPostsModel homeRestaurantPosts;
+  static CategoryPostsModel chefDomicilioPosts;
+  static CategoryPostsModel tourGastronomiciPosts;
 
   static MyUser currentUser;
   static FbUser fbUser;
@@ -34,16 +44,21 @@ class GlobalState {
   static int userId;
   static PostCategories categoriesPosts;
   static CategoryPostsModel postsList;
-  static dynamic allPostData ;  /// for Delete
-  
-  
-    ///  Used To Handle the Data in Posts
+  static dynamic allPostData;
+
+  /// for Delete
+
+  ///  Used To Handle the Data in Posts
   // static CategoryPostsModel corsiPostsList;
   // static CategoryPostsModel corsiOnlinePostsList;
   // static CategoryPostsModel chefPostsList;
   // static CategoryPostsModel eRestaurantPostsList;
   // static CategoryPostsModel tourPostsList;
-  
+
+  static ReservationsModel reservationsModel;
+  static BloglistModel bloglistModel;
+  static MatchListResponseModel matchListResponseModel;
+
   static FavoriteModel myFavorites;
   static ReviewModal myReview;
   static List allergies = [];

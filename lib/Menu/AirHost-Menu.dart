@@ -1,9 +1,8 @@
 import 'package:air_home_retaurant/UI/AddHomeRestaurantEvent.dart';
-import 'package:air_home_retaurant/UI/AddMenuEvent.dart';
-import 'package:air_home_retaurant/UI/add_eRestaurant_event.dart';
+import 'package:air_home_retaurant/UI/AddPostBlog.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:air_home_retaurant/UI/Match.dart';
 import 'package:flutter/material.dart';
 
 class AirHostMenu extends StatefulWidget {
@@ -62,10 +61,16 @@ class _AirHostMenu extends State<AirHostMenu> {
           _createDrawerItem(
             uri: "assets/images/plus.png",
             text: Constants.AIR_HOST_MENU_LABEL8,
+               onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> AddPostBlog(),));
+            }
           ),
           _createDrawerItem(
             uri: "assets/images/puzzle.png",
             text: Constants.AIR_HOST_MENU_LABEL9,
+               onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> Match(),));
+            }
           ),
           // _createDrawerItem(icon: Icons.collections_bookmark, text: 'Steps'),
           // _createDrawerItem(icon: Icons.face, text: 'Authors'),

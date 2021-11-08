@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:air_home_retaurant/ModelClasses/User.dart';
 import 'package:air_home_retaurant/UI/HomeScreen.dart';
 import 'package:air_home_retaurant/UI/NotificationScreen.dart';
@@ -88,6 +88,11 @@ class _MainScreen extends State<MainScreen> {
                     return;
                   }
                   setState(() {
+                    // if(index == 3){
+                    //   if(GlobalState.postsList== null){
+
+                    //   }
+                    // }
                     this.index = index;
                   });
                   // _navigateToScreens(index);
