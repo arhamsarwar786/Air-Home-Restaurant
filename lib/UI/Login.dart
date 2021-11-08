@@ -193,6 +193,7 @@ class _Login extends State<Login> {
                           FocusScope.of(context).requestFocus(FocusNode());
                           bool status = true;
                           if (_emailController.text.isEmpty) {
+
                             BaseClass.showSB(
                                 msg: Constants.EMAIL_EMPTY_STRING_ERROR,
                                 context: context,

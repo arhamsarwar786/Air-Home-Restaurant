@@ -2,6 +2,7 @@ import 'package:air_home_retaurant/ModelClasses/BloglistModel.dart';
 import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FavoriteModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FbUser.dart';
+import 'package:air_home_retaurant/ModelClasses/MatchListResponseModel.dart';
 import 'package:air_home_retaurant/ModelClasses/Message.dart';
 import 'package:air_home_retaurant/ModelClasses/MessageRooms.dart';
 import 'package:air_home_retaurant/ModelClasses/PostCategories.dart';
@@ -31,6 +32,7 @@ class GlobalState {
   static CategoryPostsModel postsList;
   static ReservationsModel reservationsModel;
   static BloglistModel bloglistModel;
+  static MatchListResponseModel matchListResponseModel;
     ///  Used To Handle the Data in Posts
   // static CategoryPostsModel corsiPostsList;
   // static CategoryPostsModel corsiOnlinePostsList;

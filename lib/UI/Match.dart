@@ -1,7 +1,16 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:air_home_retaurant/ModelClasses/MatchListResponseModel.dart';
+import 'package:air_home_retaurant/UI/Match2.dart';
+import 'package:air_home_retaurant/Utils/BaseClass.dart';
+import 'package:air_home_retaurant/Utils/GlobalState.dart';
+import 'package:air_home_retaurant/Utils/HttpServices.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Match extends StatefulWidget {
   @override
@@ -11,11 +20,11 @@ class Match extends StatefulWidget {
 class _Match extends State<Match> {
   MyWidget _myWidget;
 
-
   @override
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
+    getMatchList(context: context);
   }
 
   @override
@@ -39,12 +48,8 @@ class _Match extends State<Match> {
                       Container(
                         child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: _myWidget.myText(
-                                Constants.MATCH_INFO,
-                                12,
-                                FontWeight.bold,
-                                null,
-                                Colors.black)),
+                            child: _myWidget.myText(Constants.MATCH_INFO, 12,
+                                FontWeight.bold, null, Colors.black)),
                       ),
                       Container(
                         child: Padding(
@@ -68,22 +73,25 @@ class _Match extends State<Match> {
                                   ),
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: _myWidget.dataColumn(
-                                          Constants.MATCH_LABEL2,
-                                          "Post title")),
-                                  Expanded(
-                                      child: _myWidget.dataColumn(
-                                          Constants.MATCH_LABEL4,
-                                          "30/04/2021")),
-                                  Expanded(
-                                      child: _myWidget.dataColumn(
-                                          Constants.MATCH_LABEL5,
-                                          "15")),
-                                ],
-                              ),
+                              GlobalState.matchListResponseModel == null
+                                  ? CircularProgressIndicator()
+                                  : Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              2,
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          // physics: NeverScrollableScrollPhysics(),
+                                          itemCount: GlobalState
+                                              .matchListResponseModel
+                                              .data
+                                              .length,
+                                          itemBuilder: (context, index) {
+                                            var list = GlobalState
+                                                .matchListResponseModel.data;
+                                            return matchlist(list[index]);
+                                          }),
+                                    )
                             ],
                           ),
                         ),
@@ -95,7 +103,12 @@ class _Match extends State<Match> {
                             height: 30.0,
                             width: 100.0,
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return Match2();
+                                }));
+                              },
                               child: Container(
                                   decoration: BoxDecoration(
                                       color: Color(0xFFFF7878),
@@ -120,6 +133,44 @@ class _Match extends State<Match> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<MatchListResponseModel> getMatchList(
+      {@required BuildContext context}) async {
+    HttpServices httpServices = new HttpServices();
+    MatchListResponseModel list;
+    var _streamedResponse = await httpServices.getFutureJsonWithBody(
+      url: Constants.GET_ALL_Match_API,
+    );
+    var response = await http.Response.fromStream(_streamedResponse);
+    print(response.body);
+    if (response != null) {
+      log("fetch all reservations succeed");
+      var match = MatchListResponseModel.fromJson(jsonDecode(response.body));
+      setState(() {
+        GlobalState.matchListResponseModel = match;
+        BaseClass.showSB(
+            context: context,
+            msg: "${GlobalState.bloglistModel.data.length}",
+            type: Constants.SUCCESS);
+      });
+      list = match;
+    }
+    return list;
+  }
+
+  matchlist(list) {
+    return Row(
+      children: [
+        Expanded(
+            child: _myWidget.dataColumn(Constants.MATCH_LABEL2, list.titolo)),
+        Expanded(
+            child: _myWidget.dataColumn(
+                Constants.MATCH_LABEL4, "${list.categoria}")),
+        Expanded(
+            child: _myWidget.dataColumn(Constants.MATCH_LABEL5, list.citta)),
+      ],
     );
   }
 }
