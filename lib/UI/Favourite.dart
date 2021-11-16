@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FavoriteModel.dart';
+import 'package:air_home_retaurant/UI/MainScreen.dart';
 import 'package:air_home_retaurant/Utils/APIServies.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
 import 'package:air_home_retaurant/Utils/HttpServices.dart';
@@ -49,7 +50,7 @@ class _Favourite extends State<Favourite> {
     return Scaffold(
       
         appBar: _myWidget.myAppBar(Constants.FAVOURITE_TITLE, () {
-          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (_)=> MainScreen()));
         }),
         body: Container(
             height: double.infinity,

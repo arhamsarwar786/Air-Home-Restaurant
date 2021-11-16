@@ -4,6 +4,7 @@ import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class Allergies extends StatefulWidget {
   @override
@@ -153,16 +154,26 @@ class _Allergies extends State<Allergies> {
                       padding: const EdgeInsets.symmetric(vertical: 20.0),
                       child: Container(
                         child: GestureDetector(
-                          onTap: () {
-                            GlobalState.allergies.addAll(selectedAllergieis);
-                            GlobalState.allergies =
-                                GlobalState.allergies.toSet().toList();
+                          onTap: () async {
+                            // GlobalState.allergies.addAll(selectedAllergieis);
 
-                            print(GlobalState.allergies);
+                            // print(GlobalState.allergies);
+
+                            // GlobalState.allergies = GlobalState.allergies.toSet().toList();
+
+                            print(selectedAllergieis);
+                            var stringAllergies = selectedAllergieis.join(",");
+                            print(stringAllergies);
+                            // GlobalState.allergies.clear();
                             BaseClass.showSB(
                                 msg: Constants.SAVED_ALLERGIES,
                                 context: context,
-                                type: Constants.SUCCESS);
+                                type: Constants.SUCCESS,                                
+                                );                        
+                            Future.delayed(Duration(seconds: 3000), () {
+                            Navigator.pop(context, stringAllergies);
+                            });
+
                           },
                           child: Container(
                               width: double.infinity,
@@ -209,7 +220,7 @@ class _Allergies extends State<Allergies> {
               onChanged: (bool value) {
                 // if (GlobalState.allergies.contains(title)) {
                 //   if (n==true && value== false) {
-                      
+
                 //   value = false;
                 // print("I Click This : $value  $n");
                 //   }
@@ -220,97 +231,131 @@ class _Allergies extends State<Allergies> {
                   switch (title) {
                     case Constants.ALLERGIES_LABEL1:
                       cbValue1 = value;
-                      if (cbValue1) {
+
+                      if (cbValue1 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL1);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL1);
                       }
+
                       break;
                     case Constants.ALLERGIES_LABEL2:
                       cbValue2 = value;
-                      if (cbValue2) {
+                      if (cbValue2 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL2);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL2);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL3:
                       cbValue3 = value;
-                      if (cbValue3) {
+                      if (cbValue3 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL3);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL3);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL4:
                       cbValue4 = value;
-                      if (cbValue4) {
+                      if (cbValue4 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL4);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL4);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL5:
                       cbValue5 = value;
-                      if (cbValue5) {
+                      if (cbValue5 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL5);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL5);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL6:
                       cbValue6 = value;
-                      if (cbValue6) {
+                      if (cbValue6 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL6);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL6);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL7:
                       cbValue7 = value;
-                      if (cbValue7) {
+                      if (cbValue7 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL7);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL7);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL8:
                       cbValue8 = value;
-                      if (cbValue8) {
+                      if (cbValue8 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL8);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL8);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL9:
                       cbValue9 = value;
-                      if (cbValue9) {
+                      if (cbValue9 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL9);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL9);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL10:
                       cbValue10 = value;
-                      if (cbValue10) {
+                      if (cbValue10 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL10);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL10);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL11:
                       cbValue11 = value;
-                      if (cbValue11) {
+                      if (cbValue11 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL11);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL11);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL12:
                       cbValue12 = value;
-                      if (cbValue12) {
+                      if (cbValue12 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL12);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL12);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL13:
                       cbValue13 = value;
-                      if (cbValue13) {
+                      if (cbValue13 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL13);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL13);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL14:
                       cbValue14 = value;
-                      if (cbValue14) {
+                      if (cbValue14 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL14);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL14);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL15:
                       cbValue15 = value;
-                      if (cbValue15) {
+                      if (cbValue15 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL15);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL15);
                       }
                       break;
                     case Constants.ALLERGIES_LABEL16:
                       cbValue16 = value;
-                      if (cbValue16) {
+                      if (cbValue16 == false) {
+                        selectedAllergieis.remove(Constants.ALLERGIES_LABEL16);
+                      } else {
                         selectedAllergieis.add(Constants.ALLERGIES_LABEL16);
                       }
                       break;

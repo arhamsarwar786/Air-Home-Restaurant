@@ -267,11 +267,11 @@ class _AddMenuEvent2 extends State<AddMenuEvent2> {
                   child: Container(
                     child: _myWidget
                         .btnMain(Constants.ADD_MENU_EVENT2_BUTTON_MAIN, () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => AddMenuEvent3()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddMenuEvent3()),
+                      );
                     }),
                   ),
                 ),

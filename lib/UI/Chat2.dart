@@ -1,4 +1,5 @@
 import 'package:air_home_retaurant/ModelClasses/Message.dart';
+import 'package:air_home_retaurant/ModelClasses/MessageChatListModel.dart';
 import 'package:air_home_retaurant/ModelClasses/MessageRooms.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
@@ -6,7 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Chat2 extends StatefulWidget {
-
+  final List<MessageChatListModel> filterdchatList;
+  Chat2(this.filterdchatList);
   // final int position;
   // Chat2({Key key, @required this.position}) : super(key: key);
 
@@ -16,20 +18,20 @@ class Chat2 extends StatefulWidget {
 
 class _Chat2 extends State<Chat2> {
   MyWidget _myWidget;
-  List<Message> messageChatList=null;
-  List<MessageRooms> messageChatRoomsList=null;
-  int currentSelectedMessageRoom=null;
+  // List<Message> messageChatList=null;
+  // List<MessageRooms> messageChatRoomsList=null;
+  // int currentSelectedMessageRoom=null;
 
 
   @override
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
-    messageChatList=new List();
-    messageChatList=GlobalState.messageChatList;
-    messageChatRoomsList=new List();
-    messageChatRoomsList=GlobalState.messageChatRoomsList;
-    currentSelectedMessageRoom=GlobalState.currentSelectedMessageRoom;
+    // messageChatList=new List();
+    // messageChatList=GlobalState.messageChatList;
+    // messageChatRoomsList=new List();
+    // messageChatRoomsList=GlobalState.messageChatRoomsList;
+    // currentSelectedMessageRoom=GlobalState.currentSelectedMessageRoom;
   }
 
   @override
@@ -117,17 +119,18 @@ class _Chat2 extends State<Chat2> {
             width: 50.0,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(40.0),
-               image: DecorationImage(
-               image: NetworkImage(messageChatRoomsList.elementAt(currentSelectedMessageRoom).roomImageUrl),
-              fit: BoxFit.fill,
-            )),
+              //  image: DecorationImage(
+            //    image: NetworkImage(messageChatRoomsList.elementAt(currentSelectedMessageRoom).roomImageUrl),
+            //   fit: BoxFit.fill,
+            // ),
+            ),
           ),
           Container(
             child: Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
-                  child: _myWidget.myText(messageChatRoomsList.elementAt(currentSelectedMessageRoom).roomId, 20, FontWeight.bold, 1, Colors.white),
+                  child: _myWidget.myText(widget.filterdchatList.elementAt(0).message, 20, FontWeight.bold, 1, Colors.white),
                 ),
               ),
             ),
@@ -137,24 +140,15 @@ class _Chat2 extends State<Chat2> {
     );
   }
   Widget fetchMessageListView(BuildContext context) {
-    bool isNotEmptyList=false;
-    int siz=0;
-    if(messageChatRoomsList!=null){
-      isNotEmptyList=true;
-      siz=messageChatRoomsList.length;
-    }else{
-      isNotEmptyList=false;
-      siz=messageChatRoomsList.length;
-    }
-
+ 
     return ListView.builder(
-      itemCount: siz,
+      itemCount: widget.filterdchatList.length,
       itemBuilder: (context, position) {
-        return listItem(position);
+        return listItem(widget.filterdchatList.elementAt(position));
       },
     );
   }
-  Widget listItem(int position) {
+  Widget listItem(MessageChatListModel filterdchatList) {
     MyWidget _myWidget = new MyWidget();
     return
       GestureDetector(
@@ -164,7 +158,7 @@ class _Chat2 extends State<Chat2> {
           //   context,
           //   MaterialPageRoute(builder: (context) => Chat2()),
           // );
-          print(position);
+          // print(position);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -190,10 +184,10 @@ class _Chat2 extends State<Chat2> {
                             width: 60.0,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(40.0),
-                                image: DecorationImage(
-                            image: NetworkImage(messageChatRoomsList.elementAt(position).roomImageUrl),
-                        fit: BoxFit.fill,
-                  ),
+                  //               image: DecorationImage(
+                  //           image: NetworkImage(messageChatRoomsList.elementAt(position).roomImageUrl),
+                  //       fit: BoxFit.fill,
+                  // ),
                             ),
                           ),
                         ),
@@ -204,9 +198,9 @@ class _Chat2 extends State<Chat2> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _myWidget.myText(messageChatRoomsList.elementAt(position).roomId.toString(), 12,
+                                _myWidget.myText(filterdchatList.message.toString(), 12,
                                     FontWeight.bold, 1, Colors.black),
-                                _myWidget.myText(messageChatRoomsList.elementAt(position).senderId, 10,
+                                _myWidget.myText(filterdchatList.message, 10,
                                     FontWeight.bold, 1, Colors.black38),
                               ],
                             ),

@@ -45,7 +45,7 @@ class _CulinaryPreferences extends State<CulinaryPreferences> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar(Constants.CULINARY_PREFERENCES_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: SingleChildScrollView(
         child: Padding(

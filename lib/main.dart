@@ -178,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (_streamedResponse.statusCode == 200) {
             log("Login::Favorite list onSuccess");
             if (response != null) {
-              var responseList =FavoriteModel.fromJson(jsonDecode(response.body));
+              var responseList = FavoriteModel.fromJson(jsonDecode(response.body));
               if (responseList != null) {
                 log("response list = ${responseList.message}");
                 GlobalState.myFavorites = responseList;

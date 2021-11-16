@@ -3,6 +3,8 @@ import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'add_corso_cusina_classic_event2.dart';
+
 class AddCookingClassEvent extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _AddCookingClassEvent();
@@ -413,11 +415,11 @@ class _AddCookingClassEvent extends State<AddCookingClassEvent> {
                     child: Container(
                       child: _myWidget.btnMain("Continue", () {
                         // _myWidget.allergiesIntorancesBottomSheet(context);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => AddCookingClassEvent2()),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddCookingClassEvent2()),
+                        );
                       }),
                     ),
                   ),

@@ -23,6 +23,7 @@ import 'ChefDomicilioDetailScreen.dart';
 import 'CorsoCusina.dart';
 import 'HomeRestaurantDetailScreen.dart';
 import 'TourGastronomico2.dart';
+import 'chat.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -43,13 +44,17 @@ class _HomeScreen extends State<HomeScreen> {
     super.initState();
     _myWidget = new MyWidget();
     _progressDialog = new ProgressDialog();
-    httpServices = new HttpServices();
+    httpServices = new HttpServices();    
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (_)=> Chat()));
+      },),
       key: _scaffoldKey,
       drawer: MenuHamBurger(),
       appBar: AppBar(
@@ -135,6 +140,7 @@ class _HomeScreen extends State<HomeScreen> {
                                     );
                                   },
                                   child: Container(
+                                    
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment:
@@ -417,7 +423,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       child: Text("Snapshot has error"),
                                     );
                                   } else {
-                                    print("state = ${snapshot.connectionState}");
+                                    // print("state = ${snapshot.connectionState}");
                                     return Center(
                                         child: Wrap(
                                       children: [
@@ -527,7 +533,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       child: Text("Snapshot has error"),
                                     );
                                   } else {
-                                    print("state = ${snapshot.connectionState}");
+                                    // print("state = ${snapshot.connectionState}");
                                     return Center(
                                         child: Wrap(
                                       children: [
@@ -888,21 +894,12 @@ class _HomeScreen extends State<HomeScreen> {
 
     resDec1['data'] = resDec1['data'] + resDec2['data'] + resDec3['data'];
     CategoryPostsModel list;
-    Map<String, String> bodyMap = new HashMap();
     var response = resDec1;
-    print(response);
+    // print(response);
     if (response1.statusCode == 200) {
       var responseList = CategoryPostsModel.fromJson(response);
       if (responseList != null) {
         GlobalState.homeRestaurantPosts = responseList;
-
-        // GlobalState.allPostData = GlobalState.allPostData['data'] + resDec1['data'];
-
-    // GlobalState.postsList.data =GlobalState.postsList.data + response['data'];
-        log("home list length = ${responseList.data.length}");
-
-        // GlobalState.postsList = responseList;
-    // GlobalState.postsList.data =GlobalState.postsList.data + responseList.data;
         return list = responseList;
       } else {
         list = null;
@@ -933,7 +930,7 @@ class _HomeScreen extends State<HomeScreen> {
     resDec1['data'] = resDec1['data'] + resDec2['data'];
     CategoryPostsModel list;
     var response = resDec1;
-    print(response);
+    // print(response);
     if (response1.statusCode == 200) {
       var responseList = CategoryPostsModel.fromJson(response);
       if (responseList != null) {
@@ -971,7 +968,7 @@ class _HomeScreen extends State<HomeScreen> {
     resDec1['data'] = resDec1['data'];
     CategoryPostsModel list;
     var response = resDec1;
-    print(response);
+    // print(response);
     if (response1.statusCode == 200) {
       var responseList = CategoryPostsModel.fromJson(response);
       if (responseList != null) {
@@ -1226,61 +1223,7 @@ class _HomeScreen extends State<HomeScreen> {
     );
   }
 
-  Widget itemView2(int position) {
-    return Card(
-      child: Container(
-        height: 220.0,
-        width: 250.0,
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  height: 30.0,
-                  width: 70.0,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      color: Colors.orange),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: _myWidget.myText(
-                              "4.0", 12, FontWeight.normal, 1, Colors.white),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Container(
-                              height: 15.0,
-                              width: 15.0,
-                              child: ImageIcon(
-                                AssetImage("assets/images/star.png"),
-                                color: Color(0xFFFFFFFF),
-                              )),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.black26,
-                  borderRadius: BorderRadius.circular(5.0)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
+  
   void mainSearchBottomSheet(context) {
     int value1 = 1;
     showModalBottomSheet(
@@ -1470,14 +1413,14 @@ class _HomeScreen extends State<HomeScreen> {
                                                   () {
                                                     mystate(() {
                                                       value1++;
-                                                      print("$value1");
+                                                      // print("$value1");
                                                     });
                                                   },
                                                   value1,
                                                   () {
                                                     mystate(() {
                                                       value1--;
-                                                      print("$value1");
+                                                      // print("$value1");
                                                     });
                                                   }),
                                             ),
@@ -1696,15 +1639,7 @@ class _HomeScreen extends State<HomeScreen> {
 //// Refresh Indicator Function Definition
   Future refreshFunction() {
     print("Refreshed");
-    // callGetCategoryPostsApi(categoryId: '3', context: context);
-    // callGetCategoryPostsApi(categoryId: '5', context: context);
-    // callGetCategoryPostsApi(categoryId: '6', context: context);
-    // callGetCategoryPostsApi(categoryId: '7', context: context);
-    // callGetCategoryPostsApi(categoryId: '8', context: context);
-    // return callGetCategoryPostsApi(categoryId: '7', context: context);
 
-    // GlobalState.postsList.data.clear();
-//  return callGetCategoryApi(context: context);
   }
 
   Future<void> deleteFavorite(

@@ -1,5 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:air_home_retaurant/ModelClasses/AddBlogPostResponseModel.dart';
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
@@ -36,6 +38,7 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
 
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
   ListItem _selectedItem;
+  List<XFile> imageFileList = [];
 
   @override
   void initState() {
@@ -45,6 +48,7 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
     titletextcontroller = new TextEditingController();
     subtitletextcontroller = new TextEditingController();
     youtubetextcontroller = new TextEditingController();
+    descriptiontextcontroller = new TextEditingController();
     value2 = 1;
     value1 = 1;
 
@@ -75,7 +79,7 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar(Constants.ADD_POST_BLOG2_APPBAR_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: Container(
         color: Color(0xFFF5F5F5),
@@ -254,48 +258,52 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                             ),
                           ),
                         ),
-                        Container(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 10.0),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Container(
-                                        child: _myWidget.myText(
-                                            Constants.ADD_POST_BLOG2_LABEL4,
-                                            12,
-                                            FontWeight.bold,
-                                            1,
-                                            Colors.black),
-                                      ),
-                                    ),
-                                  ),
+                        InkWell(
+                          onTap: () async {
+                            final ImagePicker imagePicker = ImagePicker();
+
+                            final List<XFile> selectedImages =
+                                await imagePicker.pickMultiImage();
+                            if (selectedImages.isNotEmpty) {
+                              imageFileList.addAll(selectedImages);
+                            }
+                            print("Image List Length:" +
+                                imageFileList.length.toString());
+                            setState(() {});
+                            print(imageFileList);
+                          },
+                          child: Container(
+                            child: DottedBorder(
+                              color: Colors.black38,
+                              strokeWidth: 1,
+                              child: Container(
+                                height: 150,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
                                 ),
-                                Container(
-                                  child: DottedBorder(
-                                    color: Colors.black38,
-                                    strokeWidth: 1,
-                                    child: Container(
-                                      height: 150,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                      ),
-                                      child: Center(
-                                          child: Container(
-                                              height: 80,
-                                              width: 80,
-                                              child: Image.asset(
-                                                  "assets/images/camera.png"))),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                child: imageFileList.isNotEmpty
+                                    ? ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: imageFileList.length,
+                                        itemBuilder: (context, i) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              height: 100,
+                                              width: 100,
+                                              child: Image.file(
+                                                  File(imageFileList[i].path)),
+                                            ),
+                                          );
+                                        })
+                                    : Center(
+                                        child: Container(
+                                            height: 80,
+                                            width: 80,
+                                            child: Image.asset(
+                                                "assets/images/camera.png"))),
+                              ),
                             ),
                           ),
                         ),
@@ -339,6 +347,11 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       child: _myWidget.btnMain("Publish", () {
+                        print(titletextcontroller.text);
+                        print(subtitletextcontroller.text);
+                        print(descriptiontextcontroller.text);
+                        // callAddBlogPost(IDUser: GlobalState.userId, TypeID: TypeID, Title: titletextcontroller.text, Text: descriptiontextcontroller.text, Subtitle: subtitletextcontroller.text, CategoryID: CategoryID, Video: Video, context: context);
+
                         // Navigator.push(
                         //   context,
                         //   MaterialPageRoute(builder: (context) => AddNewEvent3()),
@@ -364,20 +377,9 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
       @required int CategoryID,
       @required String Video,
       @required BuildContext context}) async {
-    /*   {
-        "email": "khuwajahassan15@gmail.com",
-        "password": "abc123"
-    }*/
     _progressDialog.showProgressDialog(context,
         textToBeDisplayed: Constants.PLEASE_WAIT);
-    /*
-    *  "IDUser": 1,
-        "TipoID": 1,
-        "Titolo": "Titolo blog",
-        "Testo": "Testo blog",
-        "Sottotitolo": "Sottotitolo",
-        "IDCategoria": 1,
-        "Video": ""*/
+
     Map<String, dynamic> _body_map = new HashMap();
     _body_map['IDUser'] = IDUser;
     _body_map['TipoID'] = TypeID;
@@ -390,7 +392,7 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
     HttpServices httpServices = new HttpServices();
     await httpServices.postJson(
         body: _body_map,
-        url: Constants.LOGIN_API,
+        url: Constants.ADD_ALL_Blog_API,
         onSuccess: (_streamedResponse) async {
           var response = await http.Response.fromStream(_streamedResponse);
           print(response);

@@ -180,11 +180,11 @@ class _AddMenuEvent3 extends State<AddMenuEvent3> {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     child: _myWidget.btnMain("Continue", () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => AddMenuEvent4()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddMenuEvent4()),
+                      );
                     }),
                   ),
                 ),

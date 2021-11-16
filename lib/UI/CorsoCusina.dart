@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:givestarreviews/givestarreviews.dart';
 import 'package:intl/intl.dart';
 import 'package:air_home_retaurant/ModelClasses/ReviewModal.dart';
@@ -10,10 +11,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import '../Utils/constants.dart';
 import 'PaymentCorsoCusina.dart';
-import 'PaymentERestaurant.dart';
 
 class CorsoCusina extends StatefulWidget {
-  final categoryPosts;
+  final CategoryPostsList categoryPosts;
   CorsoCusina(this.categoryPosts);
   @override
   State<StatefulWidget> createState() => _CorsoCusina();
@@ -32,8 +32,9 @@ class _CorsoCusina extends State<CorsoCusina> {
     _myWidget = new MyWidget();
     getHostInfo();
     getReview();
-    addMarker(LatLng(widget.categoryPosts.posx,widget.categoryPosts.posy));
+    addMarker(LatLng(widget.categoryPosts.posx, widget.categoryPosts.posy));
   }
+
   ////  Getting HostInfo
   dynamic hostInfo, reviewInfo;
 
@@ -48,48 +49,44 @@ class _CorsoCusina extends State<CorsoCusina> {
   }
 
   getReview() async {
-    http.Response data =
-        await http.get(Uri.parse(Constants.REVIEW + '${widget.categoryPosts.hostId}'));
+    http.Response data = await http
+        .get(Uri.parse(Constants.REVIEW + '${widget.categoryPosts.hostId}'));
     reviewInfo = ReviewModal.fromJson(jsonDecode(data.body));
 
     setState(() {});
   }
 
   ///  Google Map
-  /// 
+  ///
   ///// Marks
   final Set<Marker> markers = {};
-   GoogleMapController mapController;
-   
-
+  GoogleMapController mapController;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-    
   }
 
-    ////// ADD MARKER
-  void addMarker(getPosition){
+  ////// ADD MARKER
+  void addMarker(getPosition) {
     markers.clear();
-      markers.add(
-            Marker(
-              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-              markerId: MarkerId(getPosition.toString(),),position: getPosition,
-              draggable: true,
-              onDragEnd: (endDrag){
-                print(endDrag);
-              }
-              ),
-              
-            );
-              setState(() {        
-      });   
+    markers.add(
+      Marker(
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          markerId: MarkerId(
+            getPosition.toString(),
+          ),
+          position: getPosition,
+          draggable: true,
+          onDragEnd: (endDrag) {
+            print(endDrag);
+          }),
+    );
+    setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(  
         appBar: _myWidget.myAppBar(widget.categoryPosts.nome, () {
           Navigator.pop(context);
         }),
@@ -97,47 +94,46 @@ class _CorsoCusina extends State<CorsoCusina> {
           children: [
             Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.5),
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.5),
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.width - 50,
                 child: Stack(
                   children: [
-                    widget.categoryPosts.foto.isEmpty ? Container(
-                          margin: EdgeInsets.only(bottom: 50.0),
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(                                    
-                                    'https://i.stack.imgur.com/y9DpT.jpg'
-                                    ),
-                                fit: BoxFit.cover),
-                            color: Colors.black38,
-                            borderRadius: BorderRadius.circular(10),
+                    widget.categoryPosts.foto.isEmpty
+                        ? Container(
+                            margin: EdgeInsets.only(bottom: 50.0),
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      'https://i.stack.imgur.com/y9DpT.jpg'),
+                                  fit: BoxFit.cover),
+                              color: Colors.black38,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          )
+                        : PageView.builder(
+                            controller: _pageController,
+                            itemCount: widget.categoryPosts.foto.length,
+                            onPageChanged: (int value) {
+                              _currentPage = value;
+                            },
+                            itemBuilder: (context, index) => GestureDetector(
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 50.0),
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: NetworkImage(widget
+                                            .categoryPosts.foto
+                                            .elementAt(index)
+                                            .urlFoto),
+                                        fit: BoxFit.cover),
+                                    color: Colors.black38,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                onTap: () {}),
                           ),
-                        ) :  PageView.builder(
-                    controller: _pageController,
-                    itemCount: widget.categoryPosts.foto.length,
-                    onPageChanged: (int value) {
-                      _currentPage = value;
-                    },
-                    itemBuilder: (context, index) => GestureDetector(
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 50.0),
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(                                    
-                                   
-                                    widget.categoryPosts.foto
-                                        .elementAt(index)
-                                        .urlFoto
-                                    ),
-                                fit: BoxFit.cover),
-                            color: Colors.black38,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onTap: () {}),
-                  ),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Wrap(
@@ -158,41 +154,41 @@ class _CorsoCusina extends State<CorsoCusina> {
                                         vertical: 20.0),
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         _myWidget.myText(
-                                          "${widget.categoryPosts.nome}",
-                                          15,
-                                          FontWeight.bold,
-                                          1,
-                                          Colors.black),
-                                      _myWidget.myText(
-                                          "${widget.categoryPosts.luogoCitta}",
-                                          12,
-                                          FontWeight.bold,
-                                          1,
-                                          Colors.black26),
+                                            "${widget.categoryPosts.nome}",
+                                            15,
+                                            FontWeight.bold,
+                                            1,
+                                            Colors.black),
+                                        _myWidget.myText(
+                                            "${widget.categoryPosts.luogoCitta}",
+                                            12,
+                                            FontWeight.bold,
+                                            1,
+                                            Colors.black26),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 10.0),
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               Padding(
                                                 padding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 5.0),
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 5.0),
                                                 child: Container(
                                                   decoration: BoxDecoration(
                                                       color: Color(0xFFE5E5E5),
                                                       borderRadius:
-                                                      BorderRadius.circular(
-                                                          5)),
+                                                          BorderRadius.circular(
+                                                              5)),
                                                   child: Padding(
                                                     padding:
-                                                    const EdgeInsets.all(
-                                                        5.0),
+                                                        const EdgeInsets.all(
+                                                            5.0),
                                                     child: _myWidget.myText(
                                                         "TAG Cuisine",
                                                         10,
@@ -204,18 +200,18 @@ class _CorsoCusina extends State<CorsoCusina> {
                                               ),
                                               Padding(
                                                 padding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 5.0),
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 5.0),
                                                 child: Container(
                                                   decoration: BoxDecoration(
                                                       color: Color(0xFFE5E5E5),
                                                       borderRadius:
-                                                      BorderRadius.circular(
-                                                          5)),
+                                                          BorderRadius.circular(
+                                                              5)),
                                                   child: Padding(
                                                     padding:
-                                                    const EdgeInsets.all(
-                                                        5.0),
+                                                        const EdgeInsets.all(
+                                                            5.0),
                                                     child: _myWidget.myText(
                                                         "TAG",
                                                         10,
@@ -244,7 +240,7 @@ class _CorsoCusina extends State<CorsoCusina> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                               borderRadius:
-                                              BorderRadius.circular(5.0),
+                                                  BorderRadius.circular(5.0),
                                               color: Colors.orange),
                                           child: Padding(
                                             padding: const EdgeInsets.all(5.0),
@@ -252,10 +248,10 @@ class _CorsoCusina extends State<CorsoCusina> {
                                               children: [
                                                 Padding(
                                                   padding: const EdgeInsets
-                                                      .symmetric(
+                                                          .symmetric(
                                                       horizontal: 5.0),
                                                   child: _myWidget.myText(
-                                                       "${widget.categoryPosts.valutazione}",
+                                                      "${widget.categoryPosts.valutazione}",
                                                       12,
                                                       FontWeight.normal,
                                                       1,
@@ -263,7 +259,7 @@ class _CorsoCusina extends State<CorsoCusina> {
                                                 ),
                                                 Padding(
                                                   padding: const EdgeInsets
-                                                      .symmetric(
+                                                          .symmetric(
                                                       horizontal: 5.0),
                                                   child: Container(
                                                       height: 15.0,
@@ -272,7 +268,7 @@ class _CorsoCusina extends State<CorsoCusina> {
                                                         AssetImage(
                                                             "assets/images/star.png"),
                                                         color:
-                                                        Color(0xFFFFFFFF),
+                                                            Color(0xFFFFFFFF),
                                                       )),
                                                 )
                                               ],
@@ -286,11 +282,13 @@ class _CorsoCusina extends State<CorsoCusina> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(5.0),
+                                                BorderRadius.circular(5.0),
                                             color: Color(0xFFE5E5E5),
                                           ),
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical:5.0,horizontal: 10.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5.0,
+                                                horizontal: 10.0),
                                             child: Column(
                                               children: [
                                                 _myWidget.myText(
@@ -316,11 +314,13 @@ class _CorsoCusina extends State<CorsoCusina> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(5.0),
+                                                BorderRadius.circular(5.0),
                                             color: Color(0xFFE5E5E5),
                                           ),
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical:5.0,horizontal: 10.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5.0,
+                                                horizontal: 10.0),
                                             child: Column(
                                               children: [
                                                 _myWidget.myText(
@@ -363,133 +363,135 @@ class _CorsoCusina extends State<CorsoCusina> {
                   children: [
                     ///HomeRestaurant1
 
-                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xFFDBDADA),
-                          borderRadius: BorderRadius.circular(5.0)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        child: Container(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: (hostInfo == null)
-                                    ? Container(
-                                        height: 80.0,
-                                        width: 80.0,
-                                        decoration: BoxDecoration(
-                                            color: Colors.black38,
-                                            borderRadius:
-                                                BorderRadius.circular(40.0)),
-                                      )
-                                    : Container(
-                                        height: 80.0,
-                                        width: 80.0,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: NetworkImage(
-                                                    "${hostInfo['UrlFoto']}"),
-                                                fit: BoxFit.cover),
-                                            color: Colors.black38,
-                                            borderRadius:
-                                                BorderRadius.circular(40.0)),
-                                      ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5.0),
-                                  child: Container(
-                                    height: 80.0,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        _myWidget.myText(
-                                            Constants.E_RESTAURANT_LABEL1,
-                                            12,
-                                            FontWeight.bold,
-                                            1,
-                                            Colors.black),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5.0),
-                                          child: _myWidget.myText(
-                                              "${hostInfo == null ? '' : hostInfo['Nome']}, passion of sharing",
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Color(0xFFDBDADA),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Container(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: (hostInfo == null)
+                                      ? Container(
+                                          height: 80.0,
+                                          width: 80.0,
+                                          decoration: BoxDecoration(
+                                              color: Colors.black38,
+                                              borderRadius:
+                                                  BorderRadius.circular(40.0)),
+                                        )
+                                      : Container(
+                                          height: 80.0,
+                                          width: 80.0,
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      "${hostInfo['UrlFoto']}"),
+                                                  fit: BoxFit.cover),
+                                              color: Colors.black38,
+                                              borderRadius:
+                                                  BorderRadius.circular(40.0)),
+                                        ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5.0),
+                                    child: Container(
+                                      height: 80.0,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _myWidget.myText(
+                                              Constants.E_RESTAURANT_LABEL1,
                                               12,
                                               FontWeight.bold,
-                                              2,
+                                              1,
                                               Colors.black),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0),
-                                              color: Colors.orange),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 5.0),
-                                                  child: _myWidget.myText(
-                                                      "${hostInfo == null ? '' : hostInfo['Valutazione']}",
-                                                      12,
-                                                      FontWeight.normal,
-                                                      1,
-                                                      Colors.white),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 5.0),
-                                                  child: Container(
-                                                      height: 15.0,
-                                                      width: 15.0,
-                                                      child: ImageIcon(
-                                                        AssetImage(
-                                                            "assets/images/star.png"),
-                                                        color:
-                                                            Color(0xFFFFFFFF),
-                                                      )),
-                                                )
-                                              ],
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5.0),
+                                            child: _myWidget.myText(
+                                                "${hostInfo == null ? '' : hostInfo['Nome']}, passion of sharing",
+                                                12,
+                                                FontWeight.bold,
+                                                2,
+                                                Colors.black),
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0),
+                                                color: Colors.orange),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 5.0),
+                                                    child: _myWidget.myText(
+                                                        "${hostInfo == null ? '' : hostInfo['Valutazione']}",
+                                                        12,
+                                                        FontWeight.normal,
+                                                        1,
+                                                        Colors.white),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 5.0),
+                                                    child: Container(
+                                                        height: 15.0,
+                                                        width: 15.0,
+                                                        child: ImageIcon(
+                                                          AssetImage(
+                                                              "assets/images/star.png"),
+                                                          color:
+                                                              Color(0xFFFFFFFF),
+                                                        )),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                height: 30.0,
-                                width: 50.0,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFFF7878),
-                                    borderRadius: BorderRadius.circular(5.0)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Image.asset("assets/images/chat.png"),
+                                Container(
+                                  height: 30.0,
+                                  width: 50.0,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFFF7878),
+                                      borderRadius: BorderRadius.circular(5.0)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child:
+                                        Image.asset("assets/images/chat.png"),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                Padding(
+                    Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Container(
                         child: _myWidget.myText(
@@ -500,59 +502,59 @@ class _CorsoCusina extends State<CorsoCusina> {
                             Colors.black),
                       ),
                     ),
-                     Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    child: _myWidget.myText(
-                      "${widget.categoryPosts.descrizioneIt}",
-                      12,
-                      FontWeight.normal,
-                      maxLines,
-                      Colors.black,
-                      overflow,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      // MaXLines
-                      if (toggleButton == Constants.E_RESTAURANT_BUTTON1) {
-                        maxLines = null;
-                        overflow = null;
-                        toggleButton = Constants.E_RESTAURANT_BUTTON2;
-                      } else {
-                        maxLines = 3;
-                        overflow = TextOverflow.ellipsis;
-                        toggleButton = Constants.E_RESTAURANT_BUTTON1;
-                      }
-                      setState(() {});
-                    },
-                    child: Center(
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
                       child: Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xFFFF7878),
-                              borderRadius: BorderRadius.circular(5.0)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 40.0, vertical: 10.0),
-                            child: Text(
-                              (maxLines == 3 &&
-                                      overflow == TextOverflow.ellipsis)
-                                  ? Constants.E_RESTAURANT_BUTTON1
-                                  : Constants.E_RESTAURANT_BUTTON2,
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                          )),
+                        child: _myWidget.myText(
+                          "${widget.categoryPosts.descrizioneIt}",
+                          12,
+                          FontWeight.normal,
+                          maxLines,
+                          Colors.black,
+                          overflow,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                
-                                      ///HomeRestaurant2
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          // MaXLines
+                          if (toggleButton == Constants.E_RESTAURANT_BUTTON1) {
+                            maxLines = null;
+                            overflow = null;
+                            toggleButton = Constants.E_RESTAURANT_BUTTON2;
+                          } else {
+                            maxLines = 3;
+                            overflow = TextOverflow.ellipsis;
+                            toggleButton = Constants.E_RESTAURANT_BUTTON1;
+                          }
+                          setState(() {});
+                        },
+                        child: Center(
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color(0xFFFF7878),
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 40.0, vertical: 10.0),
+                                child: Text(
+                                  (maxLines == 3 &&
+                                          overflow == TextOverflow.ellipsis)
+                                      ? Constants.E_RESTAURANT_BUTTON1
+                                      : Constants.E_RESTAURANT_BUTTON2,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12),
+                                ),
+                              )),
+                        ),
+                      ),
+                    ),
+
+                    ///HomeRestaurant2
                     //Menu
-                  
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Row(
@@ -573,8 +575,12 @@ class _CorsoCusina extends State<CorsoCusina> {
                                   borderRadius: BorderRadius.circular(5.0)),
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: _myWidget.myText("${DateFormat('yMMMMd').format(widget.categoryPosts.dataCreazione)}", 12,
-                                    FontWeight.bold, 1, Colors.black),
+                                child: _myWidget.myText(
+                                    "${DateFormat('yMMMMd').format(widget.categoryPosts.dataCreazione)}",
+                                    12,
+                                    FontWeight.bold,
+                                    1,
+                                    Colors.black),
                               ),
                             ),
                           )),
@@ -591,24 +597,32 @@ class _CorsoCusina extends State<CorsoCusina> {
                               width: 50.0,
                               child:
                                   Image.asset("assets/images/translation.png")),
-                                    if(widget.categoryPosts.lingue != "")
-                   for (var i = 0; i < getLanguage(widget.categoryPosts.lingue.toString()).length; i++)                    
-                          Expanded(
-                              child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                                
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.black12,
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: _myWidget.myText("${getLanguage(widget.categoryPosts.lingue.toString())[i]}", 12,
-                                    FontWeight.bold, 1, Colors.black),
-                              ),
-                            ),
-                          )),
+                          if (widget.categoryPosts.lingue != "")
+                            for (var i = 0;
+                                i <
+                                    getLanguage(widget.categoryPosts.lingue
+                                            .toString())
+                                        .length;
+                                i++)
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.black12,
+                                      borderRadius: BorderRadius.circular(5.0)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: _myWidget.myText(
+                                        "${getLanguage(widget.categoryPosts.lingue.toString())[i]}",
+                                        12,
+                                        FontWeight.bold,
+                                        1,
+                                        Colors.black),
+                                  ),
+                                ),
+                              )),
                         ],
                       ),
                     ),
@@ -631,8 +645,12 @@ class _CorsoCusina extends State<CorsoCusina> {
                                   borderRadius: BorderRadius.circular(5.0)),
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: _myWidget.myText("MIN ${widget.categoryPosts.partecipantiMinimo} - MAX ${widget.categoryPosts.partecipantiMassimo}", 12,
-                                    FontWeight.bold, 1, Colors.black),
+                                child: _myWidget.myText(
+                                    "MIN ${widget.categoryPosts.partecipantiMinimo} - MAX ${widget.categoryPosts.partecipantiMassimo}",
+                                    12,
+                                    FontWeight.bold,
+                                    1,
+                                    Colors.black),
                               ),
                             ),
                           )),
@@ -659,7 +677,7 @@ class _CorsoCusina extends State<CorsoCusina> {
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: _myWidget.myText(
-                                    "${widget.categoryPosts.perFamiglie ?'Recommended for families' : 'Not Recommended for families'}",
+                                    "${widget.categoryPosts.perFamiglie ? 'Recommended for families' : 'Not Recommended for families'}",
                                     12,
                                     FontWeight.bold,
                                     1,
@@ -688,8 +706,10 @@ class _CorsoCusina extends State<CorsoCusina> {
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: GestureDetector(
                         onTap: () {
-                            var allergiesList = getAllergies(widget.categoryPosts.allergie);
-                          _myWidget.allergiesIntorancesBottomSheet(context,allergiesList);
+                          var allergiesList =
+                              getAllergies(widget.categoryPosts.allergie);
+                          _myWidget.allergiesIntorancesBottomSheet(
+                              context, allergiesList);
                         },
                         child: Center(
                           child: Container(
@@ -732,25 +752,23 @@ class _CorsoCusina extends State<CorsoCusina> {
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, position) {
-                                return  Padding(
+                                return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                            width: 200,
-                            height: 200,
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                  image: NetworkImage(                                    
-                                     
-                                      widget.categoryPosts.foto
-                                          .elementAt(position)
-                                          .urlFoto
-                                      ),
-                                  fit: BoxFit.cover),
-                            color: Colors.black38,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
+                                    width: 200,
+                                    height: 200,
+                                    margin: EdgeInsets.only(bottom: 10.0),
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(widget
+                                              .categoryPosts.foto
+                                              .elementAt(position)
+                                              .urlFoto),
+                                          fit: BoxFit.cover),
+                                      color: Colors.black38,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
                                 );
                               },
                             ),
@@ -779,20 +797,20 @@ class _CorsoCusina extends State<CorsoCusina> {
                               ),
                             ),
                           ),
-                           GestureDetector(
-                             child: Container(
-                               height: 200,
-                               child: GoogleMap(
-                 
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(widget.categoryPosts.posx,widget.categoryPosts.posy),
-                  zoom: 9.0,                    
-              ),
-              markers: markers,
-            ),
-                             ),
-                           ),
+                          GestureDetector(
+                            child: Container(
+                              height: 200,
+                              child: GoogleMap(
+                                onMapCreated: _onMapCreated,
+                                initialCameraPosition: CameraPosition(
+                                  target: LatLng(widget.categoryPosts.posx,
+                                      widget.categoryPosts.posy),
+                                  zoom: 9.0,
+                                ),
+                                markers: markers,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -805,7 +823,8 @@ class _CorsoCusina extends State<CorsoCusina> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: _myWidget.myText(
-                                  Constants.HOME_RESTAURANT3_LABEL2  + " (${reviewInfo == null? '': reviewInfo.data.length})",
+                                  Constants.HOME_RESTAURANT3_LABEL2 +
+                                      " (${reviewInfo == null ? '' : reviewInfo.data.length})",
                                   15.0,
                                   FontWeight.bold,
                                   1,
@@ -813,193 +832,207 @@ class _CorsoCusina extends State<CorsoCusina> {
                             ),
                           ),
                           reviewInfo == null
-              ? CircularProgressIndicator(
-                  color: Colors.red,
-                )
-              :  Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: reviewInfo.data.isEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          child: Center(child:  _myWidget.myText(
-                                                  "No Reviews",
-                                                  15,
-                                                  FontWeight.bold,
-                                                  1,
-                                                  Colors.black38),),
-                        )
-                      : ListView.builder(
-                          itemCount: reviewInfo.data.length,
-                          shrinkWrap: true,
-                          physics: ScrollPhysics(),
-                          itemBuilder: (context, position) {
-                            return Container(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                child: Container(
-                                  // decoration: BoxDecoration(color: Colors.black12),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 80.0,
-                                          width: 80.0,
-                                          decoration: BoxDecoration(
-                                              color: Colors.black38,
-                                              borderRadius:
-                                                  BorderRadius.circular(40.0)),
-                                        ),
-                                        Padding(
+                              ? CircularProgressIndicator(
+                                  color: Colors.red,
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: reviewInfo.data.isEmpty
+                                      ? Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Container(
-                                                    child: Column(
+                                              vertical: 20),
+                                          child: Center(
+                                            child: _myWidget.myText(
+                                                "No Reviews",
+                                                15,
+                                                FontWeight.bold,
+                                                1,
+                                                Colors.black38),
+                                          ),
+                                        )
+                                      : ListView.builder(
+                                          itemCount: reviewInfo.data.length,
+                                          shrinkWrap: true,
+                                          physics: ScrollPhysics(),
+                                          itemBuilder: (context, position) {
+                                            return Container(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 10.0),
+                                                child: Container(
+                                                  // decoration: BoxDecoration(color: Colors.black12),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10.0),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        _myWidget.myText(
-                                                            "${reviewInfo.data.elementAt(position).nomeEvento}",
-                                                            12,
-                                                            FontWeight.bold,
-                                                            1,
-                                                            Colors.black),
                                                         Container(
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                          height: 80.0,
+                                                          width: 80.0,
+                                                          decoration: BoxDecoration(
+                                                              color: Colors
+                                                                  .black38,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          40.0)),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10.0),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
-                                                              _myWidget.myText(
-                                                                  "${reviewInfo.data.elementAt(position).mittenteNome}, ${reviewInfo.data.elementAt(position).mittenteCognome}",
-                                                                  10,
-                                                                  FontWeight.bold,
-                                                                  1,
-                                                                  Colors.black38),
-
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                                      child: Container(
-                                                                        child: _myWidget.myText(
-                                                      "${DateFormat('yMMMMd').format(reviewInfo.data.elementAt(position).dataInizioEvento)}",
-                                                      10,
-                                                      FontWeight.bold,
-                                                      1,
-                                                      Colors.black38),
-                                                                      ),
+                                                              Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Container(
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        _myWidget.myText(
+                                                                            "${reviewInfo.data.elementAt(position).nomeEvento}",
+                                                                            12,
+                                                                            FontWeight.bold,
+                                                                            1,
+                                                                            Colors.black),
+                                                                        Container(
+                                                                          child:
+                                                                              Row(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceEvenly,
+                                                                            children: [
+                                                                              _myWidget.myText("${reviewInfo.data.elementAt(position).mittenteNome}, ${reviewInfo.data.elementAt(position).mittenteCognome}", 10, FontWeight.bold, 1, Colors.black38),
+                                                                              Padding(
+                                                                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                                                child: Container(
+                                                                                  child: _myWidget.myText("${DateFormat('yMMMMd').format(reviewInfo.data.elementAt(position).dataInizioEvento)}", 10, FontWeight.bold, 1, Colors.black38),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ],
                                                                     ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        5.0),
+                                                                child:
+                                                                    Container(
+                                                                  // color: Colors.black,
+                                                                  height: 30.0,
+                                                                  width: 150.0,
+                                                                  child: Row(
+                                                                    children: [
+                                                                      for (int i =
+                                                                              1;
+                                                                          i <=
+                                                                              reviewInfo.data.elementAt(position).voto;
+                                                                          i++)
+                                                                        Icon(Icons.star, color: Colors.yellow),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                // padding: EdgeInsets.symmetric(horizontal: 10),
+                                                                child: _myWidget.myText(
+                                                                    "${reviewInfo.data.elementAt(position).testo}",
+                                                                    10,
+                                                                    FontWeight
+                                                                        .bold,
+                                                                    null,
+                                                                    Colors
+                                                                        .black38),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        5.0),
+                                                                child: Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Row(
+                                                                      children: [
+                                                                        Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.symmetric(horizontal: 5.0),
+                                                                            child: Icon(
+                                                                              Icons.thumb_up,
+                                                                              color: Colors.red,
+                                                                            )),
+                                                                        Container(
+                                                                          child: _myWidget.myText(
+                                                                              "${reviewInfo.data.elementAt(position).voto} Likes",
+                                                                              12,
+                                                                              FontWeight.bold,
+                                                                              1,
+                                                                              Colors.red),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.symmetric(horizontal: 5.0),
+                                                                            child: Image.network(
+                                                                              "https://cdn.icon-icons.com/icons2/1372/PNG/512/share-1_90899.png",
+                                                                              height: 12,
+                                                                            )),
+                                                                        Container(
+                                                                          child: _myWidget.myText(
+                                                                              "Share",
+                                                                              12,
+                                                                              FontWeight.bold,
+                                                                              1,
+                                                                              Colors.black38),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
                                                             ],
                                                           ),
                                                         ),
                                                       ],
                                                     ),
                                                   ),
-                                                
-                                                ],
-                                              ),
-                                              
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 5.0),
-                                                child: Container(
-                                                  // color: Colors.black,
-                                                  height: 30.0,
-                                                  width: 150.0,
-                                                  child: Row(children: [
-                                                    for(int i =1 ; i <= reviewInfo.data.elementAt(position).voto ; i++)
-                                                    Icon(Icons.star,color : Colors.yellow),
-                                                  ],),
                                                 ),
                                               ),
-                                              Container(
-                                                // padding: EdgeInsets.symmetric(horizontal: 10),
-                                                child: _myWidget.myText(
-                                                    "${reviewInfo.data.elementAt(position).testo}",
-                                                    10,
-                                                    FontWeight.bold,
-                                                    null,
-                                                    Colors.black38),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 5.0),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        5.0),
-                                                            child: Icon(
-                                                              Icons.thumb_up,
-                                                              color: Colors.red,
-                                                            )),
-                                                        Container(
-                                                          child: _myWidget.myText(
-                                                              "${reviewInfo.data.elementAt(position).voto} Likes",
-                                                              12,
-                                                              FontWeight.bold,
-                                                              1,
-                                                              Colors.red),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        5.0),
-                                                            child: Image.network("https://cdn.icon-icons.com/icons2/1372/PNG/512/share-1_90899.png",height: 12,)),
-                                                        Container(
-                                                          child:
-                                                              _myWidget.myText(
-                                                                  "Share",
-                                                                  12,
-                                                                  FontWeight
-                                                                      .bold,
-                                                                  1,
-                                                                  Colors
-                                                                      .black38),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            );
+                                          },
                                         ),
-                                      ],
-                                    ),
-                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                ),
                         ],
                       ),
                     ),
@@ -1135,14 +1168,15 @@ class _CorsoCusina extends State<CorsoCusina> {
                               ),
                             ),
                             Container(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              // color: Colors.red,
-              child: GiveStarReviews(  
-                spaceBetween: 0,
-                starData: [
-    GiveStarData(onChanged: (rate) {},text: ''),
- ],),
-            ),
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              // color: Colors.red,
+                              child: GiveStarReviews(
+                                spaceBetween: 0,
+                                starData: [
+                                  GiveStarData(onChanged: (rate) {}, text: ''),
+                                ],
+                              ),
+                            ),
                             GestureDetector(
                               onTap: () {},
                               child: Container(
@@ -1173,17 +1207,26 @@ class _CorsoCusina extends State<CorsoCusina> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             Container(
-                  child: _myWidget.myText(Constants.E_RESTAURANT4_LABEL2, 15,
-                      FontWeight.bold, 1, Colors.black),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                  child: _myWidget.myText(widget.categoryPosts.nome, 20,
-                      FontWeight.bold, 1, Colors.red),
-                ),
-                _myWidget.myText(
-                    "${widget.categoryPosts.luogoCitta}", 15, FontWeight.bold, 1, Colors.black38),
+                            Container(
+                              child: _myWidget.myText(
+                                  Constants.E_RESTAURANT4_LABEL2,
+                                  15,
+                                  FontWeight.bold,
+                                  1,
+                                  Colors.black),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 20.0, bottom: 10.0),
+                              child: _myWidget.myText(widget.categoryPosts.nome,
+                                  20, FontWeight.bold, 1, Colors.red),
+                            ),
+                            _myWidget.myText(
+                                "${widget.categoryPosts.luogoCitta}",
+                                15,
+                                FontWeight.bold,
+                                1,
+                                Colors.black38),
                           ],
                         ),
                       ),
@@ -1193,16 +1236,12 @@ class _CorsoCusina extends State<CorsoCusina> {
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: GestureDetector(
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => PaymentCorsoCusina()),
-                            // );
+                          onTap: () {                       
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PaymentCorsoCusina(widget.categoryPosts)),
+                                  builder: (context) =>
+                                      PaymentCorsoCusina(widget.categoryPosts)),
                             );
                           },
                           child: Container(
@@ -1414,15 +1453,15 @@ class _CorsoCusina extends State<CorsoCusina> {
       ),
     );
   }
-   getLanguage(String language) {
- 
-     if (language != "") {
+
+  getLanguage(String language) {
+    if (language != "") {
       var languageList = language.split(',');
-    return languageList;
-                   
+      return languageList;
     }
   }
-    getAllergies(String allergies) {
+
+  getAllergies(String allergies) {
     if (allergies != "") {
       var allergiesList = allergies.split(',');
       return allergiesList;

@@ -62,7 +62,7 @@ class _MyReviews extends State<MyReviews> {
         fetchReviews();
       },),
       appBar: _myWidget.myAppBar(Constants.MY_REVIEWS_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: FutureBuilder(
         future: fetchReviews(),

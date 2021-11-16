@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:air_home_retaurant/ModelClasses/CategoryModal.dart';
+import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
+import 'package:air_home_retaurant/ModelClasses/VendorModal.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:air_home_retaurant/ModelClasses/User.dart';
 import 'package:air_home_retaurant/UI/HomeScreen.dart';
@@ -13,7 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'Favourite.dart';
 import 'Login.dart';
 
@@ -65,12 +68,72 @@ class _MainScreen extends State<MainScreen> {
     widgets.add(NotificationLay());
     _progressDialog = new ProgressDialog();
     getProfileInfoApiCall(context: context);
-    if(GlobalState.userId == null){
+    getVendorProfile(context: context);
+    getCategory(context: context);
+    
+    if (GlobalState.userId == null) {
       GlobalState.userId = int.parse(Hive.box('userIdBox').get("userID"));
     }
   }
+  
 
 
+
+  Future<VendorModal> getVendorProfile({@required BuildContext context}) async {
+    HttpServices httpServices = new HttpServices();
+    var res1 =
+        await httpServices.getFutureJsonWithBody(url: Constants.VENDOR + '114');
+    var response1 = await http.Response.fromStream(res1);
+    var resDec1 = jsonDecode(response1.body);
+    resDec1['data'] = resDec1['data'];
+    VendorModal list;
+    var response = resDec1;
+    if (response1.statusCode == 200) {
+      var responseList = VendorModal.fromJson(response);
+      if (responseList != null) {
+        GlobalState.vendorProfile = responseList;
+        return list = responseList;
+      } else {
+        list = null;
+      }
+    } else {
+      log("API STATUS CODE = ${response.statusCode}");
+      list = null;
+    }
+    return list;
+  }
+
+  ///   Getting Category API
+
+  Future<CategoryModal> getCategory({@required BuildContext context}) async {
+    HttpServices httpServices = new HttpServices();
+    var res1 = await httpServices.getFutureJsonWithBody(
+      url: Constants.Category,
+    );
+
+    //     // var homeRestaurantResponse = res1 + res2 + res3;
+    var response1 = await http.Response.fromStream(res1);
+
+    var resDec1 = jsonDecode(response1.body);
+
+    resDec1['data'] = resDec1['data'];
+    CategoryModal list;
+    var response = resDec1;
+    // print(response);
+    if (response1.statusCode == 200) {
+      var responseList = CategoryModal.fromJson(response);
+      if (responseList != null) {
+        GlobalState.category = responseList;
+        return list = responseList;
+      } else {
+        list = null;
+      }
+    } else {
+      log("API STATUS CODE = ${response.statusCode}");
+      list = null;
+    }
+    return list;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,14 +150,29 @@ class _MainScreen extends State<MainScreen> {
                     this.index = this.index;
                     return;
                   }
-                  setState(() {
-                    // if(index == 3){
-                    //   if(GlobalState.postsList== null){
+                  
+                  // else if(index == 3){
+                  //   if(GlobalState.postsList == null){
+                  //       Fluttertoast.showToast(
+                  //         msg: "Wait for a Second",
+                  //         toastLength: Toast.LENGTH_SHORT,
+                  //         gravity: ToastGravity.BOTTOM,
+                  //         timeInSecForIosWeb: 1,
+                  //         backgroundColor: Colors.red,
+                  //         textColor: Colors.white,
+                  //         fontSize: 16.0);
+                  //   }else{
+                  //   setState(() {
+                  //   this.index = index;
+                  // });    
+                  //   }
+                  // }else{
 
-                    //   }
-                    // }
+                  // }
+                  setState(() {
                     this.index = index;
                   });
+                
                   // _navigateToScreens(index);
                 },
                 type: BottomNavigationBarType.fixed,
@@ -222,13 +300,14 @@ class _MainScreen extends State<MainScreen> {
 
   _getApiCallProfile({@required int userId}) async {
     var userBox = Hive.box('userIdBox');
-    String url = Constants.GET_PROFILE_API + "${GlobalState.userId == null ? int.parse(Hive.box('userIdBox').get('userID')): GlobalState.userId}";
+    String url = Constants.GET_PROFILE_API +
+        "${GlobalState.userId == null ? int.parse(Hive.box('userIdBox').get('userID')) : GlobalState.userId}";
     HttpServices httpServices = new HttpServices();
     await httpServices.getJsonWithOutBodyAsParamInUrl(
         url: url,
         onSuccess: (_streamedResponse) async {
           var response = await http.Response.fromStream(_streamedResponse);
-          print("this is Success result::${response.body}");
+          // print("this is Success result::${response.body}");
           var user = MyUser.fromJson(jsonDecode(response.body));
           if (user != null) {
             // GlobalState.currentUser = user;
@@ -237,12 +316,12 @@ class _MainScreen extends State<MainScreen> {
             // print("Email::${user.data.eMail}");
             GlobalState.currentUser = user;
           } else {
-            print("User data not found");
+            // print("User data not found");
           }
         },
         onFailure: (_streamedResponse) {
-          print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  UserId ${GlobalState.userId}" );
-          print("MainScreen:: getProfile onFailure");
+          // print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  UserId ${GlobalState.userId}" );
+          // print("MainScreen:: getProfile onFailure");
         });
   }
 }

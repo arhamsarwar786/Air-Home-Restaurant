@@ -37,7 +37,7 @@ class _AddPostBlog extends State<AddPostBlog> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar(Constants.ADD_POST_BLOG_APPBAR_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: Container(
         color: Color(0xFFF5F5F5),

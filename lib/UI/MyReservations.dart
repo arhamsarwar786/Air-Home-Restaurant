@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-
-import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
+import 'package:intl/intl.dart';
 import 'package:air_home_retaurant/ModelClasses/ReservationsModel.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
 import 'package:air_home_retaurant/Utils/HttpServices.dart';
@@ -10,8 +9,6 @@ import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
-import 'Login.dart';
 
 class MyReservations extends StatefulWidget {
   @override
@@ -32,7 +29,7 @@ class _MyReservations extends State<MyReservations> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar(Constants.MY_RESERVATIONS_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: SingleChildScrollView(
         child: Container(
@@ -78,7 +75,7 @@ class _MyReservations extends State<MyReservations> {
       url: Constants.GET_ALL_Reservations_API + "492",);
     var response = await http.Response.fromStream(_streamedResponse);
     if (response != null) {
-      log("fetch all reservations succeed");
+      log("${response.body}");
       var reservations =
       ReservationsModel.fromJson(jsonDecode(response.body));
       GlobalState.reservationsModel = reservations;
@@ -127,9 +124,8 @@ class _MyReservations extends State<MyReservations> {
                               Expanded(
                                 child: Container(
                                   child: _myWidget.myText(
-                                      "people ${data.numeroAdulti +
-                                          data.numeroBambini} \n date ${data
-                                          .dataPrenotazione}",
+                                      "${data.numeroAdulti} Adults , ${data.numeroBambini} Children  \n${DateFormat("yMMMMd").format(data
+                                          .dataPrenotazione)}",
                                       10,
                                       FontWeight.bold,
                                       2,
@@ -141,7 +137,7 @@ class _MyReservations extends State<MyReservations> {
                                   onTap: () {},
                                   child: Container(height: 30,width: 80,
                                       decoration: BoxDecoration(
-                                          color: Colors.orange,
+                                          color: data.stato == "P" ?Colors.orange : Colors.green,
                                           borderRadius:
                                           BorderRadius.circular(5.0)),
                                       child: Center(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:air_home_retaurant/UI/PaymentHomeRestaurant.dart';
 import 'package:givestarreviews/givestarreviews.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -1442,10 +1443,11 @@ class _HomeRestaurant extends State<HomeRestaurant> {
                         padding: const EdgeInsets.all(10.0),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                               Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PaymentERestaurant(widget.categoryPosts)),
+                                  builder: (context) =>
+                                      PaymentHomeRestaurant(widget.categoryPosts)),
                             );
                           },
                           child: Container(

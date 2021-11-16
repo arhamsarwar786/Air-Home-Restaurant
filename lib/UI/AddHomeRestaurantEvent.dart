@@ -1,13 +1,14 @@
-import 'dart:io';
-
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
+import 'package:air_home_retaurant/UI/Allergies.dart';
 import 'package:air_home_retaurant/Utils/BaseClass.dart';
+import 'package:air_home_retaurant/Utils/GlobalState.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'AddHomeRestaurantEvent2.dart';
 
 class AddNewEvent extends StatefulWidget {
   @override
@@ -17,12 +18,6 @@ class AddNewEvent extends StatefulWidget {
 class _AddNewEvent extends State<AddNewEvent> {
   MyWidget _myWidget;
   bool first, second, third;
-  List<ListItem> _dropdownItems = [
-    ListItem(1, "First Value"),
-    ListItem(2, "Second Item"),
-    ListItem(3, "Third Item"),
-    ListItem(4, "Fourth Item")
-  ];
 
   TextEditingController addCookingClassEvent2Controller =
       TextEditingController();
@@ -35,15 +30,16 @@ class _AddNewEvent extends State<AddNewEvent> {
   TextEditingController addCookingClassEvent3Controller3 =
       TextEditingController();
 
-  int value1=0 , value2=0;
+  int value1 = 0, value2 = 0;
 
-  List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
+  List<DropdownMenuItem<ListItem>> _dropdownMenuItems = [];
   ListItem _selectedItem;
 
   @override
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
+    fetchCategoriesData();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
     first = false;
@@ -70,6 +66,14 @@ class _AddNewEvent extends State<AddNewEvent> {
     return items;
   }
 
+  List<ListItem> _dropdownItems = [];
+
+  fetchCategoriesData() {
+    GlobalState.category.data.forEach((element) {
+      _dropdownItems.add(ListItem(element.id, element.en));
+    });
+  }
+
   ////   DATA ABOUT DROPDOWN
   /// Main Languages
   var languageList = ["Italian", "English", "Espanol"];
@@ -80,14 +84,19 @@ class _AddNewEvent extends State<AddNewEvent> {
   var _selectedSpokenLanguage = "Spoken Language";
   var selectedSpokenList = [];
   ////
- List<XFile> imageFileList = [];
-  
+  List<XFile> imageFileList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print(GlobalState.body_map);
+          GlobalState.body_map.clear();
+        },
+      ),
       appBar: _myWidget.myAppBar("Add New Event", () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: SingleChildScrollView(
         child: Container(
@@ -139,6 +148,13 @@ class _AddNewEvent extends State<AddNewEvent> {
                               onChanged: (value) {
                                 setState(() {
                                   _selectedItem = value;
+                                       if (GlobalState.body_map
+                                              .containsKey("TipoeventoID"))
+                                            GlobalState.body_map.update(
+                                                "TipoeventoID", (value) => _selectedItem.value);
+                                          else
+                                            GlobalState.body_map.putIfAbsent(
+                                                "TipoeventoID", () => _selectedItem.value);
                                 });
                               },
                             ),
@@ -167,7 +183,18 @@ class _AddNewEvent extends State<AddNewEvent> {
                       height: 40.0,
                       width: double.infinity,
                       child: _myWidget.selectCategory(
-                          "ALLERGIES AND INTOLERANCES", () {}),
+                          "ALLERGIES AND INTOLERANCES", () async {
+                        var getAllergies = await Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => Allergies()));
+
+                              if (GlobalState.body_map
+                                              .containsKey("Allergie"))
+                                            GlobalState.body_map.update(
+                                                "Allergie", (value) => getAllergies);
+                                          else
+                                            GlobalState.body_map.putIfAbsent(
+                                                "Allergie", () => getAllergies);
+                      }),
                     ),
                   ),
                 ),
@@ -186,6 +213,13 @@ class _AddNewEvent extends State<AddNewEvent> {
                               onChanged: (bool value) {
                                 setState(() {
                                   first = value;
+                                  if (GlobalState.body_map
+                                      .containsKey("PerFamiglie"))
+                                    GlobalState.body_map.update(
+                                        "PerFamiglie", (value) => first);
+                                  else
+                                    GlobalState.body_map.putIfAbsent(
+                                        "PerFamiglie", () => first);
                                 });
                               },
                             ),
@@ -219,6 +253,13 @@ class _AddNewEvent extends State<AddNewEvent> {
                               onChanged: (bool value) {
                                 setState(() {
                                   second = value;
+                                  if (GlobalState.body_map
+                                      .containsKey("Nobambini"))
+                                    GlobalState.body_map
+                                        .update("Nobambini", (value) => second);
+                                  else
+                                    GlobalState.body_map
+                                        .putIfAbsent("Nobambini", () => second);
                                 });
                               },
                             ),
@@ -256,6 +297,13 @@ class _AddNewEvent extends State<AddNewEvent> {
                                       onChanged: (bool value) {
                                         setState(() {
                                           third = value;
+                                          if (GlobalState.body_map
+                                              .containsKey("Smartbox"))
+                                            GlobalState.body_map.update(
+                                                "Smartbox", (value) => third);
+                                          else
+                                            GlobalState.body_map.putIfAbsent(
+                                                "Smartbox", () => third);
                                         });
                                       },
                                     ),
@@ -482,614 +530,51 @@ class _AddNewEvent extends State<AddNewEvent> {
 
                 /// Here Use CHips
                 ///
+                selectedSpokenList.isEmpty
+                    ? Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                      )
+                    : Container(
+                        height: 50,
+                        child: ListView.builder(
+                            itemCount: selectedSpokenList.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, i) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFFF7878),
+                                      borderRadius: BorderRadius.circular(5.0)),
+                                  child: InputChip(
+                                    onDeleted: () {
+                                      setState(() {
+                                        selectedSpokenList.removeAt(i);
+                                      });
+                                    },
+                                    backgroundColor: Color(0xFFFF7878),
+                                    label: Text('${selectedSpokenList[i]}',
+                                        style: TextStyle(color: Colors.white)),
+                                    onSelected: (bool value) {},
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+
                 Container(
-                  height: 50,
-                  child: ListView.builder(
-                      itemCount: selectedSpokenList.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, i) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Color(0xFFFF7878),
-                                borderRadius: BorderRadius.circular(5.0)),
-                            child: InputChip(
-                              onDeleted: () {
-                                setState(() {
-                                  selectedSpokenList.removeAt(i);
-                                });
-                              },
-                              backgroundColor: Color(0xFFFF7878),
-                              label: Text('${selectedSpokenList[i]}',
-                                  style: TextStyle(color: Colors.white)),
-                              onSelected: (bool value) {},
-                            ),
-                          ),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      child: _myWidget.btnMain("Continue", () {
+                        // print(GlobalState.body_map);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddNewEvent2()
+                        ),
                         );
                       }),
-                ),
-
-                ///  2nd Home Restaurant
-                ///
-                Container(
-                  color: Color(0xFFF5F5F5),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 10.0),
-                    child: Stack(
-                      children: [
-                        SingleChildScrollView(
-                          child: Container(
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 60),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10.0),
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Container(
-                                                child: _myWidget.myText(
-                                                    "EVENT TITLE",
-                                                    12,
-                                                    FontWeight.bold,
-                                                    1,
-                                                    Colors.black),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 10.0),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10.0),
-                                              child: _myWidget.myTextInput(
-                                                  addCookingClassEvent2Controller,
-                                                  1,
-                                                  "My Home Restaurant Event"),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10.0),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 10.0),
-                                              child: Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Container(
-                                                  child: _myWidget.myText(
-                                                      "NUMBER OF PEOPLE",
-                                                      12,
-                                                      FontWeight.bold,
-                                                      1,
-                                                      Colors.black),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10.0),
-                                            child: Row(children: [
-                                              Expanded(
-                                                  child: Row(
-                                                children: [
-                                                  Container(
-                                                      child: Center(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 5.0),
-                                                      child: _myWidget.myText(
-                                                          "MIN",
-                                                          12,
-                                                          FontWeight.bold,
-                                                          1,
-                                                          Colors.black),
-                                                    ),
-                                                  )),
-                                                  Container(
-                                                      child: Expanded(
-                                                          child: Center(
-                                                              child: _myWidget
-                                                                  .selectValue(
-                                                                      () {
-                                                                        setState(
-                                                                            () {
-                                                                          value1++;
-                                                                          print(
-                                                                              "$value1");
-                                                                        });
-                                                                      },
-                                                                      value1,
-                                                                      () {
-                                                                        setState(
-                                                                            () {
-                                                                          value1--;
-                                                                          print(
-                                                                              "$value1");
-                                                                        });
-                                                                      })))),
-                                                ],
-                                              )),
-                                              Expanded(
-                                                  child: Row(
-                                                children: [
-                                                  Container(
-                                                      child: Center(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 5.0),
-                                                      child: _myWidget.myText(
-                                                          "MAX",
-                                                          12,
-                                                          FontWeight.bold,
-                                                          1,
-                                                          Colors.black),
-                                                    ),
-                                                  )),
-                                                  Container(
-                                                      child: Expanded(
-                                                          child: Center(
-                                                              child: _myWidget
-                                                                  .selectValue(
-                                                                      () {
-                                                                        setState(
-                                                                            () {
-                                                                          value2++;
-                                                                          print(
-                                                                              "$value2");
-                                                                        });
-                                                                      },
-                                                                      value2,
-                                                                      () {
-                                                                        setState(
-                                                                            () {
-                                                                          value2--;
-                                                                          print(
-                                                                              "$value2");
-                                                                        });
-                                                                      })))),
-                                                ],
-                                              )),
-                                            ]),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
-                                      child: _myWidget.myTextInput(
-                                          addCookingClassEvent2Controller2,
-                                          5,
-                                          "Enter your event description here"),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10.0),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 10.0),
-                                              child: Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Container(
-                                                  child: _myWidget.myText(
-                                                      "UPLOAD AT LEAST 2 IMAGES",
-                                                      12,
-                                                      FontWeight.bold,
-                                                      1,
-                                                      Colors.black),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: () async {
-                                              final ImagePicker imagePicker =
-                                                  ImagePicker();
-
-                                              final List<XFile> selectedImages =
-                                                  await imagePicker
-                                                      .pickMultiImage();
-                                              if (selectedImages.isNotEmpty) {
-                                                imageFileList
-                                                    .addAll(selectedImages);
-                                              }
-                                              print("Image List Length:" +
-                                                  imageFileList.length
-                                                      .toString());
-                                              setState(() {});
-                                              print(imageFileList);
-                                            },
-                                            child: Container(
-                                              child: DottedBorder(
-                                                color: Colors.black38,
-                                                strokeWidth: 1,
-                                                child: Container(
-                                                  height: 150,
-                                                  width: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                  ),
-                                                 child:  imageFileList.isNotEmpty ?  ListView.builder(
-                                                    scrollDirection: Axis.horizontal,
-                                                    itemCount: imageFileList.length,                                                    
-                                                    itemBuilder: (context,i){
-                                                    return Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child: Container(
-                                                        height: 100,
-                                                        width: 100,
-                                                        child: Image.file(File(imageFileList[i].path)),
-                                                      ),
-                                                    );
-                                                  })
-                                               : Center(
-                                                      child: Container(
-                                                          height: 80,
-                                                          width: 80,
-                                                          child: Image.asset(
-                                                              "assets/images/camera.png"))),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10.0),
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Container(
-                                                child: _myWidget.myText(
-                                                    "EVENT TITLE",
-                                                    12,
-                                                    FontWeight.bold,
-                                                    1,
-                                                    Colors.black),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 200.0,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10.0),
-                                            child: Container(
-                                              child: ListView.builder(
-                                                itemCount: 3,
-                                                itemBuilder:
-                                                    (context, position) {
-                                                  return menuListItem(position);
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10.0),
-                                      child: Container(
-                                        height: 30.0,
-                                        width: 100.0,
-                                        child: GestureDetector(
-                                          onTap: () {},
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xFFFF7878),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          5.0)),
-                                              child: Align(
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  "ADD COURSE",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12),
-                                                ),
-                                              )),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              child: _myWidget.btnMain("Continue", () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //       builder: (context) => AddNewEvent3()),
-                                // );
-                              }),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                ////  3rd Home Restaurant
-                ///
-                Container(
-                  color: Color(0xFFF5F5F5),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Stack(
-                      children: [
-                        SingleChildScrollView(
-                          child: Container(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 10.0),
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Container(
-                                              child: _myWidget.myText(
-                                                  Constants
-                                                      .ADD_NEW_EVENT3_LABEL1,
-                                                  12,
-                                                  FontWeight.bold,
-                                                  1,
-                                                  Colors.black),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: _myWidget.myTextInput(
-                                              addCookingClassEvent3Controller,
-                                              1,
-                                              Constants
-                                                  .ADD_NEW_EVENT3_TEXTFIELD1_HINT),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 10.0),
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Container(
-                                              child: _myWidget.myText(
-                                                  Constants
-                                                      .ADD_NEW_EVENT3_LABEL2,
-                                                  12,
-                                                  FontWeight.bold,
-                                                  1,
-                                                  Colors.black),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: _myWidget.myTextInput(
-                                              addCookingClassEvent3Controller,
-                                              1,
-                                              Constants
-                                                  .ADD_NEW_EVENT3_TEXTFIELD2_HINT),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10.0),
-                                            child: _myWidget.myTextInput(
-                                                addCookingClassEvent3Controller,
-                                                5,
-                                                Constants
-                                                    .ADD_NEW_EVENT3_TEXTFIELD3_HINT),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10.0),
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Container(
-                                                child: _myWidget.myText(
-                                                    Constants
-                                                        .ADD_NEW_EVENT3_LABEL3,
-                                                    12,
-                                                    FontWeight.bold,
-                                                    1,
-                                                    Colors.black),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                                child: _myWidget.dataColumn(
-                                                    Constants
-                                                        .ADD_NEW_EVENT3_LABEL4,
-                                                    "30/04/2021")),
-                                            Expanded(
-                                                child: _myWidget.dataColumn(
-                                                    Constants
-                                                        .ADD_NEW_EVENT3_LABEL5,
-                                                    "09:15-10:15")),
-                                            Expanded(
-                                                child: _myWidget.dataColumn(
-                                                    Constants
-                                                        .ADD_NEW_EVENT3_LABEL6,
-                                                    "15,00EUR")),
-                                            Expanded(
-                                                child: _myWidget.dataColumn(
-                                                    Constants
-                                                        .ADD_NEW_EVENT3_LABEL7,
-                                                    "10,00EUR")),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    child: Container(
-                                      height: 30.0,
-                                      width: 100.0,
-                                      child: GestureDetector(
-                                        onTap: () {},
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Color(0xFFFF7878),
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0)),
-                                            child: Align(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                Constants
-                                                    .ADD_NEW_EVENT3_BUTTON1,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12),
-                                              ),
-                                            )),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        // Publish
-                        InkWell(
-                          onTap: () {
-                            // https://airhomerestaurant.com/api/v1/nuovoevento
-                          },
-                          child: Container(
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                child: _myWidget.btnMain(
-                                    Constants.ADD_NEW_EVENT3_BUTTON_MAIN, () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) => AddMenuEvent()),
-                                  // );
-                                }),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                 ),
@@ -1175,3 +660,5 @@ class _AddNewEvent extends State<AddNewEvent> {
     );
   }
 }
+
+// {"HostID": 1,"Lingua": "IT","TipoeventoID": 1,"Smartbox": false,"Nome": "Nome evento","PartecipantiMinimo": 1,"PartecipantiMassimo": 3,"LuogoCitta":"Napoli","LuogoCittaID":"ChIJ6_p622YIOxMRfriMZcxDOtI","Descrizione_it":"Descrizione evento in italiano","Lingue":"IT,EN","Nobambini": true,"PerFamiglie": false,"Cucina":"I","Allergie": "","Luogo": "Via Michelangelo da Caravaggio, 70b, 80126 Napoli NA, Italia","LuogoNote_it": "Sotto la statua",}

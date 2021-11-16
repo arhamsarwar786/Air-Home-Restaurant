@@ -2,6 +2,7 @@ import 'package:air_home_retaurant/Menu/AirChef-Menu.dart';
 import 'package:air_home_retaurant/Menu/AirGuid-Menu.dart';
 import 'package:air_home_retaurant/Menu/AirHost-Menu.dart';
 import 'package:air_home_retaurant/UI/Allergies.dart';
+import 'package:air_home_retaurant/UI/CulinaryPreferances.dart';
 import 'package:air_home_retaurant/UI/Login.dart';
 import 'package:air_home_retaurant/UI/MainScreen.dart';
 import 'package:air_home_retaurant/UI/MyProfile.dart';
@@ -111,8 +112,7 @@ class _MenuHamBurger extends State<MenuHamBurger> {
               ),
             ),
             onTap: (){
-              // onMyProfileTap();
-              Navigator.push(context, MaterialPageRoute(builder: (_)=> VendorProfile() ));
+              onMyProfileTap();
             },
           ),
 
@@ -297,18 +297,6 @@ class _MenuHamBurger extends State<MenuHamBurger> {
       print("GlobalState.currentUser Is Null");
     }
     return currentUserName;
-
-
-    /*if(GlobalState.curretnUser!=null){
-      if(GlobalState.curretnUser.data.nome!=null){
-        curerenUserName="${GlobalState.curretnUser.data.nome} ${GlobalState.curretnUser.data.cognome}";
-      }else{
-        print("GlobalState.curretnUser.nome Is Null");
-      }
-    }else{
-      print("GlobalState.curretnUser Is Null");
-    }
-    return curerenUserName;*/
   }
   String getUserImageUrl(BuildContext context) {
     String currentUserImageUrl="";
@@ -350,10 +338,10 @@ class _MenuHamBurger extends State<MenuHamBurger> {
   }
   GestureTapCallback onCulinaryPrefrencesTap() {
     print("onCulinaryPrefrencesTap");
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => Chat()),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CulinaryPreferences()),
+    );
   }
   GestureTapCallback onAllergiesTap() {
     print("onAllergiesTap");

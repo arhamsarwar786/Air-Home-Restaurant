@@ -31,7 +31,7 @@ class _Match extends State<Match> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar(Constants.MATCH_APPBAR_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: Container(
         color: Color(0xFFF5F5F5),

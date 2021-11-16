@@ -24,45 +24,17 @@ class MyProfile extends StatefulWidget {
 class _MyProfile extends State<MyProfile> {
   MyWidget _myWidget;
 
-  List<ListItem> _dropdownItems = [
-    ListItem(1, "First Value"),
-    ListItem(2, "Second Item"),
-    ListItem(3, "Third Item"),
-    ListItem(4, "Fourth Item"),
-    ListItem(5, "Fifth Item"),
-    ListItem(6, "Sixth Item")
-  ];
+
   ProgressDialog _progressDialog = ProgressDialog();
 
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
-  ListItem _selectedItem;
 
   @override
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
-    _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
-    _selectedItem = _dropdownMenuItems[0].value;
   }
 
-  List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
-    List<DropdownMenuItem<ListItem>> items = List();
-    for (ListItem listItem in listItems) {
-      items.add(
-        DropdownMenuItem(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Text(
-              listItem.name,
-              style: TextStyle(fontSize: 12.0),
-            ),
-          ),
-          value: listItem,
-        ),
-      );
-    }
-    return items;
-  }
 
   var dateOfBirth;
 

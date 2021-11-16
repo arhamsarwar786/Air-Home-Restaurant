@@ -290,7 +290,7 @@ class MyWidget {
                     ),
                     onTap: () => {}),
                 Divider(),
-                ListView.builder(
+               allergiesList.length == null ? Center(child: Text("NO ALLERGIES"),) :  ListView.builder(
                     shrinkWrap: true,
                     itemCount: allergiesList.length,
                     itemBuilder: (context, i) {

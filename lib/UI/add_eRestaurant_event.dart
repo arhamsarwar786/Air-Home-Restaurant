@@ -304,12 +304,12 @@ class _AddERestaurantEvent extends State<AddERestaurantEvent> {
                 Container(
                   child: Container(
                     child: _myWidget.btnMain("Continue", () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) =>
-                      //           AddERestaurantEvent2()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                AddERestaurantEvent2()),
+                      );
                     }),
                   ),
                 ),

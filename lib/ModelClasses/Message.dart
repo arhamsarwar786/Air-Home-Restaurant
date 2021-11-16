@@ -4,9 +4,33 @@
 
 import 'dart:convert';
 
-List<Message> messageFromMessageChatListJson(String str) => List<Message>.from(json.decode(str).map((x) => Message.fromJson(x)));
+MessageData messageFromJson(String str) => MessageData.fromJson(json.decode(str));
 
-String messageToJson(List<Message> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String messageToJson(MessageData data) => json.encode(data.toJson());
+
+class MessageData {
+  MessageData({
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int status;
+  String message;
+  List<Message> data;
+
+  factory MessageData.fromJson(Map<String, dynamic> json) => MessageData(
+    status: json["status"],
+    message: json["message"],
+    data: List<Message>.from(json["data"].map((x) => Message.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "status": status,
+    "message": message,
+    "data": List<dynamic>.from(data.map((x) => x.toJson())),
+  };
+}
 
 class Message {
   Message({

@@ -22,7 +22,7 @@ class _Cart extends State<Cart> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar(Constants.CART_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: SingleChildScrollView(
         child: Container(

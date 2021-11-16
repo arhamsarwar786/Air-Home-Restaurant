@@ -1,4 +1,7 @@
+import 'dart:collection';
+
 import 'package:air_home_retaurant/ModelClasses/BloglistModel.dart';
+import 'package:air_home_retaurant/ModelClasses/CategoryModal.dart';
 import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FavoriteModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FbUser.dart';
@@ -9,6 +12,8 @@ import 'package:air_home_retaurant/ModelClasses/PostCategories.dart';
 import 'package:air_home_retaurant/ModelClasses/ReservationsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/ReviewModal.dart';
 import 'package:air_home_retaurant/ModelClasses/User.dart';
+import 'package:air_home_retaurant/ModelClasses/VendorModal.dart';
+import 'package:air_home_retaurant/ModelClasses/VendorsModal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -60,6 +65,9 @@ class GlobalState {
   static MatchListResponseModel matchListResponseModel;
 
   static FavoriteModel myFavorites;
+  static VendorModal vendorProfile;
+  static VendorsModal vendorsAllModal;
+  static CategoryModal category;
   static ReviewModal myReview;
   static List allergies = [];
 
@@ -70,4 +78,8 @@ class GlobalState {
 
   ///Firebase SIgnIn in with Email/Password
   static Uri deeplink;
+
+
+
+  static Map<String, dynamic> body_map = new HashMap();
 }

@@ -1,4 +1,5 @@
 import 'package:air_home_retaurant/UI/AddHomeRestaurantEvent3.dart';
+import 'package:air_home_retaurant/UI/AddTourGastronomicoEvent3.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -323,10 +324,10 @@ class _AddATour2 extends State<AddATour2> {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     child: _myWidget.btnMain(Constants.ADD_TOUR2_BUTTON_MAIN, () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => AddNewEvent3()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddATour3()),
+                      );
                     }),
                   ),
                 ),

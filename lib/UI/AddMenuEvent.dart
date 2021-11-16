@@ -1,5 +1,13 @@
+import 'dart:collection';
+import 'dart:convert';
+import 'dart:developer';
+import 'package:air_home_retaurant/Utils/BaseClass.dart';
+import 'package:air_home_retaurant/Utils/GlobalState.dart';
+import 'package:http/http.dart' as http;
+import 'package:air_home_retaurant/ModelClasses/VendorModal.dart';
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
 import 'package:air_home_retaurant/UI/AddMEnuEvent2.dart';
+import 'package:air_home_retaurant/Utils/HttpServices.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,6 +60,78 @@ class _AddMenuEvent extends State<AddMenuEvent> {
     }
     return items;
   }
+
+
+
+
+//  Future<void> getMenu(
+//       {@required String email,
+//       @required String password,
+//       @required BuildContext context}) async {
+    
+//     _progressDialog.showProgressDialog(context,
+//         textToBeDisplayed: Constants.PLEASE_WAIT);
+//     Map<String, dynamic> _body_map = new HashMap();
+//     _body_map['email'] = email;
+//     _body_map['password'] = password;
+
+//     HttpServices httpServices = new HttpServices();
+//     await httpServices.postJson(
+//         body: _body_map,
+//         url: Constants.EVENT_MENU,
+//         onSuccess: (_streamedResponse) async {
+//           var response = await http.Response.fromStream(_streamedResponse);
+//           print(response);
+//           print("this is in Login Success ${response.body}");
+            
+//           if (response != null) {
+
+//             // var user = LogInResponce.fromJson(jsonDecode(response.body));
+//             // GlobalState.userId = int.parse(user.data);
+//             // if (Hive.box("userIdBox").get("userID") == null ||
+//             //     Hive.box("userIdBox").get("userID") == '') {
+//             //   Hive.box('userIdBox').put("userID", "${user.data}");
+//             // }
+//             if (response == "0") {
+//               //email Or Password wrong
+//               _progressDialog.dismissProgressDialog(context);
+//               BaseClass.showSB(
+//                   msg: Constants.LOGIN_INFO_ERROR,
+//                   context: context,
+//                   type: Constants.FAILURE);
+//             } else {
+//               _progressDialog.dismissProgressDialog(context);
+//                BaseClass.showSB(
+//               msg: Constants.SUCCESSFULLY_LOGGIN,
+//               context: context,
+//               type: Constants.SUCCESS);
+//               Navigator.pushReplacement(
+//                     context,
+//                     MaterialPageRoute(
+//                       builder: (context) => MainScreen(),
+//                     ));
+         
+//             }
+//           } else {
+//             //empty response
+//             _progressDialog.dismissProgressDialog(context);
+//           }
+//         },
+//         onFailure: (_streamedResponse) async{
+//           _progressDialog.dismissProgressDialog(context);
+//           var response = await http.Response.fromStream(_streamedResponse);
+//           // var user = LogInResponce.fromJson(jsonDecode(response.body));
+//           print("This is %%%%%%%%%%%%%%%%%%%%%% ${response.body}");
+//           BaseClass.showSB(
+//               // msg: user.message,
+//               context: context,
+//               type: Constants.FAILURE);
+//           print("Login::login onFailure");
+
+//           print("this is in OnFailure" + _streamedResponse.reasonPhrase);
+//         });
+//   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -287,10 +367,10 @@ class _AddMenuEvent extends State<AddMenuEvent> {
                 child: Container(
                   child: _myWidget.btnMain(Constants.ADD_MENU_EVENT_BUTTON_MAIN,
                       () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => AddMenuEvent2()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddMenuEvent2()),
+                    );
                   }),
                 ),
               ),

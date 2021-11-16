@@ -331,6 +331,7 @@ class Constants {
   static const String FNAME_EMPTY_STRING_ERROR = "First Name must be filled";
   static const String LNAME_EMPTY_STRING_ERROR = "Last Name must be filled";
   static const String EMAIL_EMPTY_STRING_ERROR = "Email must be filled";
+  static const String ADD_IMAGE_2 = "Please Select Atleast 2 Images";
   static const String PASSWORD_EMPTY_STRING_ERROR = "Password must be filled";
   static const String MARK_TERM_CHECK_STRING = "Mark Term & Policy";
   static const String NOT_VALID_EMAIL_STRING = "Email is not valid ";
@@ -340,7 +341,7 @@ class Constants {
 
 
   ///  Allergies Success
-  static const String SAVED_ALLERGIES = "Successfully Saved Allergies ";
+  static const String SAVED_ALLERGIES = "Successfully Allergies Saved Now Go Back";
 
   /** CorsoCusinaOnline3 Class */
   static const String CORSO_CUSINA_ONLINE3_TITLE = "Corso di Cusina Online";
@@ -567,6 +568,7 @@ class Constants {
   static const String UPDATE_USER_PROFILE = BASE_URL+"UtenteAggiornaAvanzato";
     static const String GET_ALL_Reservations_API = BASE_URL+"prenotalista/";
   static const String GET_ALL_Blog_API = BASE_URL+"bloglista/";
+  static const String ADD_ALL_Blog_API = BASE_URL+"blogadd/";
   static const String GET_ALL_Match_API = BASE_URL+"matchlista/";
   static const String GETChatListOfUser_API = BASE_URL+"chatlist/";
   static const String SendChatMessage_API = BASE_URL+"chatadd/";
@@ -578,6 +580,10 @@ class Constants {
   // Vendor Info API 
 
   static const String VENDOR = BASE_URL + 'vendor/';
+  static const String EVENT_MENU = BASE_URL + 'nuovoeventomenu/';
+  static const String YOUR_MENU = BASE_URL + 'nuovoeventoeliminamenu/';
+  
+  static const String Category = BASE_URL + 'category/';
   static const String BOOK_LIST = BASE_URL + 'utentescheda/';
   /*User Info*/
   static const String USER_ID = "USER_ID";

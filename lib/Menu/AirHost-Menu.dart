@@ -1,5 +1,11 @@
 import 'package:air_home_retaurant/UI/AddHomeRestaurantEvent.dart';
 import 'package:air_home_retaurant/UI/AddPostBlog.dart';
+import 'package:air_home_retaurant/UI/MyReviews.dart';
+import 'package:air_home_retaurant/UI/VendorProfile.dart';
+import 'package:air_home_retaurant/UI/YourEvents.dart';
+import 'package:air_home_retaurant/UI/YourEventsReservations.dart';
+import 'package:air_home_retaurant/UI/add_corso_cucina_classic_event.dart';
+import 'package:air_home_retaurant/Utils/GlobalState.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:air_home_retaurant/UI/Match.dart';
@@ -29,23 +35,36 @@ class _AirHostMenu extends State<AirHostMenu> {
           _createDrawerItem(
             uri: "assets/images/left-arrow-black.png",
             text: Constants.AIR_HOST_MENU_LABEL1,
+             onTap: (){
+              Navigator.pop(context);
+            }
           ),
           Divider(),
           _createDrawerItem(
             uri: "",
-            text: Constants.AIR_HOST_MENU_LABEL2,
+            text: Constants.AIR_HOST_MENU_LABEL2,onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (_)=> VendorProfile()));
+          }
           ),
           _createDrawerItem(
             uri: "assets/images/air-house.png",
             text: Constants.AIR_HOST_MENU_LABEL3,
+             onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> YourEvents(),));
+            }
           ),
           _createDrawerItem(
             uri: "assets/images/star.png",
             text: Constants.AIR_HOST_MENU_LABEL4,
+               onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> YourEventsReservations(),));
+            }
           ),
           _createDrawerItem(
             uri: "assets/images/smile.png",
             text: Constants.AIR_HOST_MENU_LABEL5,
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> MyReviews(),));}
           ),
           _createDrawerItem(
             uri: "assets/images/plus.png",
@@ -57,6 +76,9 @@ class _AirHostMenu extends State<AirHostMenu> {
           _createDrawerItem(
             uri: "assets/images/plus.png",
             text: Constants.AIR_HOST_MENU_LABEL7,
+             onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> AddCookingClassEvent(),));
+            }
           ),
           _createDrawerItem(
             uri: "assets/images/plus.png",
@@ -97,20 +119,26 @@ class _AirHostMenu extends State<AirHostMenu> {
           padding: const EdgeInsets.all(10.0),
           child: Row(
             children: [
-              Column(
+            Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
                       height: 100.0,
                       width: 100.0,
                       decoration: BoxDecoration(
-                          color: Colors.white60,
-                          borderRadius: BorderRadius.circular(50.0)),
+                          // color: Colors.white60,
+                           borderRadius: BorderRadius.circular(50.0),
+                        image: DecorationImage(
+                          image: NetworkImage(getUserImageUrl(context)),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+
                     ),
                     Container(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: _myWidget.myText("First Name", 12.0,
+                        child: _myWidget.myText(getCurrentUserName(context), 12.0,
                             FontWeight.bold, 1, Colors.white),
                       ),
                     ),
@@ -160,5 +188,38 @@ class _AirHostMenu extends State<AirHostMenu> {
       ),
       onTap: onTap,
     );
+  }
+
+
+    String getUserImageUrl(BuildContext context) {
+    String currentUserImageUrl="";
+    if(GlobalState.currentUser!=null){
+      if(GlobalState.currentUser.data.urlFoto !=null){
+        currentUserImageUrl=GlobalState.currentUser.data.urlFoto;
+        print("getCurrentUser urlFotoMil Gya");
+      }else{
+        print("GlobalState.curretnUser.Image Is Null");
+      }
+    }else{
+      print("GlobalState.curretnUser Is Null");
+    }
+    return currentUserImageUrl;
+  }
+
+
+  
+  String getCurrentUserName(BuildContext context) {
+    print("getCurrentUserName");
+    String currentUserName = "";
+    if(GlobalState.currentUser!=null){
+      if(GlobalState.currentUser.data.nome!=null){
+        currentUserName="${GlobalState.currentUser.data.nome} ${GlobalState.currentUser.data.cognome}";
+      }else{
+        print("GlobalState.currentUser.nome Is Null");
+      }
+    }else{
+      print("GlobalState.currentUser Is Null");
+    }
+    return currentUserName;
   }
 }

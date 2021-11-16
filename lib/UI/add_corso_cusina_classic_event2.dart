@@ -240,11 +240,11 @@ class _AddCookingClassEvent2 extends State<AddCookingClassEvent2> {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     child: _myWidget.btnMain("Continue", () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => AddCookingClassEvent3()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddCookingClassEvent3()),
+                      );
                     }),
                   ),
                 ),

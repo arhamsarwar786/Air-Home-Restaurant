@@ -28,35 +28,16 @@ class _PaymentCusinaOnlineOnDemand extends State<PaymentCusinaOnlineOnDemand> {
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
-    _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
-    _selectedItem = _dropdownMenuItems[0].value;
   }
 
-  List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
-    List<DropdownMenuItem<ListItem>> items = List();
-    for (ListItem listItem in listItems) {
-      items.add(
-        DropdownMenuItem(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Text(
-              listItem.name,
-              style: TextStyle(fontSize: 12.0),
-            ),
-          ),
-          value: listItem,
-        ),
-      );
-    }
-    return items;
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget
           .myAppBar(Constants.PAYMENT_CUSINA_ONLINE_ON_DEMAND_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: ListView(
         children: [

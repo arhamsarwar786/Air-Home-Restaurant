@@ -1,3 +1,4 @@
+import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_neat_and_clean_calendar/flutter_neat_and_clean_calendar.
 import 'package:table_calendar/table_calendar.dart';
 
 class PaymentCorsoCusina extends StatefulWidget {
-  final categoryPosts;
+  final CategoryPostsList categoryPosts;
   PaymentCorsoCusina(this.categoryPosts);
   @override
   State<StatefulWidget> createState() => _PaymentCorsoCusina();
@@ -34,35 +35,19 @@ class _PaymentCorsoCusina extends State<PaymentCorsoCusina> {
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
-    _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
-    _selectedItem = _dropdownMenuItems[0].value;
   }
 
-  List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
-    List<DropdownMenuItem<ListItem>> items = List();
-    for (ListItem listItem in listItems) {
-      items.add(
-        DropdownMenuItem(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Text(
-              listItem.name,
-              style: TextStyle(fontSize: 12.0),
-            ),
-          ),
-          value: listItem,
-        ),
-      );
-    }
-    return items;
-  }
+  var value1 = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        print(widget.categoryPosts);
+      },),
       appBar: _myWidget
           .myAppBar(Constants.PAYMENT_CUSINA_ONLINE_ON_DEMAND_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: ListView(
         children: [
@@ -186,52 +171,103 @@ class _PaymentCorsoCusina extends State<PaymentCorsoCusina> {
                     Container(
                       height: 50.0,
                     ),
-                    Container(
-                      decoration: BoxDecoration(color: Color(0xFFE0E0E0)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 5.0),
-                        child: Container(
-                          width: double.infinity,
-                          height: 40.0,
-                          color: Colors.white,
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<ListItem>(
-                              value: _selectedItem,
-                              items: _dropdownMenuItems,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedItem = value;
-                                });
-                              },
-                            ),
+                    // Container(
+                    //   decoration: BoxDecoration(color: Color(0xFFE0E0E0)),
+                    //   child: Padding(
+                    //     padding: EdgeInsets.symmetric(
+                    //         horizontal: 10.0, vertical: 5.0),
+                    //     child: Container(
+                    //       width: double.infinity,
+                    //       height: 40.0,
+                    //       color: Colors.white,
+                    //       child: DropdownButtonHideUnderline(
+                    //         child: DropdownButton<ListItem>(
+                    //           value: _selectedItem,
+                    //           items: _dropdownMenuItems,
+                    //           onChanged: (value) {
+                    //             setState(() {
+                    //               _selectedItem = value;
+                    //             });
+                    //           },
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Container(
+                    //   height: 50.0,
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text("Adults",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Container(
+                            child: _myWidget.selectValue(
+                                () {
+                                  setState(() {
+                                    value1++;
+                                    print("$value1");
+                                  });
+                                },
+                                value1,
+                                () {
+                                  setState(() {
+                                    value1--;
+                                    print("$value1");
+                                  });
+                                }),
                           ),
-                        ),
+                          Text("90 Per Person",style: TextStyle(fontWeight: FontWeight.bold),),
+                          
+                        ],
                       ),
                     ),
-                    Container(
-                      height: 50.0,
+                       Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text("Children",style: TextStyle(fontWeight: FontWeight.bold),),
+                        Container(
+                          child: _myWidget.selectValue(
+                              () {
+                                setState(() {
+                                  value1++;
+                                  print("$value1");
+                                });
+                              },
+                              value1,
+                              () {
+                                setState(() {
+                                  value1--;
+                                  print("$value1");
+                                });
+                              }),
+                        ),
+                        Text("90 Per Person",style: TextStyle(fontWeight: FontWeight.bold),),
+                        
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          Container(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-              child: Container(
-                  child: Text(
-                Constants.PAYMENT_CUSINA_ONLINE_ON_DEMAND_LABEL2,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              )),
-            ),
-          ),
+          // Container(
+          //   child: Padding(
+          //     padding:
+          //         const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+          //     child: Container(
+          //         child: Text(
+          //       Constants.PAYMENT_CUSINA_ONLINE_ON_DEMAND_LABEL2,
+          //       textAlign: TextAlign.center,
+          //       style: TextStyle(
+          //           color: Colors.black,
+          //           fontSize: 16,
+          //           fontWeight: FontWeight.bold),
+          //     )),
+          //   ),
+          // ),
           Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
@@ -253,21 +289,17 @@ class _PaymentCorsoCusina extends State<PaymentCorsoCusina> {
                     //   ),
                     // ),
                     TableCalendar(
-                      
                       firstDay: DateTime.utc(2010, 10, 16),
                       lastDay: DateTime.utc(2030, 3, 14),
                       focusedDay: _focusedDay,
-                   onDaySelected: (selectedDay, focusedDay) {
-                     print("$focusedDay $selectedDay");
-  setState(() {
-    _selectedDay = selectedDay;
-    _focusedDay = focusedDay; // update `_focusedDay` here as well
-  });
-},
-
-
-
-                      
+                      onDaySelected: (selectedDay, focusedDay) {
+                        print("$focusedDay $selectedDay");
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay =
+                              focusedDay; // update `_focusedDay` here as well
+                        });
+                      },
                     ),
                   ],
                 ),

@@ -1,4 +1,5 @@
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
+import 'package:air_home_retaurant/UI/AddTourGastronomicoEvent2.dart';
 import 'package:air_home_retaurant/UI/add_corso_cusina_classic_event2.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
@@ -376,11 +377,11 @@ class _AddATour extends State<AddATour> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Container(
                       child: _myWidget.btnMain(Constants.ADD_TOUR_BUTTON_MAIN, () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => AddCookingClassEvent2()),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddATour2()),
+                        );
                       }),
                     ),
                   ),
