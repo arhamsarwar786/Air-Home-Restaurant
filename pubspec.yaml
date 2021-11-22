@@ -35,7 +35,6 @@ dependencies:
   flutter_rating_bar: ^4.0.0
   http: ^0.13.3
   snack: ^2.0.0
-  shared_preferences: ^2.0.6
   bubble: ^1.2.1
   flutter_facebook_auth: "^3.5.0"
   hive: ^2.0.4
@@ -49,10 +48,13 @@ dependencies:
   firebase_storage: ^10.0.6
   givestarreviews: ^1.0.2
   google_maps_flutter:
-  flutter_neat_and_clean_calendar: ^0.2.3+11
   flutter_calendar_carousel: ^2.0.3
   table_calendar: ^3.0.3
   fluttertoast: ^8.0.8
+  flutter_chat_bubble: ^2.0.0
+  emoji_picker: ^0.1.0
+  flutter_slidable: ^1.1.0
+  country_list_pick: ^1.0.1+5
 
 dev_dependencies:
   flutter_test:
@@ -101,6 +103,8 @@ flutter:
     - assets/images/translation.png
     - assets/images/group.png
     - assets/images/family.png
+    - assets/images/password.png
+    - assets/images/no-milk.png
 
     - assets/images/calendar.png
     - assets/images/calendar-r.png

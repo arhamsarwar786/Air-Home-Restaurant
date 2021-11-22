@@ -11,7 +11,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'Chat2.dart';
 import 'PaymentERestaurant.dart';
+import 'PaymentHomeRestaurant.dart';
 import 'chat.dart';
 
 class ERestaurant extends StatefulWidget {
@@ -281,8 +283,7 @@ class _ERestaurant extends State<ERestaurant> {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => Chat()));
+                    Navigator.push(context, MaterialPageRoute(builder: (_)=> Chat2(hostInfo['ID'], {"name":hostInfo['Nome'],"picture":hostInfo['UrlFoto']})));
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -512,9 +513,11 @@ class _ERestaurant extends State<ERestaurant> {
                       height: 40.0,
                       width: 120.0,
                       child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => Allergies()));
+                         onTap: () {
+                          var allergiesList =
+                              getAllergies(widget.categoryPosts.allergie);
+                          _myWidget.allergiesIntorancesBottomSheet(
+                              context, allergiesList);
                         },
                         child: Container(
                             decoration: BoxDecoration(
@@ -1036,7 +1039,12 @@ class _ERestaurant extends State<ERestaurant> {
             padding: const EdgeInsets.all(10.0),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_)=>  PaymentERestaurant(widget.categoryPosts)));
+                 Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      PaymentHomeRestaurant(widget.categoryPosts)),
+                            );
               },
               child: Container(
                   width: double.infinity,
@@ -1108,5 +1116,10 @@ class _ERestaurant extends State<ERestaurant> {
   }
 
 
-  
+    getAllergies(String allergies) {
+    if (allergies != "") {
+      var allergiesList = allergies.split(',');
+      return allergiesList;
+    }
+  }
 }

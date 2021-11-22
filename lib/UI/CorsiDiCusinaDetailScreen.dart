@@ -164,17 +164,13 @@ class _CorsiDiCusinaDetailScreenState extends State<CorsiDiCusinaDetailScreen> {
                               );
                             } else {
                               print("state = ${snapshot.connectionState}");
-                              return Center(
-                                  child: Wrap(
-                                children: [
-                                  Container(
-                                    height: 50.0,
-                                    width: 50.0,
-                                    child: CircularProgressIndicator(
-                                        color: Colors.red),
-                                  ),
-                                ],
-                              ));
+                              return Container(                                
+                                height: MediaQuery.of(context).size.height,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                      color: Colors.red),
+                                ),
+                              );
                             }
                           },
                         ),
@@ -274,17 +270,7 @@ class _CorsiDiCusinaDetailScreenState extends State<CorsiDiCusinaDetailScreen> {
                               );
                             } else {
                               print("state = ${snapshot.connectionState}");
-                              return Center(
-                                  child: Wrap(
-                                children: [
-                                  Container(
-                                    height: 50.0,
-                                    width: 50.0,
-                                    child: CircularProgressIndicator(
-                                        color: Colors.red),
-                                  ),
-                                ],
-                              ));
+                              return Container();
                             }
                           },
                         ),
@@ -390,17 +376,7 @@ class _CorsiDiCusinaDetailScreenState extends State<CorsiDiCusinaDetailScreen> {
                               );
                             } else {
                               print("state = ${snapshot.connectionState}");
-                              return Center(
-                                  child: Wrap(
-                                children: [
-                                  Container(
-                                    height: 50.0,
-                                    width: 50.0,
-                                    child: CircularProgressIndicator(
-                                        color: Colors.red),
-                                  ),
-                                ],
-                              ));
+                              return Container();
                             }
                           },
                         ),
@@ -452,53 +428,7 @@ class _CorsiDiCusinaDetailScreenState extends State<CorsiDiCusinaDetailScreen> {
                             ),
                           ),
                         ),
-                        Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Container(
-                                  height: 50.0,
-                                  width: 50.0,
-                                  child: Center(
-                                    child: GlobalState.myFavorites.data
-                                            .any((element) {
-                                      return element.idEvento ==
-                                          categoryPosts.data
-                                              .elementAt(position)
-                                              .id;
-                                    })
-                                        ? IconButton(
-                                            padding: EdgeInsets.zero,
-                                            onPressed: () {
-                                              // deleteFavorite(
-                                              //     context: context,
-                                              //     idUser: GlobalState.userId,
-                                              //     item: categoryPosts.data
-                                              //         .elementAt(position));
-                                            },
-                                            icon: Icon(
-                                              Icons.favorite,
-                                              size: 40,
-                                              color: Colors.red,
-                                            ))
-                                        : IconButton(
-                                            padding: EdgeInsets.zero,
-                                            onPressed: () {
-                                              // addFavoriteAPI(
-                                              //     context: context,
-                                              //     userId: GlobalState.userId,
-                                              //     eventId: categoryPosts.data
-                                              //         .elementAt(position)
-                                              //         .id);
-                                            },
-                                            icon: Icon(
-                                              Icons.favorite_outline_rounded,
-                                              size: 40,
-                                              color: Colors.red,
-                                            )),
-                                  )),
-                            )),
-                      ],
+                       ],
                     )
                   : Container(),
             )),

@@ -1,5 +1,5 @@
 class ListItem {
-  int value;
+  dynamic value;
   String name;
 
   ListItem(this.value, this.name);

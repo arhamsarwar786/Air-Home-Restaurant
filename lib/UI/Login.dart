@@ -84,9 +84,12 @@ class _Login extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
+    return  WillPopScope(
       onWillPop: _onWillPop,
-      child: new Scaffold(
+      child:  Scaffold(
+        floatingActionButton: FloatingActionButton(onPressed: (){
+          print(GlobalState.userId);
+        },),
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(
               0.0,
@@ -412,11 +415,6 @@ class _Login extends State<Login> {
       {@required String email,
       @required String password,
       @required BuildContext context}) async {
-    /*   {
-        "email": "khuwajahassan15@gmail.com",
-        "password": "abc123"
-
-    }*/
     _progressDialog.showProgressDialog(context,
         textToBeDisplayed: Constants.PLEASE_WAIT);
     Map<String, dynamic> _body_map = new HashMap();

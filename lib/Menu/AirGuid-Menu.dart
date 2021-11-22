@@ -132,7 +132,7 @@ class _AirGuideMenu extends State<AirGuideMenu> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: _myWidget.myText(
-                              "IT/EUR", 12.0, FontWeight.bold, 1, Colors.white),
+                              "${GlobalState.myUser.data.linguaMadre}", 12.0, FontWeight.bold, 1, Colors.white),
                         ),
                       ),
                     ],
@@ -168,9 +168,9 @@ class _AirGuideMenu extends State<AirGuideMenu> {
    String getCurrentUserName(BuildContext context) {
     print("getCurrentUserName");
     String currentUserName = "";
-    if(GlobalState.currentUser!=null){
-      if(GlobalState.currentUser.data.nome!=null){
-        currentUserName="${GlobalState.currentUser.data.nome} ${GlobalState.currentUser.data.cognome}";
+    if(GlobalState.myUser!=null){
+      if(GlobalState.myUser.data.nome!=null){
+        currentUserName="${GlobalState.myUser.data.nome} ${GlobalState.myUser.data.cognome}";
       }else{
         print("GlobalState.currentUser.nome Is Null");
       }
@@ -181,9 +181,9 @@ class _AirGuideMenu extends State<AirGuideMenu> {
   }
   String getUserImageUrl(BuildContext context) {
     String currentUserImageUrl="";
-    if(GlobalState.currentUser!=null){
-      if(GlobalState.currentUser.data.urlFoto !=null){
-        currentUserImageUrl=GlobalState.currentUser.data.urlFoto;
+    if(GlobalState.myUser!=null){
+      if(GlobalState.myUser.data.urlFoto !=null){
+        currentUserImageUrl=GlobalState.myUser.data.urlFoto;
         print("getCurrentUser urlFotoMil Gya");
       }else{
         print("GlobalState.curretnUser.Image Is Null");

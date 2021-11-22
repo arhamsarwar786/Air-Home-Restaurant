@@ -94,7 +94,7 @@ class _VendorProfile extends State<VendorProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar(Constants.MY_PROFILE2_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: ListView(
         shrinkWrap: true,
@@ -160,7 +160,7 @@ class _VendorProfile extends State<VendorProfile> {
                             ),
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0, bottom: 5.0),
-                        child: _myWidget.myText( "${GlobalState.currentUser.data.nome}", 20.0,
+                        child: _myWidget.myText( "${GlobalState.myUser.data.nome}", 20.0,
                             FontWeight.bold, 1, Colors.black),
                       ),
                       Padding(

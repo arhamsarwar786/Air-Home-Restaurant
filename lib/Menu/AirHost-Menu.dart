@@ -93,18 +93,7 @@ class _AirHostMenu extends State<AirHostMenu> {
                onTap: (){
               Navigator.push(context, MaterialPageRoute(builder: (context)=> Match(),));
             }
-          ),
-          // _createDrawerItem(icon: Icons.collections_bookmark, text: 'Steps'),
-          // _createDrawerItem(icon: Icons.face, text: 'Authors'),
-          // _createDrawerItem(
-          //     icon: Icons.account_box, text: 'Flutter Documentation'),
-          // _createDrawerItem(icon: Icons.stars, text: 'Useful Links'),
-          // Divider(),
-          // _createDrawerItem(icon: Icons.bug_report, text: 'Report an issue'),
-          // ListTile(
-          //   title: Text('0.0.1'),
-          //   onTap: () {},
-          // ),
+          ),        
         ],
       ),
     );
@@ -157,7 +146,7 @@ class _AirHostMenu extends State<AirHostMenu> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: _myWidget.myText(
-                              "IT/EUR", 12.0, FontWeight.bold, 1, Colors.white),
+                              "${GlobalState.myUser.data.linguaMadre}", 12.0, FontWeight.bold, 1, Colors.white),
                         ),
                       ),
                     ],
@@ -193,9 +182,9 @@ class _AirHostMenu extends State<AirHostMenu> {
 
     String getUserImageUrl(BuildContext context) {
     String currentUserImageUrl="";
-    if(GlobalState.currentUser!=null){
-      if(GlobalState.currentUser.data.urlFoto !=null){
-        currentUserImageUrl=GlobalState.currentUser.data.urlFoto;
+    if(GlobalState.myUser!=null){
+      if(GlobalState.myUser.data.urlFoto !=null){
+        currentUserImageUrl=GlobalState.myUser.data.urlFoto;
         print("getCurrentUser urlFotoMil Gya");
       }else{
         print("GlobalState.curretnUser.Image Is Null");
@@ -211,9 +200,9 @@ class _AirHostMenu extends State<AirHostMenu> {
   String getCurrentUserName(BuildContext context) {
     print("getCurrentUserName");
     String currentUserName = "";
-    if(GlobalState.currentUser!=null){
-      if(GlobalState.currentUser.data.nome!=null){
-        currentUserName="${GlobalState.currentUser.data.nome} ${GlobalState.currentUser.data.cognome}";
+    if(GlobalState.myUser!=null){
+      if(GlobalState.myUser.data.nome!=null){
+        currentUserName="${GlobalState.myUser.data.nome} ${GlobalState.myUser.data.cognome}";
       }else{
         print("GlobalState.currentUser.nome Is Null");
       }

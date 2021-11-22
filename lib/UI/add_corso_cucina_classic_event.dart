@@ -59,7 +59,7 @@ class _AddCookingClassEvent extends State<AddCookingClassEvent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar("Add a cooking class", () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: SingleChildScrollView(
         child: Container(

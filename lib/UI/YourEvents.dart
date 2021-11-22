@@ -32,23 +32,22 @@ class _YourEvents extends State<YourEvents> {
   List<CategoryPostsList> demoList = [];
   List<Eventi> demoList2 = GlobalState.vendorProfile.data.elementAt(0).eventi;
 
-  fetchAllPostsData() {
-    if (GlobalState.postsList == null) {
-      GlobalState.postsList = GlobalState.corsiDiCusinaPosts;
-      GlobalState.postsList.data = GlobalState.postsList.data +
+fetchAllPostsData() {
+    if (GlobalState.allPostsList.isEmpty) {
+      GlobalState.allPostsList.addAll(GlobalState.corsiDiCusinaPosts.data +
           GlobalState.homeRestaurantPosts.data +
-          GlobalState.tourGastronomiciPosts.data;
-      print(GlobalState.postsList.data.length);
+          GlobalState.chefDomicilioPosts.data +
+          GlobalState.tourGastronomiciPosts.data);
     } else
       print("DATA Full");
   }
 
   getEventList() {
-    for (var i = 0; i < GlobalState.postsList.data.length; i++)
+    for (var i = 0; i < GlobalState.allPostsList.length; i++)
       for (var j = 0; j < demoList2.length; j++)
-        if (GlobalState.postsList.data.elementAt(i).id ==
+        if (GlobalState.allPostsList.elementAt(i).id ==
             demoList2.elementAt(j).id) {
-          demoList.add(GlobalState.postsList.data.elementAt(i));
+          demoList.add(GlobalState.allPostsList.elementAt(i));
 
           setState(() {});
         }
@@ -65,7 +64,9 @@ class _YourEvents extends State<YourEvents> {
           color: Color(0xFFF5F5F5),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          child: ListView.builder(
+          child: demoList.isEmpty ? Center(
+                  child: Text("No Events") ,)
+              :  ListView.builder(
             itemCount: demoList.length,
             itemBuilder: (context, position) {
               return listItem(demoList.elementAt(position), context);

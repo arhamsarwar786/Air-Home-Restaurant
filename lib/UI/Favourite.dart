@@ -1,8 +1,11 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FavoriteModel.dart';
+import 'package:air_home_retaurant/UI/HomeRestaurantDetailScreen.dart';
+import 'package:air_home_retaurant/UI/HomeScreen.dart';
 import 'package:air_home_retaurant/UI/MainScreen.dart';
 import 'package:air_home_retaurant/Utils/APIServies.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
@@ -11,7 +14,10 @@ import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+
+import 'HomeRestaurant.dart';
 
 class Favourite extends StatefulWidget {
   @override
@@ -24,52 +30,88 @@ class _Favourite extends State<Favourite> {
   FavoriteModel myFavorites;
   List<FavoriteItem> list;
 
+  bool isSelected = false;
+
   @override
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
-    myFavorites = GlobalState.myFavorites;
+    // myFavorites = GlobalState.myFavorites;
+    GlobalState.allPostsList.clear();
     fetchAllPostsData();
     getFavorites(context: context);
   }
 
   fetchAllPostsData() {
-    if (GlobalState.postsList == null) {
-      GlobalState.postsList = GlobalState.corsiDiCusinaPosts;
-      GlobalState.postsList.data = GlobalState.postsList.data +
+    if (GlobalState.allPostsList.isEmpty) {
+      GlobalState.allPostsList.addAll(GlobalState.corsiDiCusinaPosts.data +
           GlobalState.homeRestaurantPosts.data +
-          GlobalState.tourGastronomiciPosts.data;
-      print(GlobalState.postsList.data.length);
+          GlobalState.chefDomicilioPosts.data +
+          GlobalState.tourGastronomiciPosts.data);
     } else
       print("DATA Full");
+  }
+
+  Future<bool> _onWillPop() async {
+    return Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MainScreen())) ??
+        false;
   }
 
   List<CategoryPostsList> demoList = [];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      
-        appBar: _myWidget.myAppBar(Constants.FAVOURITE_TITLE, () {
-          Navigator.push(context, MaterialPageRoute(builder: (_)=> MainScreen()));
-        }),
-        body: Container(
-            height: double.infinity,
-            width: double.infinity,
-            color: Color(0xFFF5F5F5),
-            child: demoList.isEmpty ?  Center(child: Text("No Favourite Added Yet"),) :  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: demoList.length,
-                    itemBuilder: (context, position) {
-                      return  listItem(
-                        context: context,
-                        position: position,
-                        favorites: demoList[position],                    
-                      );
-                    })
-               
-            )
-    
-        );
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+          appBar: _myWidget.myAppBar(Constants.FAVOURITE_TITLE, () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => MainScreen()));
+          }),
+          body: isCheck
+              ? Center(
+                  child: CircularProgressIndicator(
+                  color: Colors.red,
+                ))
+              : Container(
+                  child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      color: Color(0xFFF5F5F5),
+                      child: demoList.isEmpty
+                          ? Center(
+                              child: Text("No Favourite Added Yet"),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: demoList.length,
+                              itemBuilder: (context, position) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => HomeRestaurant(
+                                                demoList[position])));
+                                    // setState(() {
+                                    // isSelected = true;
+
+                                    // });
+                                    // Future.delayed(Duration(seconds:1),(){
+                                    //   setState(() {
+                                    //   isSelected = false;
+                                    //   });
+                                    // });
+                                  },
+                                  child: listItem(
+                                    context: context,
+                                    position: position,
+                                    favorites: demoList[position],
+                                  ),
+                                );
+                              })),
+                )),
+    );
   }
 
   Widget listItem(
@@ -254,9 +296,13 @@ class _Favourite extends State<Favourite> {
     );
   }
 
+  bool isCheck = false;
   Future<FavoriteModel> getFavorites({
     @required BuildContext context,
   }) async {
+    setState(() {
+      isCheck = true;
+    });
     FavoriteModel favoriteModel;
     HttpServices httpServices = new HttpServices();
     Map<String, int> bodyMap = new HashMap();
@@ -265,26 +311,26 @@ class _Favourite extends State<Favourite> {
         url: APIServices.FAVORITES_API + "?i=${GlobalState.userId}");
     if (_streamedResponse.statusCode == 200) {
       var response = await http.Response.fromStream(_streamedResponse);
-      log("response list = ${response.body}");
+      // log("response list = ${response.body}");
       if (response != null) {
         var responseList = FavoriteModel.fromJson(jsonDecode(response.body));
         if (responseList != null) {
-          log("response list = ${responseList.message}");
+          log("response list = ${responseList.data.length}");
           favoriteModel = responseList;
           print(favoriteModel.data.length);
 
-          for (var i = 0; i < GlobalState.postsList.data.length; i++)
+          for (var i = 0; i < GlobalState.allPostsList.length; i++)
             for (var j = 0; j < favoriteModel.data.length; j++)
-
-              if (GlobalState.postsList.data.elementAt(i).id ==  favoriteModel.data.elementAt(j).idEvento) {
-                
-                demoList.add(GlobalState.postsList.data.elementAt(i));
-                setState(() {
-                  
-                });
+              if (GlobalState.allPostsList.elementAt(i).id ==
+                  favoriteModel.data.elementAt(j).idEvento) {
+                demoList.add(GlobalState.allPostsList.elementAt(i));
               }
 
           GlobalState.myFavorites = responseList;
+
+          setState(() {
+            isCheck = false;
+          });
         } else {
           favoriteModel = null;
         }

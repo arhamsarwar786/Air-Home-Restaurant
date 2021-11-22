@@ -1,5 +1,4 @@
 import 'dart:collection';
-
 import 'package:air_home_retaurant/ModelClasses/BloglistModel.dart';
 import 'package:air_home_retaurant/ModelClasses/CategoryModal.dart';
 import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
@@ -16,6 +15,7 @@ import 'package:air_home_retaurant/ModelClasses/VendorModal.dart';
 import 'package:air_home_retaurant/ModelClasses/VendorsModal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:core';
 
 class GlobalState {
   static final GlobalState _singleton = GlobalState._internal();
@@ -49,6 +49,7 @@ class GlobalState {
   static int userId;
   static PostCategories categoriesPosts;
   static CategoryPostsModel postsList;
+  static List<CategoryPostsList> allPostsList = [];
   static dynamic allPostData;
 
   /// for Delete
@@ -66,18 +67,20 @@ class GlobalState {
 
   static FavoriteModel myFavorites;
   static VendorModal vendorProfile;
+  static MyUser myUser;
   static VendorsModal vendorsAllModal;
   static CategoryModal category;
   static ReviewModal myReview;
   static List allergies = [];
 
-  static List<Message> messageChatList;
-  static List<MessageRooms> messageChatRoomsList = null;
-  static int currentSelectedMessageRoom = 0;
-  List<Message> messageChatListForSelectedRoom = null;
+  // static List<Message> messageChatList;
+  // static List<MessageRooms> messageChatRoomsList = null;
+  // static int currentSelectedMessageRoom = 0;
+  // List<Message> messageChatListForSelectedRoom = null;
 
   ///Firebase SIgnIn in with Email/Password
   static Uri deeplink;
+ 
 
 
 

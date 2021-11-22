@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:air_home_retaurant/UI/CorsiDiCusinaDetailScreen.dart';
 import 'package:air_home_retaurant/UI/TourGastronomicDetailScreen.dart';
 import 'package:air_home_retaurant/Utils/CustomProgressDilogue.dart';
@@ -17,13 +18,12 @@ import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'ChefDomicilioDetailScreen.dart';
 import 'CorsoCusina.dart';
 import 'HomeRestaurantDetailScreen.dart';
 import 'TourGastronomico2.dart';
-import 'chat.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -47,757 +47,750 @@ class _HomeScreen extends State<HomeScreen> {
     httpServices = new HttpServices();    
   }
 
+ Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (Platform.isAndroid) {
+                    SystemNavigator.pop();
+                  } else if (Platform.isIOS) {
+                    exit(0);
+                  }
+                },
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (_)=> Chat()));
-      },),
-      key: _scaffoldKey,
-      drawer: MenuHamBurger(),
-      appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          leading: GestureDetector(
-            onTap: () {
-              _scaffoldKey.currentState.openDrawer();
-            },
-            child: Container(
-                child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Image.asset("assets/images/menu_icon.png"),
-            )),
-          ),
-          title: Image.asset("assets/images/main_logo.png")),
-      body: FutureBuilder(
-        future: getFavorites(context: context, userId: GlobalState.userId),
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot!=null) {
-            var userFavourites = snapshot.data as FavoriteModel;
-            GlobalState.myFavorites = userFavourites;
-            return SingleChildScrollView(
-              child: Column(
-              children: [
-                Container(
-                  // height: 200.0,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(50.0),
-                      bottomRight: Radius.circular(50.0),
-                    ),
-                  ),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(    
+        key: _scaffoldKey,
+        drawer: MenuHamBurger(),
+        appBar: AppBar(
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            leading: GestureDetector(
+              onTap: () {
+                _scaffoldKey.currentState.openDrawer();
+              },
+              child: Container(
                   child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            mainSearchBottomSheet(context);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              height: 40.0,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                        child: _myWidget.myText("Search...", 12,
-                                            FontWeight.bold, 1, Colors.black38)),
-                                    Icon(Icons.search),
-                                  ],
+                padding: const EdgeInsets.all(15.0),
+                child: Image.asset("assets/images/menu_icon.png"),
+              )),
+            ),
+            title: Image.asset("assets/images/main_logo.png")),
+        body: FutureBuilder(
+          future: getFavorites(context: context, userId: GlobalState.userId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot!=null) {
+              var userFavourites = snapshot.data as FavoriteModel;
+              GlobalState.myFavorites = userFavourites;
+              return SingleChildScrollView(
+                child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(50.0),
+                        bottomRight: Radius.circular(50.0),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              mainSearchBottomSheet(context);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                height: 40.0,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5.0)),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                          child: _myWidget.myText("Search...", 12,
+                                              FontWeight.bold, 1, Colors.black38)),
+                                      Icon(Icons.search),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomeRestaurantDetailScreen()),
-                                    );
-                                  },
-                                  child: Container(
-                                    
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 60.0,
-                                          width: 60.0,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(
-                                                10.0,
-                                              )),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Image.asset(
-                                                "assets/images/dish.png"),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => HomeRestaurantDetailScreen()),
+                                      );
+                                    },
+                                    child: Container(
+                                      
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 60.0,
+                                            width: 60.0,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(
+                                                  10.0,
+                                                )),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: Image.asset(
+                                                  "assets/images/dish.png"),
+                                            ),
                                           ),
-                                        ),
-                                        Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 3.0, vertical: 3.0),
-                                            child: Text(
-                                              "Home Restaurant",
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Colors.white),
-                                            )
-                                            // _myWidget.myText("Home Restaurant", 12, FontWeight.normal, 2, Colors.white),
-                                            )
-                                      ],
+                                          Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 3.0, vertical: 3.0),
+                                              child: Text(
+                                                "Home Restaurant",
+                                                textAlign: TextAlign.center,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.normal,
+                                                    color: Colors.white),
+                                              )
+                                              )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => TourGastronomicDetailScreen()),
-                                    );
-                                  },
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 60.0,
-                                          width: 60.0,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(
-                                                10.0,
-                                              )),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Image.asset(
-                                                "assets/images/destination.png"),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => TourGastronomicDetailScreen()),
+                                      );
+                                    },
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 60.0,
+                                            width: 60.0,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(
+                                                  10.0,
+                                                )),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: Image.asset(
+                                                  "assets/images/destination.png"),
+                                            ),
                                           ),
-                                        ),
-                                        Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 3.0, vertical: 3.0),
-                                            child: Text(
-                                              "Tour Gastronomici",
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Colors.white),
-                                            )
-      
-                                            // child: _myWidget.myText("Tour Gastronomici", 12, FontWeight.normal, 2, Colors.white),
-                                            )
-                                      ],
+                                          Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 3.0, vertical: 3.0),
+                                              child: Text(
+                                                "Tour Gastronomici",
+                                                textAlign: TextAlign.center,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.normal,
+                                                    color: Colors.white),
+                                              )
+                                              )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => CorsiDiCusinaDetailScreen()),
-                                    );
-                                  },
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 60.0,
-                                          width: 60.0,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(
-                                                10.0,
-                                              )),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Image.asset(
-                                                "assets/images/bake.png"),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => CorsiDiCusinaDetailScreen()),
+                                      );
+                                    },
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 60.0,
+                                            width: 60.0,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(
+                                                  10.0,
+                                                )),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: Image.asset(
+                                                  "assets/images/bake.png"),
+                                            ),
                                           ),
-                                        ),
-                                        Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 3.0, vertical: 3.0),
-                                            child: Text(
-                                              "Corsi di Cusina",
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Colors.white),
-                                            )
-                                            // child: _myWidget.myText("Corsi di Cusina", 12, FontWeight.normal, 2, Colors.white),
-                                            )
-                                      ],
+                                          Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 3.0, vertical: 3.0),
+                                              child: Text(
+                                                "Corsi di Cusina",
+                                                textAlign: TextAlign.center,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.normal,
+                                                    color: Colors.white),
+                                              )
+                                              )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => ChefDomicilioDetailScreen()),
-                                    );
-                                  },
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 60.0,
-                                          width: 60.0,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(
-                                                10.0,
-                                              )),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Image.asset(
-                                                "assets/images/chef.png"),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ChefDomicilioDetailScreen()),
+                                      );
+                                    },
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 60.0,
+                                            width: 60.0,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(
+                                                  10.0,
+                                                )),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: Image.asset(
+                                                  "assets/images/chef.png"),
+                                            ),
                                           ),
-                                        ),
-                                        Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 3.0, vertical: 3.0),
-                                            child: Text(
-                                              "Chef a Domicilio",
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Colors.white),
-                                            )
-                                            // child: _myWidget.myText("Corsi di Cusina", 12, FontWeight.normal, 2, Colors.white),
-                                            )
-                                      ],
+                                          Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 3.0, vertical: 3.0),
+                                              child: Text(
+                                                "Chef a Domicilio",
+                                                textAlign: TextAlign.center,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.normal,
+                                                    color: Colors.white),
+                                              )
+                                              )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Column(
-                  children: [
-                      // This is the Corsi di Cusina
-      
-                    Container(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            _myWidget.myText("Corsi di Cusina", 15,
-                                FontWeight.bold, 1, Colors.black),
-                            _myWidget.myText(
-                                "Learn the secret of cooking and take part in our course!",
-                                12,
-                                FontWeight.bold,
-                                null,
-                                Colors.black38),
-                            Container(
-                              height: 220.0,
-                              width: double.infinity,
-                              child: GlobalState.corsiDiCusinaPosts != null ?  ListView.builder(
-                                      itemCount: GlobalState.corsiDiCusinaPosts.data.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, position) {
-                                        return InkWell(
-                                          onTap: () async {
-                                            // print(await categoryPosts.data.elementAt(position).hostId);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CorsoCusina(GlobalState.corsiDiCusinaPosts.data.elementAt(position))));
-                                          },
-                                          child: itemView(
-                                              context: context,
-                                              position: position,
-                                              categoryPosts: GlobalState.corsiDiCusinaPosts),
-                                        );
-                                      },
-                                    )
-                                  : FutureBuilder(
-                                future: getCategoryPostsApiCorsiDiCusina(context: context),
-                                builder: (context, snapshot) {
-                                  // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
-                                  if (snapshot.hasData) {
-                                    var categoryPosts =
-                                        snapshot.data as CategoryPostsModel;
-                                    log("list item = ${categoryPosts.data.length}");
-                                    return ListView.builder(
-                                      itemCount: categoryPosts.data.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, position) {
-                                        return InkWell(
-                                          onTap: () async {
-                                            // print(await categoryPosts.data.elementAt(position).hostId);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CorsoCusina(categoryPosts
-                                                            .data
-                                                            .elementAt(
-                                                                position))));
-                                          },
-                                          child: itemView(
-                                              context: context,
-                                              position: position,
-                                              categoryPosts: categoryPosts),
-                                        );
-                                      },
-                                    );
-                                  }
-                                  if (snapshot == null) {
-                                    return Center(
-                                      child:
-                                          Text("Corsi si cusina Post list Null"),
-                                    );
-                                  }
-                                  if (snapshot.hasError) {
-                                    return Center(
-                                      child: Text("Snapshot has error"),
-                                    );
-                                  } else {
-                                    // print("state = ${snapshot.connectionState}");
-                                    return Center(
-                                        child: Wrap(
-                                      children: [
-                                        Container(
-                                            height: 50.0,
-                                            width: 50.0,
-                                            child: CircularProgressIndicator(color:Colors.red),),
-                                      ],
-                                    ));
-                                  }
-                                },
+                  Column(
+                    children: [
+                        // This is the Corsi di Cusina
+        
+                      Container(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              _myWidget.myText("Corsi di Cusina", 15,
+                                  FontWeight.bold, 1, Colors.black),
+                              _myWidget.myText(
+                                  "Learn the secret of cooking and take part in our course!",
+                                  12,
+                                  FontWeight.bold,
+                                  null,
+                                  Colors.black38),
+                              Container(
+                                height: 220.0,
+                                width: double.infinity,
+                                child: GlobalState.corsiDiCusinaPosts != null ?  ListView.builder(
+                                        itemCount: GlobalState.corsiDiCusinaPosts.data.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, position) {
+                                          return InkWell(
+                                            onTap: () async {                                          
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CorsoCusina(GlobalState.corsiDiCusinaPosts.data.elementAt(position))));
+                                            },
+                                            child: itemView(
+                                                context: context,
+                                                position: position,
+                                                categoryPosts: GlobalState.corsiDiCusinaPosts),
+                                          );
+                                        },
+                                      )
+                                    : FutureBuilder(
+                                  future: getCategoryPostsApiCorsiDiCusina(context: context),
+                                  builder: (context, snapshot) {
+                                    // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
+                                    if (snapshot.hasData) {
+                                      var categoryPosts =
+                                          snapshot.data as CategoryPostsModel;
+                                      log("list item = ${categoryPosts.data.length}");
+                                      return ListView.builder(
+                                        itemCount: categoryPosts.data.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, position) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              // print(await categoryPosts.data.elementAt(position).hostId);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CorsoCusina(categoryPosts
+                                                              .data
+                                                              .elementAt(
+                                                                  position))));
+                                            },
+                                            child: itemView(
+                                                context: context,
+                                                position: position,
+                                                categoryPosts: categoryPosts),
+                                          );
+                                        },
+                                      );
+                                    }
+                                    if (snapshot == null) {
+                                      return Center(
+                                        child:
+                                            Text("Corsi si cusina Post list Null"),
+                                      );
+                                    }
+                                    if (snapshot.hasError) {
+                                      return Center(
+                                        child: Text("Snapshot has error"),
+                                      );
+                                    } else {
+                                      // print("state = ${snapshot.connectionState}");
+                                      return Center(
+                                          child: Wrap(
+                                        children: [
+                                          Container(
+                                              height: 50.0,
+                                              width: 50.0,
+                                              child: CircularProgressIndicator(color:Colors.red),),
+                                        ],
+                                      ));
+                                    }
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                   
-                    // This is Home Restaurant
-                    Container(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            _myWidget.myText("Home Restaurant", 15,
-                                FontWeight.bold, 1, Colors.black),
-                            _myWidget.myText(
-                                "Learn the secret of cooking and take part in our course!",
-                                12,
-                                FontWeight.bold,
-                                null,
-                                Colors.black38),
-                            Container(
-                              height: 220.0,
-                              width: double.infinity,
-                              child: GlobalState.homeRestaurantPosts != null ?  ListView.builder(
-                                      itemCount: GlobalState.homeRestaurantPosts.data.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, position) {
-                                        return InkWell(
-                                          onTap: () async {
-                                            // print(await categoryPosts.data.elementAt(position).hostId);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HomeRestaurant(GlobalState.homeRestaurantPosts.data.elementAt(position))));
-                                          },
-                                          child: itemView(
-                                              context: context,
-                                              position: position,
-                                              categoryPosts: GlobalState.homeRestaurantPosts),
-                                        );
-                                      },
-                                    )
-                                  : FutureBuilder(
-                                future: getCategoryPostsApiHomeRestaurant(context:context),
-                                builder: (context, snapshot) {
-                                  // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
-                                  if (snapshot.hasData) {
-                                    var categoryPosts =
-                                        snapshot.data as CategoryPostsModel;
-                                    log("list item = ${categoryPosts.data.length}");
-                                    return ListView.builder(
-                                      itemCount: categoryPosts.data.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, position) {
-                                        return InkWell(
-                                          onTap: () async {
-                                          // Navigator.push(
-                                          //       context,
-                                          //       MaterialPageRoute(
-                                          //           builder: (context) =>
-                                                        // ERestaurant(categoryPosts
-                                                        //     .data
-                                                        //     .elementAt(
-                                                        //         position))));
-      
-                                           Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                           HomeRestaurant(categoryPosts
-                                                            .data
-                                                            .elementAt(
-                                                                position))));
-                                          },
-                                          child: itemView(
-                                              context: context,
-                                              position: position,
-                                              categoryPosts: categoryPosts),
-                                        );
-                                      },
-                                    );
-                                  }
-                                  if (snapshot == null) {
-                                    return Center(
-                                      child:
-                                          Text("Corsi si cusina Post list Null"),
-                                    );
-                                  }
-                                  if (snapshot.hasError) {
-                                    return Center(
-                                      child: Text("Snapshot has error"),
-                                    );
-                                  } else {
-                                    // print("state = ${snapshot.connectionState}");
-                                    return Center(
-                                        child: Wrap(
-                                      children: [
-                                        Container(
-                                            height: 50.0,
-                                            width: 50.0,
-                                            child: CircularProgressIndicator(color: Colors.red,)),
-                                      ],
-                                    ));
-                                  }
-                                },
+                     
+                      // This is Home Restaurant
+                      Container(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              _myWidget.myText("Home Restaurant", 15,
+                                  FontWeight.bold, 1, Colors.black),
+                              _myWidget.myText(
+                                  "Learn the secret of cooking and take part in our course!",
+                                  12,
+                                  FontWeight.bold,
+                                  null,
+                                  Colors.black38),
+                              Container(
+                                height: 220.0,
+                                width: double.infinity,
+                                child: GlobalState.homeRestaurantPosts != null ?  ListView.builder(
+                                        itemCount: GlobalState.homeRestaurantPosts.data.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, position) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              // print(await categoryPosts.data.elementAt(position).hostId);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          HomeRestaurant(GlobalState.homeRestaurantPosts.data.elementAt(position))));
+                                            },
+                                            child: itemView(
+                                                context: context,
+                                                position: position,
+                                                categoryPosts: GlobalState.homeRestaurantPosts),
+                                          );
+                                        },
+                                      )
+                                    : FutureBuilder(
+                                  future: getCategoryPostsApiHomeRestaurant(context:context),
+                                  builder: (context, snapshot) {
+                                    // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
+                                    if (snapshot.hasData) {
+                                      var categoryPosts =
+                                          snapshot.data as CategoryPostsModel;
+                                      log("list item = ${categoryPosts.data.length}");
+                                      return ListView.builder(
+                                        itemCount: categoryPosts.data.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, position) {
+                                          return InkWell(
+                                            onTap: () async {
+                                            // Navigator.push(
+                                            //       context,
+                                            //       MaterialPageRoute(
+                                            //           builder: (context) =>
+                                                          // ERestaurant(categoryPosts
+                                                          //     .data
+                                                          //     .elementAt(
+                                                          //         position))));
+        
+                                             Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                             HomeRestaurant(categoryPosts
+                                                              .data
+                                                              .elementAt(
+                                                                  position))));
+                                            },
+                                            child: itemView(
+                                                context: context,
+                                                position: position,
+                                                categoryPosts: categoryPosts),
+                                          );
+                                        },
+                                      );
+                                    }
+                                    if (snapshot == null) {
+                                      return Center(
+                                        child:
+                                            Text("Corsi si cusina Post list Null"),
+                                      );
+                                    }
+                                    if (snapshot.hasError) {
+                                      return Center(
+                                        child: Text("Snapshot has error"),
+                                      );
+                                    } else {
+                                      // print("state = ${snapshot.connectionState}");
+                                      return Center(
+                                          child: Wrap(
+                                        children: [
+                                          Container(
+                                              height: 50.0,
+                                              width: 50.0,
+                                              child: CircularProgressIndicator(color: Colors.red,)),
+                                        ],
+                                      ));
+                                    }
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  
-                     // This is Chef a Domicilio
-                    Container(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            _myWidget.myText("Chef a Domicilio", 15,
-                                FontWeight.bold, 1, Colors.black),
-                            _myWidget.myText(
-                                "Learn the secret of cooking and take part in our course!",
-                                12,
-                                FontWeight.bold,
-                                null,
-                                Colors.black38),
-                            Container(
-                              height: 220.0,
-                              width: double.infinity,
-                              child: GlobalState.chefDomicilioPosts != null ?  ListView.builder(
-                                      itemCount: GlobalState.chefDomicilioPosts.data.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, position) {
-                                        return InkWell(
-                                          onTap: () async {
-                                            // print(await categoryPosts.data.elementAt(position).hostId);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ERestaurant(GlobalState.chefDomicilioPosts.data.elementAt(position))));
-                                          },
-                                          child: itemView(
-                                              context: context,
-                                              position: position,
-                                              categoryPosts: GlobalState.chefDomicilioPosts),
-                                        );
-                                      },
-                                    )
-                                  :  FutureBuilder(
-                                future: getCategoryPostsApiChefDomicilio(context:context),
-                                builder: (context, snapshot) {
-                                  // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
-                                  if (snapshot.hasData) {
-                                    var categoryPosts =
-                                        snapshot.data as CategoryPostsModel;
-                                    log("list item = ${categoryPosts.data.length}");
-                                    return ListView.builder(
-                                      itemCount: categoryPosts.data.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, position) {
-                                        return InkWell(
-                                          onTap: () async {
-                                            // print(await categoryPosts.data.elementAt(position).hostId);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ERestaurant(categoryPosts
-                                                            .data
-                                                            .elementAt(
-                                                                position))));
-                                          },
-                                          child: itemView(
-                                              context: context,
-                                              position: position,
-                                              categoryPosts: categoryPosts),
-                                        );
-                                      },
-                                    );
-                                  }
-                                  if (snapshot == null) {
-                                    return Center(
-                                      child:
-                                          Text("Corsi si cusina Post list Null"),
-                                    );
-                                  }
-                                  if (snapshot.hasError) {
-                                    return Center(
-                                      child: Text("Snapshot has error"),
-                                    );
-                                  } else {
-                                    print("state = ${snapshot.connectionState}");
-                                    return Center(
-                                        child: Wrap(
-                                      children: [
-                                        Container(
-                                            height: 50.0,
-                                            width: 50.0,
-                                            child: CircularProgressIndicator(color:Colors.red)),
-                                      ],
-                                    ));
-                                  }
-                                },
+                    
+                       // This is Chef a Domicilio
+                      Container(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              _myWidget.myText("Chef a Domicilio", 15,
+                                  FontWeight.bold, 1, Colors.black),
+                              _myWidget.myText(
+                                  "Learn the secret of cooking and take part in our course!",
+                                  12,
+                                  FontWeight.bold,
+                                  null,
+                                  Colors.black38),
+                              Container(
+                                height: 220.0,
+                                width: double.infinity,
+                                child: GlobalState.chefDomicilioPosts != null ?  ListView.builder(
+                                        itemCount: GlobalState.chefDomicilioPosts.data.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, position) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              // print(await categoryPosts.data.elementAt(position).hostId);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ERestaurant(GlobalState.chefDomicilioPosts.data.elementAt(position))));
+                                            },
+                                            child: itemView(
+                                                context: context,
+                                                position: position,
+                                                categoryPosts: GlobalState.chefDomicilioPosts),
+                                          );
+                                        },
+                                      )
+                                    :  FutureBuilder(
+                                  future: getCategoryPostsApiChefDomicilio(context:context),
+                                  builder: (context, snapshot) {
+                                    // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
+                                    if (snapshot.hasData) {
+                                      var categoryPosts =
+                                          snapshot.data as CategoryPostsModel;
+                                      log("list item = ${categoryPosts.data.length}");
+                                      return ListView.builder(
+                                        itemCount: categoryPosts.data.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, position) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              // print(await categoryPosts.data.elementAt(position).hostId);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ERestaurant(categoryPosts
+                                                              .data
+                                                              .elementAt(
+                                                                  position))));
+                                            },
+                                            child: itemView(
+                                                context: context,
+                                                position: position,
+                                                categoryPosts: categoryPosts),
+                                          );
+                                        },
+                                      );
+                                    }
+                                    if (snapshot == null) {
+                                      return Center(
+                                        child:
+                                            Text("Corsi si cusina Post list Null"),
+                                      );
+                                    }
+                                    if (snapshot.hasError) {
+                                      return Center(
+                                        child: Text("Snapshot has error"),
+                                      );
+                                    } else {
+                                      print("state = ${snapshot.connectionState}");
+                                      return Center(
+                                          child: Wrap(
+                                        children: [
+                                          Container(
+                                              height: 50.0,
+                                              width: 50.0,
+                                              child: CircularProgressIndicator(color:Colors.red)),
+                                        ],
+                                      ));
+                                    }
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  
-                    // This is Tour Gastronomici
-                    Container(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            _myWidget.myText("Tour Gastronomici", 15,
-                                FontWeight.bold, 1, Colors.black),
-                            _myWidget.myText(
-                                "Learn the secret of cooking and take part in our course!",
-                                12,
-                                FontWeight.bold,
-                                null,
-                                Colors.black38),
-                            Container(
-                              height: 220.0,
-                              width: double.infinity,
-                              child: GlobalState.tourGastronomiciPosts != null ?  ListView.builder(
-                                      itemCount: GlobalState.tourGastronomiciPosts.data.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, position) {
-                                        return InkWell(
-                                          onTap: () async {
-                                            // print(await categoryPosts.data.elementAt(position).hostId);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        TourGastronomico2(GlobalState.tourGastronomiciPosts.data.elementAt(position))));
-                                          },
-                                          child: itemView(
-                                              context: context,
-                                              position: position,
-                                              categoryPosts: GlobalState.tourGastronomiciPosts),
-                                        );
-                                      },
-                                    )
-                                  :  FutureBuilder(
-                                future: getCategoryPostsApiTourGastronomici(context: context),
-                                builder: (context, snapshot) {
-                                  // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
-                                  if (snapshot.hasData) {
-                                    var categoryPosts =
-                                        snapshot.data as CategoryPostsModel;
-                                    log("list item = ${categoryPosts.data.length}");
-                                    return ListView.builder(
-                                      itemCount: categoryPosts.data.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, position) {
-                                        return InkWell(
-                                          onTap: () async {
-                                            // print(await categoryPosts.data.elementAt(position).hostId);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        TourGastronomico2(categoryPosts
-                                                            .data
-                                                            .elementAt(
-                                                                position))));
-                                          },
-                                          child: itemView(
-                                              context: context,
-                                              position: position,
-                                              categoryPosts: categoryPosts),
-                                        );
-                                      },
-                                    );
-                                  }
-                                  if (snapshot == null) {
-                                    return Center(
-                                      child:
-                                          Text("Corsi si cusina Post list Null"),
-                                    );
-                                  }
-                                  if (snapshot.hasError) {
-                                    return Center(
-                                      child: Text("Snapshot has error"),
-                                    );
-                                  } else {
-                                    print("state = ${snapshot.connectionState}");
-                                    return Center(
-                                        child: Wrap(
-                                      children: [
-                                        Container(
-                                            height: 50.0,
-                                            width: 50.0,
-                                            child: CircularProgressIndicator(color:Colors.red)),
-                                      ],
-                                    ));
-                                  }
-                                },
+                    
+                      // This is Tour Gastronomici
+                      Container(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              _myWidget.myText("Tour Gastronomici", 15,
+                                  FontWeight.bold, 1, Colors.black),
+                              _myWidget.myText(
+                                  "Learn the secret of cooking and take part in our course!",
+                                  12,
+                                  FontWeight.bold,
+                                  null,
+                                  Colors.black38),
+                              Container(
+                                height: 220.0,
+                                width: double.infinity,
+                                child: GlobalState.tourGastronomiciPosts != null ?  ListView.builder(
+                                        itemCount: GlobalState.tourGastronomiciPosts.data.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, position) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              // print(await categoryPosts.data.elementAt(position).hostId);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TourGastronomico2(GlobalState.tourGastronomiciPosts.data.elementAt(position))));
+                                            },
+                                            child: itemView(
+                                                context: context,
+                                                position: position,
+                                                categoryPosts: GlobalState.tourGastronomiciPosts),
+                                          );
+                                        },
+                                      )
+                                    :  FutureBuilder(
+                                  future: getCategoryPostsApiTourGastronomici(context: context),
+                                  builder: (context, snapshot) {
+                                    // log("HomeFuture::fetch all posts Length = ${GlobalState.postsList.data.length}");
+                                    if (snapshot.hasData) {
+                                      var categoryPosts =
+                                          snapshot.data as CategoryPostsModel;
+                                      log("list item = ${categoryPosts.data.length}");
+                                      return ListView.builder(
+                                        itemCount: categoryPosts.data.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, position) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              // print(await categoryPosts.data.elementAt(position).hostId);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TourGastronomico2(categoryPosts
+                                                              .data
+                                                              .elementAt(
+                                                                  position))));
+                                            },
+                                            child: itemView(
+                                                context: context,
+                                                position: position,
+                                                categoryPosts: categoryPosts),
+                                          );
+                                        },
+                                      );
+                                    }
+                                    if (snapshot == null) {
+                                      return Center(
+                                        child:
+                                            Text("Corsi si cusina Post list Null"),
+                                      );
+                                    }
+                                    if (snapshot.hasError) {
+                                      return Center(
+                                        child: Text("Snapshot has error"),
+                                      );
+                                    } else {
+                                      print("state = ${snapshot.connectionState}");
+                                      return Center(
+                                          child: Wrap(
+                                        children: [
+                                          Container(
+                                              height: 50.0,
+                                              width: 50.0,
+                                              child: CircularProgressIndicator(color:Colors.red)),
+                                        ],
+                                      ));
+                                    }
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-      
-                    // Container(
-                    //   width: double.infinity,
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.all(10.0),
-                    //     child: Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       mainAxisSize: MainAxisSize.max,
-                    //       children: [
-                    //         _myWidget.myText("Home Restaurant", 15, FontWeight.bold,
-                    //             1, Colors.black),
-                    //         _myWidget.myText(
-                    //             "Live convval moments,join with local culinary traditions!",
-                    //             12,
-                    //             FontWeight.bold,
-                    //             null,
-                    //             Colors.black38),
-                    //         Container(
-                    //           height: 220.0,
-                    //           width: double.infinity,
-                    //           child: ListView.builder(
-                    //             itemCount: 3,
-                    //             scrollDirection: Axis.horizontal,
-                    //             itemBuilder: (context, position) {
-                    //               return itemView2(position);
-                    //             },
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ],
-          ),
-            );
-          }else if(snapshot.connectionState ==ConnectionState.waiting){
-            return Center(child: CircularProgressIndicator(color: Colors.red,));
-          }else{
-            return Container(child: Text("failed to load data"),);
-          }
-          }
+                      ),        
+                    ],
+                  ),
+                ],
+            ),
+              );
+            }else if(snapshot.connectionState ==ConnectionState.waiting){
+              return Center(child: CircularProgressIndicator(color: Colors.red,));
+            }else{
+              return Container(child: Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Sorry!",style:TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 20)),
+                  Text(" Failed to Load Data",style:TextStyle(color: Colors.grey[600])),
+                ],
+              )),);
+            }
+            }
+        ),
       ),
     );
   }
@@ -854,13 +847,11 @@ class _HomeScreen extends State<HomeScreen> {
       var responseList = CategoryPostsModel.fromJson(response);
       if (responseList != null) {
         // For Save Posts in GlobalState 
+        print("crosiDi API HIT DATA : ${responseList.data.length}");
         GlobalState.corsiDiCusinaPosts = responseList;
-        // For Favourites
-        
-        // GlobalState.allPostData = resDec1;
-    // GlobalState.postsList = response;
+     
         log("Corsi list length = ${responseList.data.length}");
-        // GlobalState.postsList = responseList;
+        
         return list = responseList;
       } else {
         list = null;
@@ -988,17 +979,6 @@ class _HomeScreen extends State<HomeScreen> {
       list = null;
     }
     return list;
-  }
-
-  CategoryPostsModel callExistingCategoryPostsApi(
-      {@required BuildContext context,
-      @required CategoryPostsModel rawList,
-      @required int categoryId}) {
-    CategoryPostsModel filteredList = rawList;
-    filteredList.data = rawList.data
-        .where((element) => element.tipoeventoId == categoryId)
-        .toList();
-    return filteredList;
   }
 
   Widget itemView(
@@ -1170,43 +1150,7 @@ class _HomeScreen extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                  ),
-                   
-                  
-
-                    
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  //   child: Container(
-                  //     decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(5.0),
-                  //         color: Colors.black26),
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.all(3.0),
-                  //       child: Padding(
-                  //         padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  //         child: _myWidget.myText("Spagnola", 12,
-                  //             FontWeight.normal, 1, Colors.black),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  //   child: Container(
-                  //     decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(5.0),
-                  //         color: Colors.black26),
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.all(3.0),
-                  //       child: Padding(
-                  //         padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  //         child: _myWidget.myText("Mediterranea", 12,
-                  //             FontWeight.normal, 1, Colors.black),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  ),                                                      
                   Expanded(
                       child: Text(
                     "${categoryPosts.data.elementAt(position).prezzoOndemand}",
@@ -1368,11 +1312,16 @@ class _HomeScreen extends State<HomeScreen> {
                                                   1,
                                                   Colors.black38)),
                                           Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Image.asset(
-                                                  "assets/images/calendar-r.png"),
+                                            child: InkWell(
+                                              onTap: (){
+                                                print("object");
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: Image.asset(
+                                                    "assets/images/calendar-r.png"),
+                                              ),
                                             ),
                                           )
                                         ],
@@ -1614,7 +1563,6 @@ class _HomeScreen extends State<HomeScreen> {
       @required int userId,
       @required int eventId}) async {
     DateTime now = DateTime.now();
-    // String isoDate = now.toIso8601String();
     Map<String, int> bodyMap = new HashMap();
     bodyMap['iduser'] = userId;
     bodyMap['idevento'] = eventId;

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:air_home_retaurant/UI/Chat2.dart';
 import 'package:air_home_retaurant/UI/PaymentHomeRestaurant.dart';
 import 'package:givestarreviews/givestarreviews.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,8 +20,6 @@ class HomeRestaurant extends StatefulWidget {
 }
 
 class _HomeRestaurant extends State<HomeRestaurant> {
-
-
   var controller1 = TextEditingController();
   var maxLines = 3, overflow = TextOverflow.ellipsis;
   var toggleButton = Constants.E_RESTAURANT_BUTTON1;
@@ -51,8 +50,8 @@ class _HomeRestaurant extends State<HomeRestaurant> {
   }
 
   getReview() async {
-    http.Response data =
-        await http.get(Uri.parse(Constants.REVIEW + '${widget.categoryPosts.hostId}'));
+    http.Response data = await http
+        .get(Uri.parse(Constants.REVIEW + '${widget.categoryPosts.hostId}'));
     reviewInfo = ReviewModal.fromJson(jsonDecode(data.body));
 
     setState(() {});
@@ -92,138 +91,456 @@ class _HomeRestaurant extends State<HomeRestaurant> {
         appBar: _myWidget.myAppBar(widget.categoryPosts.nome, () {
           Navigator.pop(context);
         }),
-        body: ListView(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.5),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.width - 50,
-                child: Stack(
-                  children: [
-                    widget.categoryPosts.foto.isEmpty
-                        ? Container(
-                            margin: EdgeInsets.only(bottom: 50.0),
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://i.stack.imgur.com/y9DpT.jpg'),
-                                  fit: BoxFit.cover),
-                              color: Colors.black38,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          )
-                        : PageView.builder(
-                            controller: _pageController,
-                            itemCount: widget.categoryPosts.foto.length,
-                            onPageChanged: (int value) {
-                              _currentPage = value;
-                            },
-                            itemBuilder: (context, index) => GestureDetector(
-                                child: Container(
+        body: widget.categoryPosts == null
+            ? Center(
+                child: CircularProgressIndicator(
+                color: Colors.red,
+              ))
+            : ListView(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 2.5),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.width - 50,
+                      child: Stack(
+                        children: [
+                          widget.categoryPosts.foto.isEmpty
+                              ? Container(
                                   margin: EdgeInsets.only(bottom: 50.0),
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                        image: NetworkImage(widget
-                                            .categoryPosts.foto
-                                            .elementAt(index)
-                                            .urlFoto),
+                                        image: NetworkImage(
+                                            'https://i.stack.imgur.com/y9DpT.jpg'),
                                         fit: BoxFit.cover),
                                     color: Colors.black38,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
+                                )
+                              : PageView.builder(
+                                  controller: _pageController,
+                                  itemCount: widget.categoryPosts.foto.length,
+                                  onPageChanged: (int value) {
+                                    _currentPage = value;
+                                  },
+                                  itemBuilder: (context, index) =>
+                                      GestureDetector(
+                                          child: Container(
+                                            margin:
+                                                EdgeInsets.only(bottom: 50.0),
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(widget
+                                                      .categoryPosts.foto
+                                                      .elementAt(index)
+                                                      .urlFoto),
+                                                  fit: BoxFit.cover),
+                                              color: Colors.black38,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          onTap: () {}),
                                 ),
-                                onTap: () {}),
-                          ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Wrap(
-                        alignment: WrapAlignment.end,
-                        children: [
-                          Stack(
+                          Align(
                             alignment: Alignment.bottomCenter,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 20.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        _myWidget.myText(
-                                            "${widget.categoryPosts.nome}",
-                                            15,
-                                            FontWeight.bold,
-                                            1,
-                                            Colors.black),
-                                        _myWidget.myText(
-                                            "${widget.categoryPosts.luogoCitta}",
-                                            12,
-                                            FontWeight.bold,
-                                            1,
-                                            Colors.black26),
-                                        Padding(
+                            child: Wrap(
+                              alignment: WrapAlignment.end,
+                              children: [
+                                Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                        ),
+                                        child: Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 10.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                              vertical: 20.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
+                                              _myWidget.myText(
+                                                  "${widget.categoryPosts.nome}",
+                                                  15,
+                                                  FontWeight.bold,
+                                                  1,
+                                                  Colors.black),
+                                              _myWidget.myText(
+                                                  "${widget.categoryPosts.luogoCitta}",
+                                                  12,
+                                                  FontWeight.bold,
+                                                  1,
+                                                  Colors.black26),
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                        horizontal: 5.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Color(0xFFE5E5E5),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: _myWidget.myText(
-                                                        "TAG Cuisine",
-                                                        10,
-                                                        FontWeight.bold,
-                                                        1,
-                                                        Colors.black),
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 5.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Color(0xFFE5E5E5),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: _myWidget.myText(
-                                                        "TAG",
-                                                        10,
-                                                        FontWeight.bold,
-                                                        1,
-                                                        Colors.black),
-                                                  ),
+                                                        vertical: 10.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 5.0),
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Color(
+                                                                0xFFE5E5E5),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(5.0),
+                                                          child:
+                                                              _myWidget.myText(
+                                                                  "TAG Cuisine",
+                                                                  10,
+                                                                  FontWeight
+                                                                      .bold,
+                                                                  1,
+                                                                  Colors.black),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 5.0),
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Color(
+                                                                0xFFE5E5E5),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(5.0),
+                                                          child:
+                                                              _myWidget.myText(
+                                                                  "TAG",
+                                                                  10,
+                                                                  FontWeight
+                                                                      .bold,
+                                                                  1,
+                                                                  Colors.black),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Wrap(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5.0),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0),
+                                                    color: Colors.orange),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(5.0),
+                                                  child: Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    5.0),
+                                                        child: _myWidget.myText(
+                                                            "${widget.categoryPosts.valutazione}",
+                                                            12,
+                                                            FontWeight.normal,
+                                                            1,
+                                                            Colors.white),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    5.0),
+                                                        child: Container(
+                                                            height: 15.0,
+                                                            width: 15.0,
+                                                            child: ImageIcon(
+                                                              AssetImage(
+                                                                  "assets/images/star.png"),
+                                                              color: Color(
+                                                                  0xFFFFFFFF),
+                                                            )),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5.0),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0),
+                                                  color: Color(0xFFE5E5E5),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 5.0,
+                                                      horizontal: 10.0),
+                                                  child: Column(
+                                                    children: [
+                                                      _myWidget.myText(
+                                                          "ADULTS",
+                                                          12,
+                                                          FontWeight.bold,
+                                                          1,
+                                                          Colors.black),
+                                                      _myWidget.myText(
+                                                          "99,00 p.p",
+                                                          12,
+                                                          FontWeight.bold,
+                                                          1,
+                                                          Colors.black),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5.0),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0),
+                                                  color: Color(0xFFE5E5E5),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 5.0,
+                                                      horizontal: 10.0),
+                                                  child: Column(
+                                                    children: [
+                                                      _myWidget.myText(
+                                                          "Children",
+                                                          12,
+                                                          FontWeight.bold,
+                                                          1,
+                                                          Colors.black),
+                                                      _myWidget.myText(
+                                                          "99,00 p.p",
+                                                          12,
+                                                          FontWeight.bold,
+                                                          1,
+                                                          Colors.black),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  /// BREAK POINT
+                  Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    color: Color(0xFFEFEFEF),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => Chat2(hostInfo['ID'], {
+                                            "name": hostInfo['Nome'],
+                                            "picture": hostInfo['UrlFoto']
+                                          })));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 10.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFDBDADA),
+                                    borderRadius: BorderRadius.circular(5.0)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5.0),
+                                  child: Container(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: (hostInfo == null)
+                                              ? Container(
+                                                  height: 80.0,
+                                                  width: 80.0,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.black38,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40.0)),
+                                                )
+                                              : Container(
+                                                  height: 80.0,
+                                                  width: 80.0,
+                                                  decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          image: NetworkImage(
+                                                              "${hostInfo['UrlFoto']}"),
+                                                          fit: BoxFit.cover),
+                                                      color: Colors.black38,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40.0)),
+                                                ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5.0),
+                                            child: Container(
+                                              height: 80.0,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  _myWidget.myText(
+                                                      Constants
+                                                          .E_RESTAURANT_LABEL1,
+                                                      12,
+                                                      FontWeight.bold,
+                                                      1,
+                                                      Colors.black),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 5.0),
+                                                    child: _myWidget.myText(
+                                                        "${hostInfo == null ? '' : hostInfo['Nome']}, passion of sharing",
+                                                        12,
+                                                        FontWeight.bold,
+                                                        2,
+                                                        Colors.black),
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5.0),
+                                                        color: Colors.orange),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        5.0),
+                                                            child: _myWidget.myText(
+                                                                "${hostInfo == null ? '' : hostInfo['Valutazione']}",
+                                                                12,
+                                                                FontWeight
+                                                                    .normal,
+                                                                1,
+                                                                Colors.white),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        5.0),
+                                                            child: Container(
+                                                                height: 15.0,
+                                                                width: 15.0,
+                                                                child:
+                                                                    ImageIcon(
+                                                                  AssetImage(
+                                                                      "assets/images/star.png"),
+                                                                  color: Color(
+                                                                      0xFFFFFFFF),
+                                                                )),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 30.0,
+                                          width: 50.0,
+                                          decoration: BoxDecoration(
+                                              color: Color(0xFFFF7878),
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Image.asset(
+                                                "assets/images/chat.png"),
                                           ),
                                         ),
                                       ],
@@ -231,873 +548,620 @@ class _HomeRestaurant extends State<HomeRestaurant> {
                                   ),
                                 ),
                               ),
-                              Wrap(
-                                children: [
-                                  Row(
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Container(
+                              child: _myWidget.myText(
+                                  Constants.HOME_RESTAURANT_LABEL2,
+                                  15,
+                                  FontWeight.bold,
+                                  1,
+                                  Colors.black),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                              child: _myWidget.myText(
+                                "${widget.categoryPosts.descrizioneIt}",
+                                12,
+                                FontWeight.normal,
+                                maxLines,
+                                Colors.black,
+                                overflow,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                // MaXLines
+                                if (toggleButton ==
+                                    Constants.E_RESTAURANT_BUTTON1) {
+                                  maxLines = null;
+                                  overflow = null;
+                                  toggleButton = Constants.E_RESTAURANT_BUTTON2;
+                                } else {
+                                  maxLines = 3;
+                                  overflow = TextOverflow.ellipsis;
+                                  toggleButton = Constants.E_RESTAURANT_BUTTON1;
+                                }
+                                setState(() {});
+                              },
+                              child: Center(
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFFF7878),
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 40.0, vertical: 10.0),
+                                      child: Text(
+                                        (maxLines == 3 &&
+                                                overflow ==
+                                                    TextOverflow.ellipsis)
+                                            ? Constants.E_RESTAURANT_BUTTON1
+                                            : Constants.E_RESTAURANT_BUTTON2,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 12),
+                                      ),
+                                    )),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Container(
+                              child: _myWidget.myText(
+                                  Constants.HOME_RESTAURANT_LABEL4,
+                                  15,
+                                  FontWeight.bold,
+                                  1,
+                                  Colors.black),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            height: 100,
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: _myWidget.myText("1", 20.0,
+                                      FontWeight.bold, 1, Colors.red),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: Container(
+                                      child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 5.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0),
-                                              color: Colors.orange),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Row(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 5.0),
-                                                  child: _myWidget.myText(
-                                                      "${widget.categoryPosts.valutazione}",
-                                                      12,
-                                                      FontWeight.normal,
-                                                      1,
-                                                      Colors.white),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 5.0),
-                                                  child: Container(
-                                                      height: 15.0,
-                                                      width: 15.0,
-                                                      child: ImageIcon(
-                                                        AssetImage(
-                                                            "assets/images/star.png"),
-                                                        color:
-                                                            Color(0xFFFFFFFF),
-                                                      )),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
+                                            vertical: 5.0),
+                                        child: _myWidget.myText(
+                                            "Course Title",
+                                            12.0,
+                                            FontWeight.bold,
+                                            1,
+                                            Colors.black),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 5.0),
+                                            vertical: 5.0),
                                         child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                            color: Color(0xFFE5E5E5),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5.0,
-                                                horizontal: 10.0),
-                                            child: Column(
-                                              children: [
-                                                _myWidget.myText(
-                                                    "ADULTS",
-                                                    12,
-                                                    FontWeight.bold,
-                                                    1,
-                                                    Colors.black),
-                                                _myWidget.myText(
-                                                    "99,00 p.p",
-                                                    12,
-                                                    FontWeight.bold,
-                                                    1,
-                                                    Colors.black),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                            color: Color(0xFFE5E5E5),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5.0,
-                                                horizontal: 10.0),
-                                            child: Column(
-                                              children: [
-                                                _myWidget.myText(
-                                                    "Children",
-                                                    12,
-                                                    FontWeight.bold,
-                                                    1,
-                                                    Colors.black),
-                                                _myWidget.myText(
-                                                    "99,00 p.p",
-                                                    12,
-                                                    FontWeight.bold,
-                                                    1,
-                                                    Colors.black),
-                                              ],
-                                            ),
-                                          ),
+                                          // height: 50,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.70,
+                                          child: _myWidget.myText(
+                                              "Course Discribton",
+                                              12.0,
+                                              FontWeight.bold,
+                                              1,
+                                              Colors.black38),
                                         ),
                                       ),
                                     ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            /// BREAK POINT
-            Container(
-              margin: EdgeInsets.only(top: 10.0),
-              color: Color(0xFFEFEFEF),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 10.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Color(0xFFDBDADA),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Container(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: (hostInfo == null)
-                                      ? Container(
-                                          height: 80.0,
-                                          width: 80.0,
-                                          decoration: BoxDecoration(
-                                              color: Colors.black38,
-                                              borderRadius:
-                                                  BorderRadius.circular(40.0)),
-                                        )
-                                      : Container(
-                                          height: 80.0,
-                                          width: 80.0,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      "${hostInfo['UrlFoto']}"),
-                                                  fit: BoxFit.cover),
-                                              color: Colors.black38,
-                                              borderRadius:
-                                                  BorderRadius.circular(40.0)),
-                                        ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    child: Container(
-                                      height: 80.0,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          _myWidget.myText(
-                                              Constants.E_RESTAURANT_LABEL1,
-                                              12,
-                                              FontWeight.bold,
-                                              1,
-                                              Colors.black),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5.0),
-                                            child: _myWidget.myText(
-                                                "${hostInfo == null ? '' : hostInfo['Nome']}, passion of sharing",
-                                                12,
-                                                FontWeight.bold,
-                                                2,
-                                                Colors.black),
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                                color: Colors.orange),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 5.0),
-                                                    child: _myWidget.myText(
-                                                        "${hostInfo == null ? '' : hostInfo['Valutazione']}",
-                                                        12,
-                                                        FontWeight.normal,
-                                                        1,
-                                                        Colors.white),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 5.0),
-                                                    child: Container(
-                                                        height: 15.0,
-                                                        width: 15.0,
-                                                        child: ImageIcon(
-                                                          AssetImage(
-                                                              "assets/images/star.png"),
-                                                          color:
-                                                              Color(0xFFFFFFFF),
-                                                        )),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 30.0,
-                                  width: 50.0,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFFFF7878),
-                                      borderRadius: BorderRadius.circular(5.0)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child:
-                                        Image.asset("assets/images/chat.png"),
-                                  ),
+                                  )),
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Container(
-                        child: _myWidget.myText(
-                            Constants.HOME_RESTAURANT_LABEL2,
-                            15,
-                            FontWeight.bold,
-                            1,
-                            Colors.black),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        child: _myWidget.myText(
-                          "${widget.categoryPosts.descrizioneIt}",
-                          12,
-                          FontWeight.normal,
-                          maxLines,
-                          Colors.black,
-                          overflow,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          // MaXLines
-                          if (toggleButton == Constants.E_RESTAURANT_BUTTON1) {
-                            maxLines = null;
-                            overflow = null;
-                            toggleButton = Constants.E_RESTAURANT_BUTTON2;
-                          } else {
-                            maxLines = 3;
-                            overflow = TextOverflow.ellipsis;
-                            toggleButton = Constants.E_RESTAURANT_BUTTON1;
-                          }
-                          setState(() {});
-                        },
-                        child: Center(
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  color: Color(0xFFFF7878),
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 40.0, vertical: 10.0),
-                                child: Text(
-                                  (maxLines == 3 &&
-                                          overflow == TextOverflow.ellipsis)
-                                      ? Constants.E_RESTAURANT_BUTTON1
-                                      : Constants.E_RESTAURANT_BUTTON2,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 12),
-                                ),
-                              )),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Container(
-                        child: _myWidget.myText(
-                            Constants.HOME_RESTAURANT_LABEL4,
-                            15,
-                            FontWeight.bold,
-                            1,
-                            Colors.black),
-                      ),
-                    ),
-                      Container(
-                        width: double.infinity,
-                        height: 100,
-                        child: 
-                          Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
+                          // Container(
+                          //   // width: double.infinity,
+                          //   child: Padding(
+                          //       padding: const EdgeInsets.symmetric(
+                          //           horizontal: 10.0, vertical: 5.0),
+                          //       child: ListView.builder(
+                          //           physics: NeverScrollableScrollPhysics(),
+                          //           shrinkWrap: true,
+                          //           itemCount: widget.categoryPosts.menu.length,
+                          //           itemBuilder: (context, i) {
+                          // return Row(
+                          //   children: [
+                          //     Container(
+                          //       child: Padding(
+                          //         padding: const EdgeInsets.symmetric(
+                          //             horizontal: 10.0),
+                          //         child: _myWidget.myText(
+                          //             "${i + 1}",
+                          //             20.0,
+                          //             FontWeight.bold,
+                          //             1,
+                          //             Colors.red),
+                          //       ),
+                          //     ),
+                          //     Padding(
+                          //       padding: const EdgeInsets.symmetric(
+                          //           horizontal: 10.0),
+                          //       child: Container(
+                          //           child: Expanded(
+                          //         child: Column(
+                          //           crossAxisAlignment:
+                          //               CrossAxisAlignment.start,
+                          //           mainAxisAlignment:
+                          //               MainAxisAlignment.center,
+                          //           children: [
+                          //             Padding(
+                          //               padding:
+                          //                   const EdgeInsets.symmetric(
+                          //                       vertical: 5.0),
+                          //               child: _myWidget.myText(
+                          //                   "${widget.categoryPosts.menu.elementAt(i).portata}",
+                          //                   12.0,
+                          //                   FontWeight.bold,
+                          //                   1,
+                          //                   Colors.black),
+                          //             ),
+                          //             Padding(
+                          //               padding:
+                          //                   const EdgeInsets.symmetric(
+                          //                       vertical: 5.0),
+                          //               child: Container(
+                          //                 // height: 50,
+                          //                 width: MediaQuery.of(context)
+                          //                         .size
+                          //                         .width *
+                          //                     0.70,
+                          //                 child: _myWidget.myText(
+                          //                     "${widget.categoryPosts.menu.elementAt(i).descrizione}",
+                          //                     12.0,
+                          //                     FontWeight.bold,
+                          //                     1,
+                          //                     Colors.black38),
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       )),
+                          //     ),
+                          //   ],
+                          // );
+                          //           })),
+                          // ),
+
+                          // /HomeRestaurant2
+                          // Menu
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                    height: 50.0,
+                                    width: 50.0,
+                                    child: Image.asset(
+                                        "assets/images/food-tray.png")),
+                                Expanded(
+                                    child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black12,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: _myWidget.myText("Starter", 12,
+                                          FontWeight.bold, 1, Colors.black),
+                                    ),
+                                  ),
+                                )),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                    height: 50.0,
+                                    width: 50.0,
+                                    child: Image.asset(
+                                        "assets/images/back-in-time.png")),
+                                Expanded(
+                                    child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black12,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
                                       child: _myWidget.myText(
-                                          "1",
-                                          20.0,
+                                          "${DateFormat('yMMMMd').format(widget.categoryPosts.dataCreazione)}",
+                                          12,
                                           FontWeight.bold,
                                           1,
-                                          Colors.red),
+                                          Colors.black),
                                     ),
-                                    Padding(
+                                  ),
+                                )),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                    height: 50.0,
+                                    width: 50.0,
+                                    child: Image.asset(
+                                        "assets/images/translation.png")),
+                                if (widget.categoryPosts.lingue != "")
+                                  for (var i = 0;
+                                      i <
+                                          getLanguage(widget
+                                                  .categoryPosts.lingue
+                                                  .toString())
+                                              .length;
+                                      i++)
+                                    Expanded(
+                                        child: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
+                                          horizontal: 20.0),
                                       child: Container(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 5.0),
-                                                child: _myWidget.myText(
-                                                    "Course Title",
-                                                    12.0,
-                                                    FontWeight.bold,
-                                                    1,
-                                                    Colors.black),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 5.0),
-                                                child: Container(
-                                                  // height: 50,
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.70,
-                                                  child: _myWidget.myText(
-                                                      "Course Discribton",
-                                                      12.0,
-                                                      FontWeight.bold,
-                                                      1,
-                                                      Colors.black38),
-                                                ),
-                                              ),
-                                            ],
-                                          )),
+                                        decoration: BoxDecoration(
+                                            color: Colors.black12,
+                                            borderRadius:
+                                                BorderRadius.circular(5.0)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: _myWidget.myText(
+                                              "${getLanguage(widget.categoryPosts.lingue.toString())[i]}",
+                                              12,
+                                              FontWeight.bold,
+                                              1,
+                                              Colors.black),
+                                        ),
+                                      ),
+                                    )),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                    height: 50.0,
+                                    width: 50.0,
+                                    child:
+                                        Image.asset("assets/images/group.png")),
+                                Expanded(
+                                    child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black12,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: _myWidget.myText(
+                                          "MIN ${widget.categoryPosts.partecipantiMinimo} - MAX ${widget.categoryPosts.partecipantiMassimo}",
+                                          12,
+                                          FontWeight.bold,
+                                          1,
+                                          Colors.black),
                                     ),
-                                  ],
-                                ),),
-                    // Container(
-                    //   // width: double.infinity,
-                    //   child: Padding(
-                    //       padding: const EdgeInsets.symmetric(
-                    //           horizontal: 10.0, vertical: 5.0),
-                    //       child: ListView.builder(
-                    //           physics: NeverScrollableScrollPhysics(),
-                    //           shrinkWrap: true,
-                    //           itemCount: widget.categoryPosts.menu.length,
-                    //           itemBuilder: (context, i) {
-                                // return Row(
-                                //   children: [
-                                //     Container(
-                                //       child: Padding(
-                                //         padding: const EdgeInsets.symmetric(
-                                //             horizontal: 10.0),
-                                //         child: _myWidget.myText(
-                                //             "${i + 1}",
-                                //             20.0,
-                                //             FontWeight.bold,
-                                //             1,
-                                //             Colors.red),
-                                //       ),
-                                //     ),
-                                //     Padding(
-                                //       padding: const EdgeInsets.symmetric(
-                                //           horizontal: 10.0),
-                                //       child: Container(
-                                //           child: Expanded(
-                                //         child: Column(
-                                //           crossAxisAlignment:
-                                //               CrossAxisAlignment.start,
-                                //           mainAxisAlignment:
-                                //               MainAxisAlignment.center,
-                                //           children: [
-                                //             Padding(
-                                //               padding:
-                                //                   const EdgeInsets.symmetric(
-                                //                       vertical: 5.0),
-                                //               child: _myWidget.myText(
-                                //                   "${widget.categoryPosts.menu.elementAt(i).portata}",
-                                //                   12.0,
-                                //                   FontWeight.bold,
-                                //                   1,
-                                //                   Colors.black),
-                                //             ),
-                                //             Padding(
-                                //               padding:
-                                //                   const EdgeInsets.symmetric(
-                                //                       vertical: 5.0),
-                                //               child: Container(
-                                //                 // height: 50,
-                                //                 width: MediaQuery.of(context)
-                                //                         .size
-                                //                         .width *
-                                //                     0.70,
-                                //                 child: _myWidget.myText(
-                                //                     "${widget.categoryPosts.menu.elementAt(i).descrizione}",
-                                //                     12.0,
-                                //                     FontWeight.bold,
-                                //                     1,
-                                //                     Colors.black38),
-                                //               ),
-                                //             ),
-                                //           ],
-                                //         ),
-                                //       )),
-                                //     ),
-                                //   ],
-                                // );
-                    //           })),
-                    // ),
-
-                    // /HomeRestaurant2
-                    // Menu
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                              height: 50.0,
-                              width: 50.0,
-                              child:
-                                  Image.asset("assets/images/food-tray.png")),
-                          Expanded(
-                              child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.black12,
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: _myWidget.myText("Starter", 12,
-                                    FontWeight.bold, 1, Colors.black),
-                              ),
+                                  ),
+                                )),
+                              ],
                             ),
-                          )),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                              height: 50.0,
-                              width: 50.0,
-                              child: Image.asset(
-                                  "assets/images/back-in-time.png")),
-                          Expanded(
-                              child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.black12,
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: _myWidget.myText(
-                                    "${DateFormat('yMMMMd').format(widget.categoryPosts.dataCreazione)}",
-                                    12,
-                                    FontWeight.bold,
-                                    1,
-                                    Colors.black),
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                    height: 50.0,
+                                    width: 50.0,
+                                    child: Image.asset(
+                                        "assets/images/family.png")),
+                                Expanded(
+                                    child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black12,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: _myWidget.myText(
+                                          "${widget.categoryPosts.perFamiglie ? 'Recommended for families' : 'Not Recommended for families'}",
+                                          12,
+                                          FontWeight.bold,
+                                          1,
+                                          Colors.black),
+                                    ),
+                                  ),
+                                )),
+                              ],
                             ),
-                          )),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                              height: 50.0,
-                              width: 50.0,
-                              child:
-                                  Image.asset("assets/images/translation.png")),
-                          if (widget.categoryPosts.lingue != "")
-                            for (var i = 0;
-                                i <
-                                    getLanguage(widget.categoryPosts.lingue
-                                            .toString())
-                                        .length;
-                                i++)
-                              Expanded(
-                                  child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Container(
+                                child: Text(
+                              Constants.HOME_RESTAURANT2_LABEL1,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red),
+                            )
+                                // _myWidget.myText(Constants.CORSO_CUSINA2_ALLLEGIES_MODEL_LABEL2, 15, FontWeight.bold, null, Colors.red),
+                                ),
+                          ),
+                          // bottomSheet
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                var allergiesList =
+                                    getAllergies(widget.categoryPosts.allergie);
+                                _myWidget.allergiesIntorancesBottomSheet(
+                                    context, allergiesList);
+                              },
+                              child: Center(
                                 child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.black12,
-                                      borderRadius: BorderRadius.circular(5.0)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
+                                    width: 150.0,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFFF7878),
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0, vertical: 10.0),
+                                      child: Text(
+                                        Constants.HOME_RESTAURANT2_BUTTON1,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 12),
+                                      ),
+                                    )),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
                                     child: _myWidget.myText(
-                                        "${getLanguage(widget.categoryPosts.lingue.toString())[i]}",
-                                        12,
+                                        Constants.HOME_RESTAURANT2_LABEL2,
+                                        15.0,
                                         FontWeight.bold,
                                         1,
                                         Colors.black),
                                   ),
                                 ),
-                              )),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                              height: 50.0,
-                              width: 50.0,
-                              child: Image.asset("assets/images/group.png")),
-                          Expanded(
-                              child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.black12,
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: _myWidget.myText(
-                                    "MIN ${widget.categoryPosts.partecipantiMinimo} - MAX ${widget.categoryPosts.partecipantiMassimo}",
-                                    12,
-                                    FontWeight.bold,
-                                    1,
-                                    Colors.black),
-                              ),
-                            ),
-                          )),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                              height: 50.0,
-                              width: 50.0,
-                              child: Image.asset("assets/images/family.png")),
-                          Expanded(
-                              child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.black12,
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: _myWidget.myText(
-                                    "${widget.categoryPosts.perFamiglie ? 'Recommended for families' : 'Not Recommended for families'}",
-                                    12,
-                                    FontWeight.bold,
-                                    1,
-                                    Colors.black),
-                              ),
-                            ),
-                          )),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Container(
-                          child: Text(
-                        Constants.HOME_RESTAURANT2_LABEL1,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red),
-                      )
-                          // _myWidget.myText(Constants.CORSO_CUSINA2_ALLLEGIES_MODEL_LABEL2, 15, FontWeight.bold, null, Colors.red),
-                          ),
-                    ),
-                    // bottomSheet
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          var allergiesList = getAllergies(widget.categoryPosts.allergie);
-                          _myWidget.allergiesIntorancesBottomSheet(context,allergiesList);
-                        },
-                        child: Center(
-                          child: Container(
-                              width: 150.0,
-                              decoration: BoxDecoration(
-                                  color: Color(0xFFFF7878),
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 10.0),
-                                child: Text(
-                                  Constants.HOME_RESTAURANT2_BUTTON1,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 12),
+                                Container(
+                                  height: 200.0,
+                                  child: ListView.builder(
+                                    itemCount: widget.categoryPosts.foto.length,
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, position) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          width: 200,
+                                          height: 200,
+                                          margin: EdgeInsets.only(bottom: 10.0),
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: NetworkImage(widget
+                                                    .categoryPosts.foto
+                                                    .elementAt(position)
+                                                    .urlFoto),
+                                                fit: BoxFit.cover),
+                                            color: Colors.black38,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
-                              )),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: _myWidget.myText(
-                                  Constants.HOME_RESTAURANT2_LABEL2,
-                                  15.0,
-                                  FontWeight.bold,
-                                  1,
-                                  Colors.black),
+                              ],
                             ),
                           ),
-                          Container(
-                            height: 200.0,
-                            child: ListView.builder(
-                              itemCount: widget.categoryPosts.foto.length,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, position) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    width: 200,
-                                    height: 200,
-                                    margin: EdgeInsets.only(bottom: 10.0),
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: NetworkImage(widget
-                                              .categoryPosts.foto
-                                              .elementAt(position)
-                                              .urlFoto),
-                                          fit: BoxFit.cover),
-                                      color: Colors.black38,
-                                      borderRadius: BorderRadius.circular(10),
+
+                          // /HomeRestaurant3
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 5.0),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: _myWidget.myText(
+                                          Constants.HOME_RESTAURANT3_LABEL1,
+                                          15.0,
+                                          FontWeight.bold,
+                                          1,
+                                          Colors.black),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // /HomeRestaurant3
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 5.0),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: _myWidget.myText(
-                                    Constants.HOME_RESTAURANT3_LABEL1,
-                                    15.0,
-                                    FontWeight.bold,
-                                    1,
-                                    Colors.black),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            child: Container(
-                              height: 200,
-                              child: GoogleMap(
-                                onMapCreated: _onMapCreated,
-                                initialCameraPosition: CameraPosition(
-                                  target: LatLng(widget.categoryPosts.posx,
-                                      widget.categoryPosts.posy),
-                                  zoom: 9.0,
                                 ),
-                                markers: markers,
-                              ),
+                                GestureDetector(
+                                  child: Container(
+                                    height: 200,
+                                    child: GoogleMap(
+                                      onMapCreated: _onMapCreated,
+                                      initialCameraPosition: CameraPosition(
+                                        target: LatLng(
+                                            widget.categoryPosts.posx,
+                                            widget.categoryPosts.posy),
+                                        zoom: 9.0,
+                                      ),
+                                      markers: markers,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 10.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: _myWidget.myText(
-                                  Constants.HOME_RESTAURANT3_LABEL2 +
-                                      " (${reviewInfo == null ? '' : reviewInfo.data.length})",
-                                  15.0,
-                                  FontWeight.bold,
-                                  1,
-                                  Colors.black),
-                            ),
-                          ),
-                          reviewInfo == null
-                              ? CircularProgressIndicator(
-                                  color: Colors.red,
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: reviewInfo.data.isEmpty
-                                      ? Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 20),
-                                          child: Center(
-                                            child: _myWidget.myText(
-                                                "No Reviews",
-                                                15,
-                                                FontWeight.bold,
-                                                1,
-                                                Colors.black38),
-                                          ),
-                                        )
-                                      : ListView.builder(
-                                          itemCount: reviewInfo.data.length,
-                                          shrinkWrap: true,
-                                          physics: ScrollPhysics(),
-                                          itemBuilder: (context, position) {
-                                            return Container(
-                                              child: Padding(
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 10.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: _myWidget.myText(
+                                        Constants.HOME_RESTAURANT3_LABEL2 +
+                                            " (${reviewInfo == null ? '' : reviewInfo.data.length})",
+                                        15.0,
+                                        FontWeight.bold,
+                                        1,
+                                        Colors.black),
+                                  ),
+                                ),
+                                reviewInfo == null
+                                    ? CircularProgressIndicator(
+                                        color: Colors.red,
+                                      )
+                                    : Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10.0),
+                                        child: reviewInfo.data.isEmpty
+                                            ? Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                        vertical: 10.0),
-                                                child: Container(
-                                                  // decoration: BoxDecoration(color: Colors.black12),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            10.0),
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Container(
-                                                          height: 80.0,
-                                                          width: 80.0,
-                                                          decoration: BoxDecoration(
-                                                              color: Colors
-                                                                  .black38,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          40.0)),
-                                                        ),
-                                                        Padding(
+                                                        vertical: 20),
+                                                child: Center(
+                                                  child: _myWidget.myText(
+                                                      "No Reviews",
+                                                      15,
+                                                      FontWeight.bold,
+                                                      1,
+                                                      Colors.black38),
+                                                ),
+                                              )
+                                            : ListView.builder(
+                                                itemCount:
+                                                    reviewInfo.data.length,
+                                                shrinkWrap: true,
+                                                physics: ScrollPhysics(),
+                                                itemBuilder:
+                                                    (context, position) {
+                                                  return Container(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 10.0),
+                                                      child: Container(
+                                                        // decoration: BoxDecoration(color: Colors.black12),
+                                                        child: Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      10.0),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
+                                                                  .all(10.0),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                children: [
-                                                                  Container(
-                                                                    child:
-                                                                        Column(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
+                                                              Container(
+                                                                height: 80.0,
+                                                                width: 80.0,
+                                                                decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .black38,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            40.0)),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        10.0),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
                                                                       children: [
-                                                                        _myWidget.myText(
-                                                                            "${reviewInfo.data.elementAt(position).nomeEvento}",
-                                                                            12,
-                                                                            FontWeight.bold,
-                                                                            1,
-                                                                            Colors.black),
                                                                         Container(
                                                                           child:
-                                                                              Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceEvenly,
+                                                                              Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
                                                                             children: [
-                                                                              _myWidget.myText("${reviewInfo.data.elementAt(position).mittenteNome}, ${reviewInfo.data.elementAt(position).mittenteCognome}", 10, FontWeight.bold, 1, Colors.black38),
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                                                child: Container(
-                                                                                  child: _myWidget.myText("${DateFormat('yMMMMd').format(reviewInfo.data.elementAt(position).dataInizioEvento)}", 10, FontWeight.bold, 1, Colors.black38),
+                                                                              _myWidget.myText("${reviewInfo.data.elementAt(position).nomeEvento}", 12, FontWeight.bold, 1, Colors.black),
+                                                                              Container(
+                                                                                child: Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                  children: [
+                                                                                    _myWidget.myText("${reviewInfo.data.elementAt(position).mittenteNome}, ${reviewInfo.data.elementAt(position).mittenteCognome}", 10, FontWeight.bold, 1, Colors.black38),
+                                                                                    Padding(
+                                                                                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                                                      child: Container(
+                                                                                        child: _myWidget.myText("${DateFormat('yMMMMd').format(reviewInfo.data.elementAt(position).dataInizioEvento)}", 10, FontWeight.bold, 1, Colors.black38),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
                                                                                 ),
                                                                               ),
                                                                             ],
@@ -1105,89 +1169,78 @@ class _HomeRestaurant extends State<HomeRestaurant> {
                                                                         ),
                                                                       ],
                                                                     ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                    vertical:
-                                                                        5.0),
-                                                                child:
-                                                                    Container(
-                                                                  // color: Colors.black,
-                                                                  height: 30.0,
-                                                                  width: 150.0,
-                                                                  child: Row(
-                                                                    children: [
-                                                                      for (int i =
-                                                                              1;
-                                                                          i <=
-                                                                              reviewInfo.data.elementAt(position).voto;
-                                                                          i++)
-                                                                        Icon(Icons.star, color: Colors.yellow),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                // padding: EdgeInsets.symmetric(horizontal: 10),
-                                                                child: _myWidget.myText(
-                                                                    "${reviewInfo.data.elementAt(position).testo}",
-                                                                    10,
-                                                                    FontWeight
-                                                                        .bold,
-                                                                    null,
-                                                                    Colors
-                                                                        .black38),
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                    vertical:
-                                                                        5.0),
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  children: [
-                                                                    Row(
-                                                                      children: [
-                                                                        Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 5.0),
-                                                                            child: Icon(
-                                                                              Icons.thumb_up,
-                                                                              color: Colors.red,
-                                                                            )),
-                                                                        Container(
-                                                                          child: _myWidget.myText(
-                                                                              "${reviewInfo.data.elementAt(position).voto} Likes",
-                                                                              12,
-                                                                              FontWeight.bold,
-                                                                              1,
-                                                                              Colors.red),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          vertical:
+                                                                              5.0),
+                                                                      child:
+                                                                          Container(
+                                                                        // color: Colors.black,
+                                                                        height:
+                                                                            30.0,
+                                                                        width:
+                                                                            150.0,
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            for (int i = 1;
+                                                                                i <= reviewInfo.data.elementAt(position).voto;
+                                                                                i++)
+                                                                              Icon(Icons.star, color: Colors.yellow),
+                                                                          ],
                                                                         ),
-                                                                      ],
+                                                                      ),
                                                                     ),
-                                                                    Row(
-                                                                      children: [
-                                                                        Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 5.0),
-                                                                            child: Image.network(
-                                                                              "https://cdn.icon-icons.com/icons2/1372/PNG/512/share-1_90899.png",
-                                                                              height: 12,
-                                                                            )),
-                                                                        Container(
-                                                                          child: _myWidget.myText(
-                                                                              "Share",
-                                                                              12,
-                                                                              FontWeight.bold,
-                                                                              1,
-                                                                              Colors.black38),
-                                                                        ),
-                                                                      ],
+                                                                    Container(
+                                                                      // padding: EdgeInsets.symmetric(horizontal: 10),
+                                                                      child: _myWidget.myText(
+                                                                          "${reviewInfo.data.elementAt(position).testo}",
+                                                                          10,
+                                                                          FontWeight
+                                                                              .bold,
+                                                                          null,
+                                                                          Colors
+                                                                              .black38),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          vertical:
+                                                                              5.0),
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.max,
+                                                                        children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Padding(
+                                                                                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                                                  child: Icon(
+                                                                                    Icons.thumb_up,
+                                                                                    color: Colors.red,
+                                                                                  )),
+                                                                              Container(
+                                                                                child: _myWidget.myText("${reviewInfo.data.elementAt(position).voto} Likes", 12, FontWeight.bold, 1, Colors.red),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Row(
+                                                                            children: [
+                                                                              Padding(
+                                                                                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                                                  child: Image.network(
+                                                                                    "https://cdn.icon-icons.com/icons2/1372/PNG/512/share-1_90899.png",
+                                                                                    height: 12,
+                                                                                  )),
+                                                                              Container(
+                                                                                child: _myWidget.myText("Share", 12, FontWeight.bold, 1, Colors.black38),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ],
+                                                                      ),
                                                                     ),
                                                                   ],
                                                                 ),
@@ -1195,337 +1248,355 @@ class _HomeRestaurant extends State<HomeRestaurant> {
                                                             ],
                                                           ),
                                                         ),
-                                                      ],
+                                                      ),
                                                     ),
-                                                  ),
+                                                  );
+                                                },
+                                              ),
+                                      ),
+                              ],
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.black12,
+                                    borderRadius: BorderRadius.circular(5.0)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  child: _myWidget.myText(
+                                      Constants.HOME_RESTAURANT3_BUTTON1,
+                                      12,
+                                      FontWeight.bold,
+                                      1,
+                                      Colors.black),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          ///HomeRestaurant4
+                          ///
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 10.0),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: _myWidget.myText(
+                                    Constants.Home_RESTAURANT4_LABEL1,
+                                    15.0,
+                                    FontWeight.bold,
+                                    1,
+                                    Colors.black),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(color: Color(0xFFE8E8E8)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 5.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Flexible(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 5.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0)),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10.0),
+                                                child: TextField(
+                                                  autofocus: false,
+                                                  keyboardType:
+                                                      TextInputType.text,
+                                                  maxLines: 1,
+                                                  decoration: InputDecoration(
+                                                      border: InputBorder.none,
+                                                      hintText: Constants
+                                                          .Home_RESTAURANT4_FIELD1_HINT,
+                                                      hintStyle: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
                                                 ),
                                               ),
-                                            );
-                                          },
-                                        ),
-                                ),
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.black12,
-                              borderRadius: BorderRadius.circular(5.0)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 10.0),
-                            child: _myWidget.myText(
-                                Constants.HOME_RESTAURANT3_BUTTON1,
-                                12,
-                                FontWeight.bold,
-                                1,
-                                Colors.black),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    ///HomeRestaurant4
-                    ///
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 10.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: _myWidget.myText(
-                              Constants.Home_RESTAURANT4_LABEL1,
-                              15.0,
-                              FontWeight.bold,
-                              1,
-                              Colors.black),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(color: Color(0xFFE8E8E8)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 5.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Flexible(
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 5.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: TextField(
-                                            autofocus: false,
-                                            keyboardType: TextInputType.text,
-                                            maxLines: 1,
-                                            decoration: InputDecoration(
-                                                border: InputBorder.none,
-                                                hintText: Constants
-                                                    .Home_RESTAURANT4_FIELD1_HINT,
-                                                hintStyle: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
+                                            ),
                                           ),
-                                      
+                                          flex: 1,
                                         ),
-                                      ),
-                                    ),
-                                    flex: 1,
-                                  ),
-                                  Flexible(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 5.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: TextField(
-                                            autofocus: false,
-                                            keyboardType: TextInputType.text,
-                                            maxLines: 1,
-                                            decoration: InputDecoration(
-                                                border: InputBorder.none,
-                                                hintText: Constants
-                                                    .Home_RESTAURANT4_FIELD2_HINT,
-                                                hintStyle: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
+                                        Flexible(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 5.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0)),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10.0),
+                                                child: TextField(
+                                                  autofocus: false,
+                                                  keyboardType:
+                                                      TextInputType.text,
+                                                  maxLines: 1,
+                                                  decoration: InputDecoration(
+                                                      border: InputBorder.none,
+                                                      hintText: Constants
+                                                          .Home_RESTAURANT4_FIELD2_HINT,
+                                                      hintStyle: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                ),
+                                              ),
+                                            ),
                                           ),
+                                          flex: 1,
                                         ),
-                                      ),
-                                    ),
-                                    flex: 1,
-                                  ),
-                              
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 5.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(5.0)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0),
-                                  child: TextField(
-                                    autofocus: false,
-                                    keyboardType: TextInputType.text,
-                                    maxLines: 1,
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: Constants
-                                            .Home_RESTAURANT4_FIELD3_HINT,
-                                        hintStyle: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 5.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(5.0)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0),
-                                  child: TextField(
-                                    autofocus: false,
-                                    keyboardType: TextInputType.text,
-                                    maxLines: 1,
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: Constants
-                                            .Home_RESTAURANT4_FIELD4_HINT,
-                                        hintStyle: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              // color: Colors.red,
-                              child: GiveStarReviews(
-                                spaceBetween: 0,
-                                starData: [
-                                  GiveStarData(onChanged: (rate) {}, text: ''),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                  width: double.infinity,
-                                  height: 40.0,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(5.0)),
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      Constants.Home_RESTAURANT4_BUTTON1,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              child: _myWidget.myText(
-                                  Constants.E_RESTAURANT4_LABEL2,
-                                  15,
-                                  FontWeight.bold,
-                                  1,
-                                  Colors.black),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 20.0, bottom: 10.0),
-                              child: _myWidget.myText(widget.categoryPosts.nome,
-                                  20, FontWeight.bold, 1, Colors.red),
-                            ),
-                            _myWidget.myText(
-                                "${widget.categoryPosts.luogoCitta}",
-                                15,
-                                FontWeight.bold,
-                                1,
-                                Colors.black38),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(color: Color(0xFFE8E8E8)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: GestureDetector(
-                          onTap: () {
-                               Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      PaymentHomeRestaurant(widget.categoryPosts)),
-                            );
-                          },
-                          child: Container(
-                              width: double.infinity,
-                              height: 40.0,
-                              decoration: BoxDecoration(
-                                  color: Colors.redAccent,
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    Constants.Home_RESTAURANT4_BUTTON2,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image.asset(
-                                          "assets/images/calendar.png"),
-                                    ),
-                                  )
-                                ],
-                              )),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0),
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  color: Color(0xFF2A2A40),
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Container(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Container(
-                                          child: _myWidget.myText(
-                                              Constants.Home_RESTAURANT4_LABEL4,
-                                              20,
-                                              FontWeight.normal,
-                                              1,
-                                              Colors.white),
-                                        ),
-                                        Container(
-                                          child: _myWidget.myText(
-                                              Constants.Home_RESTAURANT4_LABEL5,
-                                              25,
-                                              FontWeight.bold,
-                                              1,
-                                              Colors.white),
-                                        )
                                       ],
                                     ),
                                   ),
-                                ),
-                              )),
-                        ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 5.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(5.0)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: TextField(
+                                          autofocus: false,
+                                          keyboardType: TextInputType.text,
+                                          maxLines: 1,
+                                          decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText: Constants
+                                                  .Home_RESTAURANT4_FIELD3_HINT,
+                                              hintStyle: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 5.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(5.0)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: TextField(
+                                          autofocus: false,
+                                          keyboardType: TextInputType.text,
+                                          maxLines: 1,
+                                          decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText: Constants
+                                                  .Home_RESTAURANT4_FIELD4_HINT,
+                                              hintStyle: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    // color: Colors.red,
+                                    child: GiveStarReviews(
+                                      spaceBetween: 0,
+                                      starData: [
+                                        GiveStarData(
+                                            onChanged: (rate) {}, text: ''),
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                        width: double.infinity,
+                                        height: 40.0,
+                                        decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius:
+                                                BorderRadius.circular(5.0)),
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            Constants.Home_RESTAURANT4_BUTTON1,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    child: _myWidget.myText(
+                                        Constants.E_RESTAURANT4_LABEL2,
+                                        15,
+                                        FontWeight.bold,
+                                        1,
+                                        Colors.black),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 20.0, bottom: 10.0),
+                                    child: _myWidget.myText(
+                                        widget.categoryPosts.nome,
+                                        20,
+                                        FontWeight.bold,
+                                        1,
+                                        Colors.red),
+                                  ),
+                                  _myWidget.myText(
+                                      "${widget.categoryPosts.luogoCitta}",
+                                      15,
+                                      FontWeight.bold,
+                                      1,
+                                      Colors.black38),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(color: Color(0xFFE8E8E8)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PaymentHomeRestaurant(
+                                                widget.categoryPosts)),
+                                  );
+                                },
+                                child: Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    decoration: BoxDecoration(
+                                        color: Colors.redAccent,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          Constants.Home_RESTAURANT4_BUTTON2,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Container(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Image.asset(
+                                                "assets/images/calendar.png"),
+                                          ),
+                                        )
+                                      ],
+                                    )),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20.0),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFF2A2A40),
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Container(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Container(
+                                                child: _myWidget.myText(
+                                                    Constants
+                                                        .Home_RESTAURANT4_LABEL4,
+                                                    20,
+                                                    FontWeight.normal,
+                                                    1,
+                                                    Colors.white),
+                                              ),
+                                              Container(
+                                                child: _myWidget.myText(
+                                                    Constants
+                                                        .Home_RESTAURANT4_LABEL5,
+                                                    25,
+                                                    FontWeight.bold,
+                                                    1,
+                                                    Colors.white),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ));
+                  ),
+                ],
+              ));
   }
 
   Widget listItem(int position) {
@@ -1666,7 +1737,8 @@ class _HomeRestaurant extends State<HomeRestaurant> {
       return languageList;
     }
   }
-    getAllergies(String allergies) {
+
+  getAllergies(String allergies) {
     if (allergies != "") {
       var allergiesList = allergies.split(',');
       return allergiesList;

@@ -59,6 +59,8 @@ class _MenuHamBurger extends State<MenuHamBurger> {
 
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -66,7 +68,7 @@ class _MenuHamBurger extends State<MenuHamBurger> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           _createHeader(),
-
+       
           ListTile(
             title: Container(
               child: Row(
@@ -133,14 +135,14 @@ class _MenuHamBurger extends State<MenuHamBurger> {
 
           ),
           _createDrawerItem(
-            uri: "assets/images/star.png",
+            uri: "assets/images/no-milk.png",
             text: Constants.MENU_HUMBERGER_LABEL5,
             onTap:  (){
                 onAllergiesTap();
               }
           ),
           _createDrawerItem(
-            uri: "assets/images/star.png",
+            uri: "assets/images/password.png",
             text: Constants.MENU_HUMBERGER_LABEL6,
             onTap:  (){
                 onPasswordChangeTap();
@@ -251,7 +253,7 @@ class _MenuHamBurger extends State<MenuHamBurger> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: _myWidget.myText(
-                              "IT/EUR", 12.0, FontWeight.bold, 1, Colors.white),
+                              "${GlobalState.myUser.data.linguaMadre}", 12.0, FontWeight.bold, 1, Colors.white),
                         ),
                       ),
                     ],
@@ -287,9 +289,12 @@ class _MenuHamBurger extends State<MenuHamBurger> {
   String getCurrentUserName(BuildContext context) {
     print("getCurrentUserName");
     String currentUserName = "";
-    if(GlobalState.currentUser!=null){
-      if(GlobalState.currentUser.data.nome!=null){
-        currentUserName="${GlobalState.currentUser.data.nome} ${GlobalState.currentUser.data.cognome}";
+    if(GlobalState.myUser !=null ){
+      if(GlobalState.myUser.data.nome != null){
+
+        currentUserName="${GlobalState.myUser.data.nome} ${GlobalState.myUser.data.cognome}";
+          
+
       }else{
         print("GlobalState.currentUser.nome Is Null");
       }
@@ -300,9 +305,12 @@ class _MenuHamBurger extends State<MenuHamBurger> {
   }
   String getUserImageUrl(BuildContext context) {
     String currentUserImageUrl="";
-    if(GlobalState.currentUser!=null){
-      if(GlobalState.currentUser.data.urlFoto !=null){
-        currentUserImageUrl=GlobalState.currentUser.data.urlFoto;
+    if(GlobalState.myUser != null){
+      if(GlobalState.myUser.data.urlFoto != null){
+   
+        currentUserImageUrl=GlobalState.myUser.data.urlFoto;
+          
+   
         print("getCurrentUser urlFotoMil Gya");
       }else{
         print("GlobalState.curretnUser.Image Is Null");
@@ -401,6 +409,7 @@ class _MenuHamBurger extends State<MenuHamBurger> {
   print("LogOut Pressed");
   await FirebaseAuth.instance.signOut();
   Hive.box("userIdBox").clear();
+  GlobalState.myUser = null;
   // GlobalState.
     // if(GlobalState.facebookSignIn!=null){
     //   _fbLogOut();

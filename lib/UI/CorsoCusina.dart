@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import '../Utils/constants.dart';
+import 'Chat2.dart';
 import 'PaymentCorsoCusina.dart';
 
 class CorsoCusina extends StatefulWidget {
@@ -363,129 +364,134 @@ class _CorsoCusina extends State<CorsoCusina> {
                   children: [
                     ///HomeRestaurant1
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 10.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Color(0xFFDBDADA),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Container(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: (hostInfo == null)
-                                      ? Container(
-                                          height: 80.0,
-                                          width: 80.0,
-                                          decoration: BoxDecoration(
-                                              color: Colors.black38,
-                                              borderRadius:
-                                                  BorderRadius.circular(40.0)),
-                                        )
-                                      : Container(
-                                          height: 80.0,
-                                          width: 80.0,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      "${hostInfo['UrlFoto']}"),
-                                                  fit: BoxFit.cover),
-                                              color: Colors.black38,
-                                              borderRadius:
-                                                  BorderRadius.circular(40.0)),
-                                        ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    child: Container(
-                                      height: 80.0,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          _myWidget.myText(
-                                              Constants.E_RESTAURANT_LABEL1,
-                                              12,
-                                              FontWeight.bold,
-                                              1,
-                                              Colors.black),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5.0),
-                                            child: _myWidget.myText(
-                                                "${hostInfo == null ? '' : hostInfo['Nome']}, passion of sharing",
+                    InkWell(
+                      onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (_)=> Chat2(hostInfo['ID'],  {"name":hostInfo['Nome'],"picture":hostInfo['UrlFoto']})));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Color(0xFFDBDADA),
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: Container(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: (hostInfo == null)
+                                        ? Container(
+                                            height: 80.0,
+                                            width: 80.0,
+                                            decoration: BoxDecoration(
+                                                color: Colors.black38,
+                                                borderRadius:
+                                                    BorderRadius.circular(40.0)),
+                                          )
+                                        : Container(
+                                            height: 80.0,
+                                            width: 80.0,
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: NetworkImage(
+                                                        "${hostInfo['UrlFoto']}"),
+                                                    fit: BoxFit.cover),
+                                                color: Colors.black38,
+                                                borderRadius:
+                                                    BorderRadius.circular(40.0)),
+                                          ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5.0),
+                                      child: Container(
+                                        height: 80.0,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            _myWidget.myText(
+                                                Constants.E_RESTAURANT_LABEL1,
                                                 12,
                                                 FontWeight.bold,
-                                                2,
+                                                1,
                                                 Colors.black),
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                                color: Colors.orange),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 5.0),
-                                                    child: _myWidget.myText(
-                                                        "${hostInfo == null ? '' : hostInfo['Valutazione']}",
-                                                        12,
-                                                        FontWeight.normal,
-                                                        1,
-                                                        Colors.white),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 5.0),
-                                                    child: Container(
-                                                        height: 15.0,
-                                                        width: 15.0,
-                                                        child: ImageIcon(
-                                                          AssetImage(
-                                                              "assets/images/star.png"),
-                                                          color:
-                                                              Color(0xFFFFFFFF),
-                                                        )),
-                                                  )
-                                                ],
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  vertical: 5.0),
+                                              child: _myWidget.myText(
+                                                  "${hostInfo == null ? '' : hostInfo['Nome']}, passion of sharing",
+                                                  12,
+                                                  FontWeight.bold,
+                                                  2,
+                                                  Colors.black),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5.0),
+                                                  color: Colors.orange),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 5.0),
+                                                      child: _myWidget.myText(
+                                                          "${hostInfo == null ? '' : hostInfo['Valutazione']}",
+                                                          12,
+                                                          FontWeight.normal,
+                                                          1,
+                                                          Colors.white),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 5.0),
+                                                      child: Container(
+                                                          height: 15.0,
+                                                          width: 15.0,
+                                                          child: ImageIcon(
+                                                            AssetImage(
+                                                                "assets/images/star.png"),
+                                                            color:
+                                                                Color(0xFFFFFFFF),
+                                                          )),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  height: 30.0,
-                                  width: 50.0,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFFFF7878),
-                                      borderRadius: BorderRadius.circular(5.0)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child:
-                                        Image.asset("assets/images/chat.png"),
+                                  Container(
+                                    height: 30.0,
+                                    width: 50.0,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFFF7878),
+                                        borderRadius: BorderRadius.circular(5.0)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child:
+                                          Image.asset("assets/images/chat.png"),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

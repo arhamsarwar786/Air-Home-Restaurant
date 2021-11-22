@@ -1,7 +1,12 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:air_home_retaurant/ModelClasses/User.dart';
+import 'package:air_home_retaurant/UI/HomeScreen.dart';
+import 'package:air_home_retaurant/UI/MainScreen.dart';
+import 'package:country_list_pick/country_list_pick.dart';
 import 'package:air_home_retaurant/Utils/CustomProgressDilogue.dart';
-import 'package:country_code_picker/country_code_picker.dart';
+// import 'package:country_code_picker/country_code_picker.dart';
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
 import 'package:air_home_retaurant/Utils/BaseClass.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
@@ -10,6 +15,7 @@ import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,17 +30,40 @@ class MyProfile extends StatefulWidget {
 class _MyProfile extends State<MyProfile> {
   MyWidget _myWidget;
 
-
   ProgressDialog _progressDialog = ProgressDialog();
-
-  List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
 
   @override
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
+    _selectedLanguageMenuList = buildDropDownMenuItems(_selectedItemDropDown);
+    _selectedLanguage = _selectedLanguageMenuList[0].value;
   }
 
+  List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
+    List<DropdownMenuItem<ListItem>> items = List();
+    for (ListItem listItem in listItems) {
+      items.add(
+        DropdownMenuItem(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Text(
+              listItem.name,
+              style: TextStyle(fontSize: 12.0),
+            ),
+          ),
+          value: listItem,
+        ),
+      );
+    }
+    return items;
+  }
+
+  List<ListItem> _selectedItemDropDown = [
+    ListItem('IT', 'Italian'),
+    ListItem('US', 'English'),
+    ListItem('ES', 'Espanol'),
+  ];
 
   var dateOfBirth;
 
@@ -44,7 +73,7 @@ class _MyProfile extends State<MyProfile> {
 
   /// Main Languages
   var languageList = ["Italian", "English", "Espanol"];
-  var _selectedLanguage = "Main Language";
+  ListItem _selectedLanguage;
   //////  Spoken Languages
   var spokenList = ["Italian", "English", "Espanol"];
   var _selectedSpokenLanguage = "Spoken Language";
@@ -82,6 +111,12 @@ class _MyProfile extends State<MyProfile> {
   File _image;
   bool isImageUploaded = false;
   String downloadUrl;
+
+  // Language Code Selected
+  var languageCode = '';
+
+  List<DropdownMenuItem<ListItem>> _selectedLanguageMenuList = [];
+  ListItem _selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +169,7 @@ class _MyProfile extends State<MyProfile> {
                                   image: DecorationImage(
                                       image: NetworkImage(
                                           "${downloadUrl == null ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' : downloadUrl}"),
-                                      fit: BoxFit.cover)),                        
+                                      fit: BoxFit.cover)),
                               child: isImageUploaded
                                   ? CircularProgressIndicator(
                                       color: Colors.red,
@@ -159,7 +194,7 @@ class _MyProfile extends State<MyProfile> {
                               padding:
                                   const EdgeInsets.symmetric(vertical: 10.0),
                               child: _myWidget.myText(
-                                  "${GlobalState.currentUser.data.nome}",
+                                  "${GlobalState.myUser.data.nome}",
                                   20.0,
                                   FontWeight.bold,
                                   1,
@@ -250,7 +285,6 @@ class _MyProfile extends State<MyProfile> {
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
-                           
                           ),
                         ),
                       ),
@@ -343,27 +377,30 @@ class _MyProfile extends State<MyProfile> {
                           width: double.infinity,
                           color: Colors.white,
                           child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
+                            child: DropdownButton<ListItem>(
                               hint: Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  _selectedLanguage,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                // child: Text(
+                                //   _selectedLanguage.name,
+                                //   style: TextStyle(
+                                //       fontSize: 12,
+                                //       fontWeight: FontWeight.bold),
+                                // ),
                               ),
-                              onChanged: (String newValue) {
+                              onChanged: (newValue) {
                                 setState(() {
                                   _selectedLanguage = newValue;
+                                  print(_selectedLanguage.value);
                                 });
                               },
-                              items: languageList.map((String item) {
-                                return DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text("$item"),
-                                );
-                              }).toList(),
+                              items: _selectedLanguageMenuList,
+                              value: _selectedLanguage,
+                              // items: languageList.map((String item) {
+                              //   return DropdownMenuItem<String>(
+                              //     value: item,
+                              //     child: Text("$item"),
+                              //   );
+                              // }).toList(),
                             ),
                           ),
                         ),
@@ -396,20 +433,31 @@ class _MyProfile extends State<MyProfile> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: Container(
+                          alignment: Alignment.centerLeft,
                           // height: 40.0,
                           width: double.infinity,
                           color: Colors.white,
                           child: DropdownButtonHideUnderline(
-                            child: CountryCodePicker(
+                            child: CountryListPick(
+                              appBar: AppBar(
+                                backgroundColor: Colors.red,
+                                title: Text("Select Country"),
+                              ),
                               onChanged: (val) {
-                                print(val);
+                                languageCode = val.code;
+                                print(languageCode);
                               },
                               initialSelection: 'PK',
-                              showCountryOnly: true,
-                              // hideSearch: true,
-                              // showFlagMain: false,
-                              showOnlyCountryWhenClosed: false,
-                              // alignLeft: false,
+                              theme: CountryTheme(
+                                alphabetSelectedBackgroundColor: Colors.red,
+                                labelColor: Colors.red,
+                                alphabetTextColor: Colors.black,
+                                isShowFlag: false,
+                                isShowTitle: true,
+                                isShowCode: false,
+                                isDownIcon: false,
+                                showEnglishName: true,
+                              ),
                             ),
                           ),
                         ),
@@ -486,6 +534,20 @@ class _MyProfile extends State<MyProfile> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.0),
                           child: TextField(
+                            onTap: () {
+                              print(phoneNumber.text.length);
+                              //             Fluttertoast.showToast(
+                              // msg: "Add Last 10 Digits",
+                              // toastLength: Toast.LENGTH_SHORT,
+                              // gravity: ToastGravity.BOTTOM,
+                              // timeInSecForIosWeb: 1,
+                              // backgroundColor: Colors.red,
+                              // textColor: Colors.white,
+                              // fontSize: 10.0);
+                            },
+                            onChanged: (val) {
+                              print(val);
+                            },
                             autofocus: false,
                             controller: phoneNumber,
                             keyboardType: TextInputType.phone,
@@ -497,10 +559,6 @@ class _MyProfile extends State<MyProfile> {
                                 hintStyle: TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.bold)),
                           ),
-                          // _myWidget.myTextInput(
-                          //      TextEditingController(),
-                          //     1,
-                          //     Constants.MY_PROFILE_TEXT_FIELD7),
                         ),
                       ),
                     ),
@@ -653,27 +711,28 @@ class _MyProfile extends State<MyProfile> {
                             width: 100.0,
                             child: GestureDetector(
                               onTap: () {
-                                if (_selectedSpokenLanguage == 'Spoken Language') {
+                                if (_selectedSpokenLanguage ==
+                                    'Spoken Language') {
                                   BaseClass.showSB(
                                       msg: Constants.EMPTY_LIST_INFO_ERROR,
                                       context: context,
                                       type: Constants.FAILURE);
-                                }else{
-                                  if(selectedSpokenList.contains(_selectedSpokenLanguage)){
-                                       BaseClass.showSB(
-                                      msg: Constants.ALREADY_IN_LIST_INFO_ERROR,
-                                      context: context,
-                                      type: Constants.FAILURE);
-                                  }else{
-
-                                setState(() {
-                                  selectedSpokenList
-                                      .add(_selectedSpokenLanguage);
-                                  selectedSpokenList =
-                                      selectedSpokenList.toSet().toList();
-                                });
+                                } else {
+                                  if (selectedSpokenList
+                                      .contains(_selectedSpokenLanguage)) {
+                                    BaseClass.showSB(
+                                        msg: Constants
+                                            .ALREADY_IN_LIST_INFO_ERROR,
+                                        context: context,
+                                        type: Constants.FAILURE);
+                                  } else {
+                                    setState(() {
+                                      selectedSpokenList
+                                          .add(_selectedSpokenLanguage);
+                                      selectedSpokenList =
+                                          selectedSpokenList.toSet().toList();
+                                    });
                                   }
-
                                 }
                               },
                               child: Container(
@@ -709,9 +768,9 @@ class _MyProfile extends State<MyProfile> {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                         decoration: BoxDecoration(
-                                      color: Color(0xFFFF7878),
-                                      borderRadius: BorderRadius.circular(5.0)),
+                        decoration: BoxDecoration(
+                            color: Color(0xFFFF7878),
+                            borderRadius: BorderRadius.circular(5.0)),
                         child: InputChip(
                           onDeleted: () {
                             setState(() {
@@ -741,100 +800,184 @@ class _MyProfile extends State<MyProfile> {
             /// SAVE
             InkWell(
               onTap: () async {
-                  FocusScope.of(context)
-                                  .requestFocus(new FocusNode());
+                FocusScope.of(context).requestFocus(new FocusNode());
                 _progressDialog.showProgressDialog(context);
-                // print("$_selectedGender $_selectedLanguage $_selectedQualification $_selectedJob ${birthPlace.text}  ${address.text}  ${postalCode.text}  ${phoneNumber.text}");
-            print(dateOfBirth);
-                HttpServices httpServices = new HttpServices();
-                await httpServices.postJson(
-                    body: {
-                      "ID": "${GlobalState.userId}",
-                      "Payoff": "",
-                      "UrlFoto": "$downloadUrl",
-                      "DataDiNascita": "$dateOfBirth",
-                      // "NatoA": "Napoli",
-                      // "Host": false,
-                      // "Chef": true,
-                      // "Guide": true,
-                      // "Ambassador": true,
-                      // "Airagency": true,
-                      // "DisponibileXEventiPrivati": true,
-                      "Telefono": "${phoneNumber.text}",
-                      "Indirizzo": "${address.text}",
-                      "Nazione": "IT",
-                      "Citta": "${birthPlace.text}",
-                      "CAP": "${postalCode.text}",
-                      // "IdTitoloDiStudio": 3,
-                      // "ListaAllergie": "I,J",
-                      // "ListaTipiDiCucinaGuest": "I,J",
-                      "ListaTipiDiCucinaHost": "",
-                      // "ListaLingue": "IT,EN",
-                      // "IdProfessione": 5,
-                      // "LinguaMadre": "IT",
-                      // "Valuta": "EUR",
-                      // "Valutazione": 0,
-                      "Descrizione": "Arham Here",
-                      // "IBAN": "123",
-                      "RagioneSociale": "",
-                      "SedeLegale": "",
-                      "PIVA": "",
-                      "CF": "",
-                      "ReferenteAzienda": "",
-                      "PEC": "",
-                      "SDI": "",
-                      // "ProfiloCompleto": 2,
-                      // "Credito": 45,
-                      // "RicaricoEvento": 20,
-                      // "InAttesadiEssereEliminato": false,
-                      "SitoWeb": "",
-                      "UrlVideo": ""
-                    },
-                    url: Constants.UPDATE_USER_PROFILE,
-                    onSuccess: (_streamedResponse) async {
-                      var response =
-                          await http.Response.fromStream(_streamedResponse);
-                      print(response.body);
+                bool status = true;
 
-                      if (response != null) {
-                        if (response == "0") {
-                          //email Or Password wrong
-                          _progressDialog.dismissProgressDialog(context);
+                if (downloadUrl == null) {
+                  BaseClass.showSB(
+                      msg: Constants.ADD_PICTURE,
+                      context: context,
+                      type: Constants.FAILURE);
+                  status = false;
+                  _progressDialog.dismissProgressDialog(context);
+                } 
+                else if (dateOfBirth == null) {
+                  BaseClass.showSB(
+                      msg: Constants.ADD_DATE_OF_BIRTH,
+                      context: context,
+                      type: Constants.FAILURE);
+                  status = false;
+                  _progressDialog.dismissProgressDialog(context);
+                } else if (birthPlace.text.isEmpty) {
+                  BaseClass.showSB(
+                      msg: Constants.ADD_BIRTH_PLACE,
+                      context: context,
+                      type: Constants.FAILURE);
+                  status = false;
+                  _progressDialog.dismissProgressDialog(context);
+                } else if (address.text.isEmpty) {
+                  BaseClass.showSB(
+                      msg: Constants.ADD_ADDRESS,
+                      context: context,
+                      type: Constants.FAILURE);
+                  status = false;
+                  _progressDialog.dismissProgressDialog(context);
+                } else if (postalCode.text.isEmpty) {
+                  BaseClass.showSB(
+                      msg: Constants.ADD_POSTCODE,
+                      context: context,
+                      type: Constants.FAILURE);
+                  status = false;
+                  _progressDialog.dismissProgressDialog(context);
+                } else if (phoneNumber.text.isEmpty) {
+                  BaseClass.showSB(
+                      msg: Constants.ADD_PHONE_NUMBERS,
+                      context: context,
+                      type: Constants.FAILURE);
+
+                  status = false;
+                  _progressDialog.dismissProgressDialog(context);
+                } else if (phoneNumber.text.length < 10) {
+                  BaseClass.showSB(
+                      msg: Constants.PHONE_NUMBERS_LENGTH,
+                      context: context,
+                      type: Constants.FAILURE);
+                                        status = false;
+                  _progressDialog.dismissProgressDialog(context);
+                } else if (_selectedQualification == "Qualifications") {
+                  BaseClass.showSB(
+                      msg: Constants.ADD_QUALIFICATION,
+                      context: context,
+                      type: Constants.FAILURE);
+                  status = false;
+                  _progressDialog.dismissProgressDialog(context);
+                } else if (_selectedJob == "Job") {
+                  BaseClass.showSB(
+                      msg: Constants.ADD_JOB,
+                      context: context,
+                      type: Constants.FAILURE);
+                  status = false;
+                  _progressDialog.dismissProgressDialog(context);
+                }
+                if (status) {
+                  if ( downloadUrl != null && dateOfBirth != null &&
+                      birthPlace.text.isNotEmpty &&
+                      address.text.isNotEmpty &&
+                      _selectedQualification != "Qualifications" &&
+                      _selectedJob != "Job" &&
+                      phoneNumber.text.isNotEmpty && phoneNumber.text.length > 9 &&
+                      postalCode.text.isNotEmpty) {
+                  // _progressDialog.showProgressDialog(context);
+
+                    print("SuccessFul");
+
+                    HttpServices httpServices = new HttpServices();
+                    await httpServices.postJson(
+                        body: {
+                          "ID": "${GlobalState.userId}",
+                          "Payoff": "",
+                          "UrlFoto": "$downloadUrl",
+                          "DataDiNascita": "$dateOfBirth",
+                          // "NatoA": "Napoli",
+                          // "Host": false,
+                          // "Chef": true,
+                          // "Guide": true,
+                          // "Ambassador": true,
+                          // "Airagency": true,
+                          // "DisponibileXEventiPrivati": true,
+                          "Telefono": "${phoneNumber.text}",
+                          "Indirizzo": "${address.text}",
+                          "Nazione": "${languageCode}",
+                          "Citta": "${birthPlace.text}",
+                          "CAP": "${postalCode.text}",
+                          // "IdTitoloDiStudio": 3,
+                          // "ListaAllergie": "I,J",
+                          // "ListaTipiDiCucinaGuest": "I,J",
+                          "ListaTipiDiCucinaHost": "",
+                          // "ListaLingue": "IT,EN",
+                          // "IdProfessione": 5,
+                          "LinguaMadre": "${_selectedLanguage}",
+                          // "Valuta": "EUR",
+                          // "Valutazione": 0,
+                          "Descrizione": "Arham Here",
+                          // "IBAN": "123",
+                          "RagioneSociale": "",
+                          "SedeLegale": "",
+                          "PIVA": "",
+                          "CF": "",
+                          "ReferenteAzienda": "",
+                          "PEC": "",
+                          "SDI": "",
+                          // "ProfiloCompleto": 2,
+                          // "Credito": 45,
+                          // "RicaricoEvento": 20,
+                          // "InAttesadiEssereEliminato": false,
+                          "SitoWeb": "",
+                          "UrlVideo": ""
+                        },
+                        url: Constants.UPDATE_USER_PROFILE,
+                        onSuccess: (_streamedResponse) async {
+                          var response =
+                              await http.Response.fromStream(_streamedResponse);
+                          print(response.body);
+
+                          if (response != null) {
+                            if (response == "0") {
+                              //email Or Password wrong
+                              _progressDialog.dismissProgressDialog(context);
+                              BaseClass.showSB(
+                                  msg: Constants.PROFILE_INFO_ERROR,
+                                  context: context,
+                                  type: Constants.FAILURE);
+                            } else {
+                              _progressDialog.dismissProgressDialog(context);
+                              BaseClass.showSB(
+                                  msg: Constants.SUCCESSFULLY_UPDATED,
+                                  context: context,
+                                  type: Constants.SUCCESS);
+                                  Navigator.push(context, MaterialPageRoute(builder: (_)=> MainScreen() ));
+
+                       
+                            }
+                          } else {
+                            //empty response
+                            _progressDialog.dismissProgressDialog(context);
+                          }
+                        },
+                        onFailure: (_streamedResponse) async {
+                          // _progressDialog.dismissProgressDialog(context);
+                          var response =
+                              await http.Response.fromStream(_streamedResponse);
+                          print(response.body);
                           BaseClass.showSB(
-                              msg: Constants.LOGIN_INFO_ERROR,
+                              msg: _streamedResponse.reasonPhrase,
                               context: context,
                               type: Constants.FAILURE);
-                        } else {
-                          _progressDialog.dismissProgressDialog(context);
-                          BaseClass.showSB(
-                              msg: Constants.SUCCESSFULLY_UPDATED,
-                              context: context,
-                              type: Constants.SUCCESS);
-                          // getFavorites(
-                          //     context: context,
-                          //     userId: GlobalState.userId == null
-                          //         ? int.parse(Hive.box('userIdBox').get('userID'))
-                          //         : GlobalState.userId);
-                        }
-                      } else {
-                        //empty response
-                        _progressDialog.dismissProgressDialog(context);
-                      }
-                    },
-                    onFailure: (_streamedResponse) async {
-                      // _progressDialog.dismissProgressDialog(context);
-                      var response =
-                          await http.Response.fromStream(_streamedResponse);
-                      print(response.body);
-                      // var user = LogInResponce.fromJson(jsonDecode(response.body));
-                      // BaseClass.showSB(
-                      //     msg: user.message,
-                      //     context: context,
-                      //     type: Constants.FAILURE);
-                      // print("Login::login onFailure");
+                        });
+                  } else {
+                    // status = false;
+                  _progressDialog.dismissProgressDialog(context);
+                    BaseClass.showSB(
+                        msg: "SomeThing Missing",
+                        context: context,
+                        type: Constants.FAILURE);
 
-                      // print("this is in OnFailure" + _streamedResponse.reasonPhrase);
-                    });
+                  }
+                }else{
+                  _progressDialog.dismissProgressDialog(context);
+
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -898,7 +1041,7 @@ class _MyProfile extends State<MyProfile> {
   // Select Date Of Birth
   _selectDate(BuildContext context) async {
     DateTime selectedDate = DateTime.now();
-    
+
     final DateTime selected = await showDatePicker(
       builder: (BuildContext context, Widget child) {
         return Theme(
@@ -994,7 +1137,8 @@ class _MyProfile extends State<MyProfile> {
         if (snapshot.state == TaskState.success) {
           // _progressDialog.dismissProgressDialog(context);
           downloadUrl = await snapshot.ref.getDownloadURL();
-          snapshot.ref.getMetadata().then((value) => print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${value.fullPath}"));
+          snapshot.ref.getMetadata().then((value) =>
+              print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ${value.fullPath}"));
           isImageUploaded = false;
           setState(() {});
           log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%% URL = $downloadUrl');
@@ -1019,5 +1163,25 @@ class _MyProfile extends State<MyProfile> {
         }
       }
     });
+  }
+
+  getUserProfile({@required BuildContext context}) async {
+    print("USER ID  : ${GlobalState.userId}");
+    if (GlobalState.myUser == null) {
+      HttpServices httpServices = new HttpServices();
+      var res1 = await httpServices.getFutureJsonWithBody(
+          url: Constants.USER_API + GlobalState.userId.toString());
+      var response1 = await http.Response.fromStream(res1);
+
+      if (response1.statusCode == 200) {
+        print(" ${response1.body}");
+        var responseList = MyUser.fromJson(jsonDecode(response1.body));
+        if (responseList != null) {
+          GlobalState.myUser = responseList;
+        }
+      } else {
+        log("API STATUS CODE = ${response1.statusCode}");
+      }
+    }
   }
 }

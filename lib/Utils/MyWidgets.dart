@@ -102,7 +102,7 @@ class MyWidget {
 
   Widget myTextInput(
       TextEditingController controller, int lines, String hintText) {
-    return TextField(
+    return TextField(      
       autofocus: false,
       controller: controller,
       keyboardType: TextInputType.text,
@@ -185,41 +185,36 @@ class MyWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                add();
-              },
-              child: Container(
-                // height: 20,
-                // width: 20,
-                // color: Colors.red,
-                child: Icon(Icons.add, color: Colors.red),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              // height: 20,
-              // width: 20,
-              child: Center(
-                  child:
-                      myText("$number", 12, FontWeight.bold, 1, Colors.black)),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
                 if (number > 0) {
                   minus();
                 }
               },
               child: Container(
-                // height: 20,
-                // width: 20,
-                // color: Colors.green,
-                child: Icon(Icons.indeterminate_check_box_sharp,
-                    color: Colors.green),
+               
+                child: Icon(Icons.remove,
+                    color: Colors.red),
               ),
             ),
           ),
+          Expanded(
+            child: Container(
+         
+              child: Center(
+                  child:
+                      myText("$number", 12, FontWeight.bold, 1, Colors.black)),
+            ),
+          ),
+           Expanded(
+            child: GestureDetector(
+              onTap: () {
+                add();
+              },
+              child: Container(              
+                child: Icon(Icons.add, color: Colors.green),
+              ),
+            ),
+          ),
+         
         ],
       ),
     );
@@ -250,7 +245,7 @@ class MyWidget {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
-          return Container(
+          return allergiesList == null ? Center(child: Text("No Allergies")): Container(
             child: ListView(
               children: [
                 ListTile(

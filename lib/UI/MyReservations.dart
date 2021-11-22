@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:air_home_retaurant/UI/HomeScreen.dart';
+import 'package:air_home_retaurant/UI/MainScreen.dart';
 import 'package:intl/intl.dart';
 import 'package:air_home_retaurant/ModelClasses/ReservationsModel.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
@@ -24,43 +26,47 @@ class _MyReservations extends State<MyReservations> {
     super.initState();
     _myWidget = new MyWidget();
   }
-
+Future<bool> _onWillPop() async {
+             return    Navigator.push(context, MaterialPageRoute(builder: (context)=>MainScreen())) ?? false;
+   
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _myWidget.myAppBar(Constants.MY_RESERVATIONS_TITLE, () {
-        Navigator.pop(context);
-      }),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery
-              .of(context)
-              .size
-              .height,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
-          child: FutureBuilder(
-              future: getReservationList(context: context),
-              builder: (context, snapshot) {
-                if (snapshot.data != null && snapshot.hasData) {
-                  var list = snapshot.data as ReservationsModel;
-                  return ListView.builder(
-                    itemCount: list.data.length,
-                    itemBuilder: (context, position) {
-                      return listItem(position, list.data[position]);
-                    },
-                  );
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: _myWidget.myAppBar(Constants.MY_RESERVATIONS_TITLE, () {
+          Navigator.push(context, MaterialPageRoute(builder: (_)=> MainScreen()));
+        }),
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery
+                .of(context)
+                .size
+                .height,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
+            child: FutureBuilder(
+                future: getReservationList(context: context),
+                builder: (context, snapshot) {
+                  if (snapshot.data != null && snapshot.hasData) {
+                    var list = snapshot.data as ReservationsModel;
+                    return ListView.builder(
+                      itemCount: list.data.length,
+                      itemBuilder: (context, position) {
+                        return listItem(position, list.data[position]);
+                      },
+                    );
+                  }
+                  else {
+                    return Center(
+                      child: CircularProgressIndicator(color: Colors.red,),
+                    );
+                  }
                 }
-                else {
-                  return Center(
-                    child: Container(height: 50,
-                      width: 50,
-                      child: CircularProgressIndicator(),),
-                  );
-                }
-              }
+            ),
           ),
         ),
       ),

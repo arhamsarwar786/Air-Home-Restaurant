@@ -365,3 +365,6 @@ class _Match2 extends State<Match2> {
     );
   }
 }
+
+
+// {"IDUser": 3730,"TipoID": 1,"Titolo":"Arham Add Title","Titolo":"Arham Add Match","Testo": "Testo Match","IDCategoria": 1,"Citta" : "Lahore"}

@@ -181,3 +181,5 @@ class _AddPostBlog extends State<AddPostBlog> {
     );
   }
 }
+
+// {"IDUser": 1,"TipoID": 1,"Titolo":"Titolo blog","Testo": "Testo blog","Sottotitolo": "Sottotitolo","IDCategoria": 1,"Video": ""}

@@ -5,7 +5,6 @@ import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
-import 'package:flutter_neat_and_clean_calendar/flutter_neat_and_clean_calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class PaymentCorsoCusina extends StatefulWidget {
@@ -289,7 +288,8 @@ class _PaymentCorsoCusina extends State<PaymentCorsoCusina> {
                     //   ),
                     // ),
                     TableCalendar(
-                      firstDay: DateTime.utc(2010, 10, 16),
+                      selectedDayPredicate: (day) => isSameDay(day, _focusedDay),
+                      firstDay: DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day),
                       lastDay: DateTime.utc(2030, 3, 14),
                       focusedDay: _focusedDay,
                       onDaySelected: (selectedDay, focusedDay) {

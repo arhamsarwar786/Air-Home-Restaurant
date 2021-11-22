@@ -164,45 +164,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   
-  Future<CategoryPostsModel> getFavorites({
-    @required BuildContext context,
-    @required int userId,
-  }) async {
-    HttpServices httpServices = new HttpServices();
-    Map<String, int> bodyMap = new HashMap();
-    bodyMap['i'] = GlobalState.userId;
-    await httpServices.getJsonWithOutBody(
-        url: APIServices.FAVORITES_API + "?i=$userId",
-        onSuccess: (_streamedResponse) async {
-          var response = await http.Response.fromStream(_streamedResponse);
-          if (_streamedResponse.statusCode == 200) {
-            log("Login::Favorite list onSuccess");
-            if (response != null) {
-              var responseList = FavoriteModel.fromJson(jsonDecode(response.body));
-              if (responseList != null) {
-                log("response list = ${responseList.message}");
-                GlobalState.myFavorites = responseList;
-                if (GlobalState.myFavorites != null) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MainScreen(),
-                    ),
-                  );
-                } else {
-                  log("Login::Favorite list onSuccess GlobalState.myFavorites null");
-                }
-              }
-            }
-          } else {
-            log("Login::Favorite list onSuccess error");
-          }
-        },
-        onFailure: (_streamedResponse) async {
-          log("Login::Favorite list ononFailure");
-        });
-    return GlobalState.postsList;
-  }
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -212,12 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
         if (_start == 2) {
           _timer.cancel();
           var userBox = Hive.box('userIdBox');
-          if(userBox.get("userID") != null)
-            //  getFavorites(
-            //       context: context,
-            //       userId: GlobalState.userId == null
-            //           ? int.parse(Hive.box('userIdBox').get('userID'))
-            //           : GlobalState.userId);
+          if(userBox.get("userID") != null)           
                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

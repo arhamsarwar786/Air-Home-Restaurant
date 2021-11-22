@@ -15,7 +15,7 @@ import 'package:air_home_retaurant/Menu/AirChef-Menu.dart';
 import 'package:air_home_retaurant/Menu/AirHost-Menu.dart';
 import 'package:air_home_retaurant/UI/Allergies.dart';
 import 'package:air_home_retaurant/UI/Cart.dart';
-import 'package:air_home_retaurant/UI/Chat2.dart';
+
 import 'package:air_home_retaurant/UI/CorsoCusina2.dart';
 import 'package:air_home_retaurant/UI/CorsoCusina3.dart';
 import 'package:air_home_retaurant/UI/add_corso_cucina_classic_event.dart';
@@ -77,7 +77,7 @@ class _ClientDemoState extends State<ClientDemo> {
       Allergies(),
       Cart(),
       Chat(),
-      Chat2(),
+      // Chat2(),
       CheckOut(),
       CorsoCusina2(),
       CorsoCusina3(),

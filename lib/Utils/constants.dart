@@ -340,6 +340,21 @@ class Constants {
   static const String ALREADY_IN_LIST_INFO_ERROR = "Already Selected";
 
 
+
+  /// Profile Class
+  static const String ADD_PICTURE = "Add Profile Picture";
+  static const String ADD_PHONE_NUMBERS = "Phone Number Must be Enter";
+  static const String PHONE_NUMBERS_LENGTH = "Phone Number Must be 10 Digits Long";
+  static const String ADD_POSTCODE = "PostCode Must be Enter";
+  static const String ADD_QUALIFICATION = "Add Qualification first";
+  static const String ADD_JOB = "Add JOB first";
+  static const String ADD_DATE_OF_BIRTH = "Add Date of Birth";
+  static const String ADD_BIRTH_PLACE = "Add Birth Place";
+  static const String ADD_ADDRESS = "Add Address";
+  static const String PROFILE_INFO_ERROR = "Profile Info Wrong";
+  
+
+
   ///  Allergies Success
   static const String SAVED_ALLERGIES = "Successfully Allergies Saved Now Go Back";
 
@@ -580,6 +595,7 @@ class Constants {
   // Vendor Info API 
 
   static const String VENDOR = BASE_URL + 'vendor/';
+  static const String USER_API = BASE_URL + 'UtenteScheda/';
   static const String EVENT_MENU = BASE_URL + 'nuovoeventomenu/';
   static const String YOUR_MENU = BASE_URL + 'nuovoeventoeliminamenu/';
   
