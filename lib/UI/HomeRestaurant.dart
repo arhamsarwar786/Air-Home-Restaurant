@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:air_home_retaurant/UI/Chat2.dart';
 import 'package:air_home_retaurant/UI/PaymentHomeRestaurant.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:givestarreviews/givestarreviews.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -398,6 +399,16 @@ class _HomeRestaurant extends State<HomeRestaurant> {
                         children: [
                           InkWell(
                             onTap: () {
+                              if(hostInfo == null){
+                                  Fluttertoast.showToast(
+                      msg: "Wait to LOAD",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                              }else
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

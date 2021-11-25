@@ -51,6 +51,8 @@ class Datum {
     this.numeroBambini,
     this.importoTotale,
     this.creditoUtilizzato,
+    this.immagineEvento,
+    this.nominativoUtente,
   });
 
   int idPrenotazione;
@@ -70,6 +72,8 @@ class Datum {
   int numeroBambini;
   double importoTotale;
   double creditoUtilizzato;
+  String immagineEvento;
+  String nominativoUtente;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     idPrenotazione: json["IDPrenotazione"],
@@ -89,6 +93,8 @@ class Datum {
     numeroBambini: json["NumeroBambini"],
     importoTotale: json["ImportoTotale"].toDouble(),
     creditoUtilizzato: json["CreditoUtilizzato"],
+    immagineEvento:json["ImmagineEvento"],
+    nominativoUtente:json["NominativoUtente"],
   );
 
   Map<String, dynamic> toJson() => {

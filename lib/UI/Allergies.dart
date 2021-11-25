@@ -32,7 +32,6 @@ class _Allergies extends State<Allergies> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _myWidget = new MyWidget();
     cbValue1 = false;
@@ -155,11 +154,6 @@ class _Allergies extends State<Allergies> {
                       child: Container(
                         child: GestureDetector(
                           onTap: () async {
-                            // GlobalState.allergies.addAll(selectedAllergieis);
-
-                            // print(GlobalState.allergies);
-
-                            // GlobalState.allergies = GlobalState.allergies.toSet().toList();
 
                             print(selectedAllergieis);
                             var stringAllergies = selectedAllergieis.join(",");
@@ -170,9 +164,9 @@ class _Allergies extends State<Allergies> {
                                 context: context,
                                 type: Constants.SUCCESS,                                
                                 );                        
-                            Future.delayed(Duration(seconds: 3000), () {
                             Navigator.pop(context, stringAllergies);
-                            });
+                            // Future.delayed(Duration(seconds: 3000), () {
+                            // });
 
                           },
                           child: Container(

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:air_home_retaurant/ModelClasses/CategoryModal.dart';
 import 'package:air_home_retaurant/ModelClasses/VendorModal.dart';
 import 'package:air_home_retaurant/UI/MyReservations.dart';
+import 'package:air_home_retaurant/Utils/BaseClass.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:air_home_retaurant/ModelClasses/User.dart';
 import 'package:air_home_retaurant/UI/HomeScreen.dart';
@@ -17,7 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'Favourite.dart';
-  List<Widget> widgets = new List();
+
+  List<Widget> widgets =  List();
 
 class MainScreen extends StatefulWidget {
   @override
@@ -81,6 +83,7 @@ class _MainScreen extends State<MainScreen> {
         var responseList = VendorModal.fromJson(jsonDecode(response1.body));
         if (responseList != null) {
           GlobalState.vendorProfile = responseList;
+
         }
       } else {
         log("API STATUS CODE = ${response1.statusCode}");
@@ -119,8 +122,91 @@ class _MainScreen extends State<MainScreen> {
     return list;
   }
 
+
+
+// POPUP SHOW 
+
+ void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return Material(
+          type: MaterialType.transparency,
+          child: Container(
+            alignment: Alignment.center,
+          margin: EdgeInsets.only(left: 0.0,right: 0.0),
+          child: Stack(
+              children: <Widget>[
+              Container(
+                  padding: EdgeInsets.only(
+                  top: 10.0,
+                  ),
+                  margin: EdgeInsets.only(top: 13.0,right: 18.0,left: 18.0),
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 0.0,
+                          offset: Offset(0.0, 0.0),
+                      ),
+                      ]),
+                  child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                      SizedBox(
+                      height: 20.0,
+                      ),
+                      Center(
+                          child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: new Text("WELCOME", style:TextStyle(fontSize: 30.0,color: Colors.white)),
+                          )//
+                      ),
+                      
+                      Center(
+                          child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: new Text("Lorem ipsum dolor sit amet consectetur adipisicing lit. Maxime mollitia,molestiae quas vel sint commodi repudiandae  onsequuntur voluptatum laborum numquam blanditiis harum quisquam eius   ed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. voluptatum laborum numquam blanditiis harum quisquam eius   ed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem.", style:TextStyle(fontSize: 13.0,color: Colors.white)),
+                          )//
+                      ),
+                    
+                  ],
+                  ),
+              ),
+              Positioned(
+                  right: 10.0,
+                  child: GestureDetector(
+                  onTap: (){
+                      Navigator.of(context).pop();
+                  },
+                  child: Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                      radius: 14.0,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.close, color: Colors.red),
+                      ),
+                  ),
+                  ),
+              ),
+              ],
+          ),
+          ),
+        ); },
+    );
+  }
   @override
   Widget build(BuildContext context) {
+    if (toggle) {
+     Future.delayed(Duration.zero, () => _showDialog());
+      toggle = false;
+    }
     return new Scaffold(
       floatingActionButtonLocation:
           FloatingActionButtonLocation.centerDocked,

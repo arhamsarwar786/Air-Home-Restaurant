@@ -81,7 +81,9 @@ class _YourEventsReservations extends State<YourEventsReservations> {
       ReservationsModel.fromJson(jsonDecode(response.body));
       GlobalState.reservationsModel = reservations;
       list = reservations;
+    // print("%%%%%%%%%%%%%%%%%%%%% ${reservations.data}");
     }
+
     return list;
   }
 
@@ -102,6 +104,7 @@ class _YourEventsReservations extends State<YourEventsReservations> {
             children: [
               Expanded(
                   child: Container(
+                    child: Image.network(data.immagineEvento),
                 decoration: BoxDecoration(
                     color: Colors.black26,
                     borderRadius: BorderRadius.circular(5.0)),
@@ -125,7 +128,7 @@ class _YourEventsReservations extends State<YourEventsReservations> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2.0),
                       child: _myWidget.myText(
-                          "User name requesting the reservation",
+                          "${data.nominativoUtente}",
                           12,
                           FontWeight.bold,
                           1,

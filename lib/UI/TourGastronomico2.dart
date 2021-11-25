@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:air_home_retaurant/ModelClasses/ReviewModal.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
@@ -366,6 +367,16 @@ class _TourGastronomico2 extends State<TourGastronomico2> {
 
                    InkWell(
                      onTap: (){
+                         if(hostInfo == null){
+                                  Fluttertoast.showToast(
+                      msg: "Wait to LOAD",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                              }else
                          Navigator.push(context, MaterialPageRoute(builder: (_)=> Chat2(hostInfo['ID'], {"name":hostInfo['Nome'],"picture":hostInfo['UrlFoto']})));
                      },
                      child: Padding(

@@ -85,4 +85,8 @@ class GlobalState {
 
 
   static Map<String, dynamic> body_map = new HashMap();
+  static Map<String, dynamic> add_cooking_class = {"HostID": GlobalState.userId,"Lingua": "","TipoeventoID": 5,"Smartbox": false,"Nome":"","PartecipantiMinimo": 1,"PartecipantiMassimo": 1,"LuogoCitta": "","LuogoCittaID": "","Descrizione_it": "","Lingue": "","Nobambini": false,"PerFamiglie": false,"Cucina": "","Allergie": "","Luogo": "","LuogoNote_it": "","Posx": "","Posy": ""};
+
+
+    static Map<String, dynamic> add_Events = {"HostID": GlobalState.userId,"Lingua": "","TipoeventoID": 1,"Smartbox": false,"Nome":"","PartecipantiMinimo": 1,"PartecipantiMassimo": 1,"LuogoCitta": "","LuogoCittaID": "","Descrizione_it": "","Lingue": "","Nobambini": false,"PerFamiglie": false,"Cucina": "","Allergie": "","Luogo": "","LuogoNote_it": "","Posx": "","Posy": ""};
 }

@@ -4,6 +4,9 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FavoriteModel.dart';
+import 'package:air_home_retaurant/UI/E_Restaurant.dart';
+import 'package:air_home_retaurant/UI/TourGastronomico2.dart';
+import 'CorsoCusina.dart';
 import 'package:air_home_retaurant/UI/HomeRestaurantDetailScreen.dart';
 import 'package:air_home_retaurant/UI/HomeScreen.dart';
 import 'package:air_home_retaurant/UI/MainScreen.dart';
@@ -88,11 +91,45 @@ class _Favourite extends State<Favourite> {
                               itemBuilder: (context, position) {
                                 return InkWell(
                                   onTap: () {
+                                    print(demoList[position].tipoeventoId);
+                                    if (demoList[position].tipoeventoId == 5 || demoList[position].tipoeventoId == 8 || demoList[position].tipoeventoId == 9 ) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => CorsoCusina(
+                                                demoList[position])));
+                                      
+                                    }
+                                    else  if (demoList[position].tipoeventoId == 1 || demoList[position].tipoeventoId == 4 || demoList[position].tipoeventoId == 2 ) {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (_) => HomeRestaurant(
                                                 demoList[position])));
+                                      
+                                    }
+                                    else  if (demoList[position].tipoeventoId == 7 || demoList[position].tipoeventoId == 10) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => ERestaurant(
+                                                demoList[position])));
+                                      
+                                    }
+                                    else  if (demoList[position].tipoeventoId == 3 ) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => TourGastronomico2(
+                                                demoList[position])));
+                                      
+                                    }else{
+                                        Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => ERestaurant(
+                                                demoList[position])));
+                                    }
                                     // setState(() {
                                     // isSelected = true;
 

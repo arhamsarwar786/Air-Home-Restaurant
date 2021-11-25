@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:air_home_retaurant/Utils/BaseClass.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -74,8 +75,13 @@ class _MyHomePageState extends State<MyHomePage> {
     // getAllPosts(context: context);
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
+    
+
     return Scaffold(
       body: Container(
         child: Center(
@@ -172,13 +178,16 @@ class _MyHomePageState extends State<MyHomePage> {
       (Timer timer) {
         if (_start == 2) {
           _timer.cancel();
+          toggle = true;
           var userBox = Hive.box('userIdBox');
-          if(userBox.get("userID") != null)           
+          if(userBox.get("userID") != null){
+            // _showDialog();
                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => MainScreen(),
                     ));
+          }        
           else
             Navigator.push(
             context,

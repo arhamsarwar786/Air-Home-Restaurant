@@ -1,6 +1,7 @@
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
 import 'package:air_home_retaurant/UI/Allergies.dart';
 import 'package:air_home_retaurant/Utils/BaseClass.dart';
+import 'package:air_home_retaurant/Utils/CustomProgressDilogue.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
@@ -31,9 +32,11 @@ class _AddNewEvent extends State<AddNewEvent> {
       TextEditingController();
 
   int value1 = 0, value2 = 0;
+  ProgressDialog _progressDialog = ProgressDialog();
 
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems = [];
   ListItem _selectedItem;
+  List<DropdownMenuItem<ListItem>> _selectedLanguageMenuList = [];
 
   @override
   void initState() {
@@ -42,6 +45,9 @@ class _AddNewEvent extends State<AddNewEvent> {
     fetchCategoriesData();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
+
+    _selectedLanguageMenuList = buildDropDownMenuItems(_selectedItemDropDown);
+    _selectedLanguage = _selectedLanguageMenuList[0].value;
     first = false;
     second = false;
     third = false;
@@ -74,10 +80,18 @@ class _AddNewEvent extends State<AddNewEvent> {
     });
   }
 
-  ////   DATA ABOUT DROPDOWN
+  /// DATA ABOUT DROPDOWN
   /// Main Languages
-  var languageList = ["Italian", "English", "Espanol"];
-  var _selectedLanguage = "Select Language";
+  // var languageList = ["Italian", "English", "Espanol"];
+
+  List<ListItem> _selectedItemDropDown = [
+    ListItem('IT', 'Italian'),
+    ListItem('US', 'English'),
+    ListItem('ES', 'Espanol'),
+  ];
+
+  // var _selectedLanguage = "Select Language";
+  ListItem _selectedLanguage;
 
   //////  Spoken Languages
   var spokenList = ["Italian", "English", "Espanol"];
@@ -92,7 +106,7 @@ class _AddNewEvent extends State<AddNewEvent> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           print(GlobalState.body_map);
-          GlobalState.body_map.clear();
+          // GlobalState.body_map.clear();
         },
       ),
       appBar: _myWidget.myAppBar("Add New Event", () {
@@ -148,13 +162,14 @@ class _AddNewEvent extends State<AddNewEvent> {
                               onChanged: (value) {
                                 setState(() {
                                   _selectedItem = value;
-                                       if (GlobalState.body_map
-                                              .containsKey("TipoeventoID"))
-                                            GlobalState.body_map.update(
-                                                "TipoeventoID", (value) => _selectedItem.value);
-                                          else
-                                            GlobalState.body_map.putIfAbsent(
-                                                "TipoeventoID", () => _selectedItem.value);
+                                  // if (GlobalState.body_map
+                                  //     .containsKey("TipoeventoID"))
+                                  //   GlobalState.body_map.update("TipoeventoID",
+                                  //       (value) => _selectedItem.value);
+                                  // else
+                                  //   GlobalState.body_map.putIfAbsent(
+                                  //       "TipoeventoID",
+                                  //       () => _selectedItem.value);
                                 });
                               },
                             ),
@@ -186,14 +201,8 @@ class _AddNewEvent extends State<AddNewEvent> {
                           "ALLERGIES AND INTOLERANCES", () async {
                         var getAllergies = await Navigator.push(context,
                             MaterialPageRoute(builder: (_) => Allergies()));
-
-                              if (GlobalState.body_map
-                                              .containsKey("Allergie"))
-                                            GlobalState.body_map.update(
-                                                "Allergie", (value) => getAllergies);
-                                          else
-                                            GlobalState.body_map.putIfAbsent(
-                                                "Allergie", () => getAllergies);
+                        GlobalState.add_Events
+                            .update("Allergie", (value) => getAllergies);
                       }),
                     ),
                   ),
@@ -213,13 +222,8 @@ class _AddNewEvent extends State<AddNewEvent> {
                               onChanged: (bool value) {
                                 setState(() {
                                   first = value;
-                                  if (GlobalState.body_map
-                                      .containsKey("PerFamiglie"))
-                                    GlobalState.body_map.update(
-                                        "PerFamiglie", (value) => first);
-                                  else
-                                    GlobalState.body_map.putIfAbsent(
-                                        "PerFamiglie", () => first);
+                                  GlobalState.add_Events
+                                      .update("PerFamiglie", (value) => first);
                                 });
                               },
                             ),
@@ -253,13 +257,8 @@ class _AddNewEvent extends State<AddNewEvent> {
                               onChanged: (bool value) {
                                 setState(() {
                                   second = value;
-                                  if (GlobalState.body_map
-                                      .containsKey("Nobambini"))
-                                    GlobalState.body_map
-                                        .update("Nobambini", (value) => second);
-                                  else
-                                    GlobalState.body_map
-                                        .putIfAbsent("Nobambini", () => second);
+                                  GlobalState.add_Events
+                                      .update("Nobambini", (value) => second);
                                 });
                               },
                             ),
@@ -297,13 +296,8 @@ class _AddNewEvent extends State<AddNewEvent> {
                                       onChanged: (bool value) {
                                         setState(() {
                                           third = value;
-                                          if (GlobalState.body_map
-                                              .containsKey("Smartbox"))
-                                            GlobalState.body_map.update(
-                                                "Smartbox", (value) => third);
-                                          else
-                                            GlobalState.body_map.putIfAbsent(
-                                                "Smartbox", () => third);
+                                          GlobalState.add_Events.update(
+                                              "Smartbox", (value) => third);
                                         });
                                       },
                                     ),
@@ -384,27 +378,27 @@ class _AddNewEvent extends State<AddNewEvent> {
                                   width: double.infinity,
                                   color: Colors.white,
                                   child: DropdownButtonHideUnderline(
-                                    child: DropdownButton(
+                                    child: DropdownButton<ListItem>(
                                       hint: Padding(
                                         padding: EdgeInsets.all(8.0),
-                                        child: Text(
-                                          _selectedLanguage,
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                        ),
                                       ),
-                                      onChanged: (String newValue) {
+                                      onChanged: (newValue) {
                                         setState(() {
                                           _selectedLanguage = newValue;
+                                          if (GlobalState.body_map
+                                              .containsKey("Lingua"))
+                                            GlobalState.body_map.update(
+                                                "Lingua",
+                                                (value) =>
+                                                    _selectedLanguage.value);
+                                          else
+                                            GlobalState.body_map.putIfAbsent(
+                                                "Lingua",
+                                                () => _selectedLanguage.value);
                                         });
                                       },
-                                      items: languageList.map((String item) {
-                                        return DropdownMenuItem<String>(
-                                          value: item,
-                                          child: Text("$item"),
-                                        );
-                                      }).toList(),
+                                      items: _selectedLanguageMenuList,
+                                      value: _selectedLanguage,
                                     ),
                                   ),
                                 ),
@@ -567,12 +561,18 @@ class _AddNewEvent extends State<AddNewEvent> {
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       child: _myWidget.btnMain("Continue", () {
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                        GlobalState.add_Events.update(
+                            "Lingua", (value) => _selectedLanguage.value);
+                        GlobalState.add_Events.update(
+                            "LuogoCitta", (value) => _selectedSpokenLanguage);
+                        GlobalState.add_Events.update(
+                            "TipoeventoID", (value) => _selectedItem.value);
                         // print(GlobalState.body_map);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AddNewEvent2()
-                        ),
+                              builder: (context) => AddNewEvent2()),
                         );
                       }),
                     ),

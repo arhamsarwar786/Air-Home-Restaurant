@@ -355,8 +355,27 @@ class Constants {
   
 
 
+
+  /// ADD NEW EVENT 
+  /// 
+  static const String ADD_CITY = "Add City";
+  static const String SUCCESSFULLY_PUBLISHED_ONLINE_CLASS = "Successfully Published";
+
+  // static const String ADD_ADDRESS = "Add Address";
+//// ADD POST BLOG 
+///
+  static const String ADD_TITLE = "Add Title";
+  static const String ADD_SUBTITLE = "Add Subtitle";
+  static const String ADD_DESCRIPTION = "Add Description";
+  static const String SUCCESSFULLY_PUBLISHED = "Successfully Published Your Blog";
+
+
+  ///  ADD MATCH
+  static const String SUCCESSFULLY_PUBLISHED_MATCH = "Successfully ADDED MATCH";
+  
+
   ///  Allergies Success
-  static const String SAVED_ALLERGIES = "Successfully Allergies Saved Now Go Back";
+  static const String SAVED_ALLERGIES = "Allergies SAVED";
 
   /** CorsoCusinaOnline3 Class */
   static const String CORSO_CUSINA_ONLINE3_TITLE = "Corso di Cusina Online";
@@ -583,7 +602,9 @@ class Constants {
   static const String UPDATE_USER_PROFILE = BASE_URL+"UtenteAggiornaAvanzato";
     static const String GET_ALL_Reservations_API = BASE_URL+"prenotalista/";
   static const String GET_ALL_Blog_API = BASE_URL+"bloglista/";
+  static const String ADD_EVENT = BASE_URL+"nuovoevento/";
   static const String ADD_ALL_Blog_API = BASE_URL+"blogadd/";
+  static const String ADD_MATCH = BASE_URL+"matchadd/";
   static const String GET_ALL_Match_API = BASE_URL+"matchlista/";
   static const String GETChatListOfUser_API = BASE_URL+"chatlist/";
   static const String SendChatMessage_API = BASE_URL+"chatadd/";

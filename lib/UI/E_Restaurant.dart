@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:air_home_retaurant/UI/MyReservations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import  'package:givestarreviews/givestarreviews.dart';
 import 'package:intl/intl.dart';
@@ -283,6 +284,16 @@ class _ERestaurant extends State<ERestaurant> {
               children: [
                 InkWell(
                   onTap: () {
+                      if(hostInfo == null){
+                                  Fluttertoast.showToast(
+                      msg: "Wait to LOAD",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                              }else
                     Navigator.push(context, MaterialPageRoute(builder: (_)=> Chat2(hostInfo['ID'], {"name":hostInfo['Nome'],"picture":hostInfo['UrlFoto']})));
                   },
                   child: Padding(

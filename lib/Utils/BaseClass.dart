@@ -33,3 +33,5 @@ class BaseClass{
     }
   }
 }
+
+bool toggle = false;

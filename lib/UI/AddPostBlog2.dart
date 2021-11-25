@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
+import 'package:air_home_retaurant/UI/MainScreen.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:air_home_retaurant/ModelClasses/AddBlogPostResponseModel.dart';
@@ -29,22 +30,28 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
       descriptiontextcontroller;
   int value1, value2;
   ProgressDialog _progressDialog;
-  List<ListItem> _dropdownItems = [
-    ListItem(1, "First Value"),
-    ListItem(2, "Second Item"),
-    ListItem(3, "Third Item"),
-    ListItem(4, "Fourth Item")
+
+// 1 Cucina Tradizionale
+// 2 Cucina Etnica
+// 3 Cibo e Natura
+
+  List<XFile> imageFileList = [];
+
+  List<ListItem> _selectedItemDropDown = [
+    ListItem('1', 'Cucina Tradizionale'),
+    ListItem('2', 'Cucina Etnica'),
+    ListItem('3', 'Cibo e Natura'),
   ];
 
-  List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
-  ListItem _selectedItem;
-  List<XFile> imageFileList = [];
+  List<DropdownMenuItem<ListItem>> _selectedCategoryList = [];
+  ListItem _selectedCategory;
 
   @override
   void initState() {
     super.initState();
     _myWidget = new MyWidget();
     _progressDialog = ProgressDialog();
+
     titletextcontroller = new TextEditingController();
     subtitletextcontroller = new TextEditingController();
     youtubetextcontroller = new TextEditingController();
@@ -52,8 +59,8 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
     value2 = 1;
     value1 = 1;
 
-    _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
-    _selectedItem = _dropdownMenuItems[0].value;
+    _selectedCategoryList = buildDropDownMenuItems(_selectedItemDropDown);
+    _selectedCategory = _selectedCategoryList[0].value;
   }
 
   List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
@@ -246,11 +253,11 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                               color: Colors.white,
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<ListItem>(
-                                  value: _selectedItem,
-                                  items: _dropdownMenuItems,
+                                  value: _selectedCategory,
+                                  items: _selectedCategoryList,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedItem = value;
+                                      _selectedCategory = value;
                                     });
                                   },
                                 ),
@@ -330,34 +337,56 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  callAddBlogPost(
-                      context: context,
-                      Text: descriptiontextcontroller.text.toString(),
-                      CategoryID: 1,
-                      IDUser: GlobalState.userId,
-                      Subtitle: subtitletextcontroller.text.toString(),
-                      Title: titletextcontroller.text.toString(),
-                      TypeID: 1,
-                      Video: youtubetextcontroller.text.toString());
-                },
-                child: Container(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      child: _myWidget.btnMain("Publish", () {
-                        print(titletextcontroller.text);
-                        print(subtitletextcontroller.text);
-                        print(descriptiontextcontroller.text);
-                        // callAddBlogPost(IDUser: GlobalState.userId, TypeID: TypeID, Title: titletextcontroller.text, Text: descriptiontextcontroller.text, Subtitle: subtitletextcontroller.text, CategoryID: CategoryID, Video: Video, context: context);
+              Container(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    child: _myWidget.btnMain("Publish", () {
+                      FocusScope.of(context).requestFocus(new FocusNode());
 
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => AddNewEvent3()),
-                        // );
-                      }),
-                    ),
+                      bool status = true;
+
+                      if (titletextcontroller.text.isEmpty) {
+                        BaseClass.showSB(
+                            msg: Constants.ADD_TITLE,
+                            context: context,
+                            type: Constants.FAILURE);
+                        status = false;
+                      } else if (subtitletextcontroller.text.isEmpty) {
+                        BaseClass.showSB(
+                            msg: Constants.ADD_SUBTITLE,
+                            context: context,
+                            type: Constants.FAILURE);
+                        status = false;
+                      } else if (descriptiontextcontroller.text.isEmpty) {
+                        BaseClass.showSB(
+                            msg: Constants.ADD_DESCRIPTION,
+                            context: context,
+                            type: Constants.FAILURE);
+                        status = false;
+                      }
+                      if (status) {
+                        if (titletextcontroller.text.isNotEmpty &&
+                            subtitletextcontroller.text.isNotEmpty &&
+                            descriptiontextcontroller.text.isNotEmpty) {
+                          callAddBlogPost(
+                            context: context,
+                            IDUser: GlobalState.userId,
+                            Title: titletextcontroller.text.toString(),
+                            Subtitle: subtitletextcontroller.text.toString(),
+                            Video: youtubetextcontroller.text.toString(),
+                            Text: descriptiontextcontroller.text.toString(),
+                            CategoryID: int.parse(_selectedCategory.value),
+                            TypeID: int.parse(_selectedCategory.value),
+                          );
+                        } else {
+                          BaseClass.showSB(
+                              msg: "SomeThing Missing",
+                              context: context,
+                              type: Constants.FAILURE);
+                        }
+                      }
+                    }),
                   ),
                 ),
               ),
@@ -395,7 +424,7 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
         url: Constants.ADD_ALL_Blog_API,
         onSuccess: (_streamedResponse) async {
           var response = await http.Response.fromStream(_streamedResponse);
-          print(response);
+          print(response.body);
 
           if (response != null) {
             var user =
@@ -405,15 +434,17 @@ class _AddPostBlog2 extends State<AddPostBlog2> {
               //email Or Password wrong
               _progressDialog.dismissProgressDialog(context);
               BaseClass.showSB(
-                  msg: Constants.LOGIN_INFO_ERROR,
+                  msg: "Something Went Wrong",
                   context: context,
                   type: Constants.FAILURE);
             } else {
               _progressDialog.dismissProgressDialog(context);
               BaseClass.showSB(
-                  msg: Constants.SUCCESSFULLY_LOGGIN,
+                  msg: Constants.SUCCESSFULLY_PUBLISHED,
                   context: context,
                   type: Constants.SUCCESS);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => MainScreen()));
             }
           } else {
             //empty response

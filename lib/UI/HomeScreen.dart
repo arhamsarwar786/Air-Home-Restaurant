@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:air_home_retaurant/UI/CorsiDiCusinaDetailScreen.dart';
 import 'package:air_home_retaurant/UI/TourGastronomicDetailScreen.dart';
@@ -45,7 +46,14 @@ class _HomeScreen extends State<HomeScreen> {
     _myWidget = new MyWidget();
     _progressDialog = new ProgressDialog();
     httpServices = new HttpServices();    
+     
   }
+
+
+
+
+  // Date Time 
+  var  dateOfSearch;
 
  Future<bool> _onWillPop() async {
     return (await showDialog(
@@ -79,7 +87,7 @@ class _HomeScreen extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: Scaffold(    
+      child: Scaffold(           
         key: _scaffoldKey,
         drawer: MenuHamBurger(),
         appBar: AppBar(
@@ -99,6 +107,7 @@ class _HomeScreen extends State<HomeScreen> {
         body: FutureBuilder(
           future: getFavorites(context: context, userId: GlobalState.userId),
           builder: (context, snapshot) {
+              // _showDialog();
             if (snapshot.hasData && snapshot!=null) {
               var userFavourites = snapshot.data as FavoriteModel;
               GlobalState.myFavorites = userFavourites;
@@ -1305,7 +1314,7 @@ class _HomeScreen extends State<HomeScreen> {
                                         children: [
                                           Expanded(
                                               child: _myWidget.myText(
-                                                  Constants
+                                                  dateOfSearch != null ?  dateOfSearch: Constants
                                                       .CLASS_HOME_SCREEN_SEARCH_LABEL4,
                                                   12,
                                                   FontWeight.bold,
@@ -1313,8 +1322,14 @@ class _HomeScreen extends State<HomeScreen> {
                                                   Colors.black38)),
                                           Expanded(
                                             child: InkWell(
-                                              onTap: (){
-                                                print("object");
+                                              onTap: ()async{
+                                                dateOfSearch = await _selectDate(context);
+                                                  
+                                               mystate((){
+                                                dateOfSearch = DateFormat("yyyy-MM-dd").format(dateOfSearch);
+
+                                               });
+                                                // print();
                                               },
                                               child: Padding(
                                                 padding:
@@ -1625,4 +1640,36 @@ class _HomeScreen extends State<HomeScreen> {
                    
     }
   }
+
+
+
+  
+  // Select Date Of Birth
+  _selectDate(BuildContext context) async {
+    DateTime selectedDate = DateTime.now();
+
+    final DateTime selected = await showDatePicker(
+      builder: (BuildContext context, Widget child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: Colors.red,
+            accentColor: Colors.red,
+            colorScheme: ColorScheme.light(primary: Colors.red),
+            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+          ),
+          child: child,
+        );
+      },
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(1950),
+      lastDate: DateTime(2025),
+    );
+    if (selected != null && selected != selectedDate)
+      setState(() {
+        selectedDate = selected;
+      });
+    return selectedDate;
+  }
+
 }

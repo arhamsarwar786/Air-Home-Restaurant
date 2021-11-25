@@ -1,5 +1,8 @@
 import 'package:air_home_retaurant/UI/add_corso_cusina_classic_event3.dart';
+import 'package:air_home_retaurant/Utils/BaseClass.dart';
+import 'package:air_home_retaurant/Utils/GlobalState.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
+import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +33,7 @@ class _AddCookingClassEvent2 extends State<AddCookingClassEvent2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar("Add a cooking class", () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: Container(
         color: Color(0xFFF5F5F5),
@@ -63,7 +66,8 @@ class _AddCookingClassEvent2 extends State<AddCookingClassEvent2> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical:10.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: Colors.white,
@@ -88,7 +92,8 @@ class _AddCookingClassEvent2 extends State<AddCookingClassEvent2> {
                               children: [
                                 Container(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 10.0),
+                                    padding:
+                                        const EdgeInsets.only(bottom: 10.0),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Container(
@@ -103,70 +108,112 @@ class _AddCookingClassEvent2 extends State<AddCookingClassEvent2> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical:10.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
                                   child: Row(children: [
                                     Expanded(
                                         child: Row(
-                                          children: [
-                                            Container(
+                                      children: [
+                                        Container(
+                                            child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5.0),
+                                            child: _myWidget.myText(
+                                                "MIN",
+                                                12,
+                                                FontWeight.bold,
+                                                1,
+                                                Colors.black),
+                                          ),
+                                        )),
+                                        Container(
+                                            child: Expanded(
                                                 child: Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.symmetric(
-                                                        horizontal: 5.0),
-                                                    child: _myWidget.myText("MIN", 12,
-                                                        FontWeight.bold, 1, Colors.black),
-                                                  ),
-                                                )),
-                                            Container(
-                                                child: Expanded(
-                                                    child: Center(
-                                                        child: _myWidget.selectValue(
-                                                                () {
+                                                    child:
+                                                        _myWidget.selectValue(
+                                                            () {
                                                               setState(() {
                                                                 value1++;
-                                                                print("$value1");
+                                                                print(
+                                                                    "$value1");
+                                                                GlobalState
+                                                                    .add_cooking_class
+                                                                    .update(
+                                                                        "PartecipantiMinimo",
+                                                                        (value) =>
+                                                                            value1);
                                                               });
                                                             },
                                                             value1,
-                                                                () {
+                                                            () {
                                                               setState(() {
                                                                 value1--;
-                                                                print("$value1");
+                                                                GlobalState
+                                                                    .add_cooking_class
+                                                                    .update(
+                                                                        "PartecipantiMinimo",
+                                                                        (value) =>
+                                                                            value1);
+
+                                                                print(
+                                                                    "$value1");
                                                               });
                                                             })))),
-                                          ],
-                                        )),
+                                      ],
+                                    )),
                                     Expanded(
                                         child: Row(
-                                          children: [
-                                            Container(
+                                      children: [
+                                        Container(
+                                            child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5.0),
+                                            child: _myWidget.myText(
+                                                "MAX",
+                                                12,
+                                                FontWeight.bold,
+                                                1,
+                                                Colors.black),
+                                          ),
+                                        )),
+                                        Container(
+                                            child: Expanded(
                                                 child: Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.symmetric(
-                                                        horizontal: 5.0),
-                                                    child: _myWidget.myText("MAX", 12,
-                                                        FontWeight.bold, 1, Colors.black),
-                                                  ),
-                                                )),
-                                            Container(
-                                                child: Expanded(
-                                                    child: Center(
-                                                        child: _myWidget.selectValue(
-                                                                () {
+                                                    child:
+                                                        _myWidget.selectValue(
+                                                            () {
                                                               setState(() {
                                                                 value2++;
-                                                                print("$value2");
+                                                                GlobalState
+                                                                    .add_cooking_class
+                                                                    .update(
+                                                                        "PartecipantiMassimo",
+                                                                        (value) =>
+                                                                            value2);
+
+                                                                print(
+                                                                    "$value2");
                                                               });
                                                             },
                                                             value2,
-                                                                () {
+                                                            () {
                                                               setState(() {
                                                                 value2--;
-                                                                print("$value2");
+                                                                GlobalState
+                                                                    .add_cooking_class
+                                                                    .update(
+                                                                        "PartecipantiMassimo",
+                                                                        (value) =>
+                                                                            value1);
+
+                                                                print(
+                                                                    "$value2");
                                                               });
                                                             })))),
-                                          ],
-                                        )),
+                                      ],
+                                    )),
                                   ]),
                                 ),
                               ],
@@ -178,8 +225,8 @@ class _AddCookingClassEvent2 extends State<AddCookingClassEvent2> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(5)),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
                             child: _myWidget.myTextInput(
                                 addCookingClassEvent2Controller2,
                                 5,
@@ -236,15 +283,71 @@ class _AddCookingClassEvent2 extends State<AddCookingClassEvent2> {
                   ),
                 ),
               ),
-              Container(child: Align(
+              Container(
+                child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     child: _myWidget.btnMain("Continue", () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddCookingClassEvent3()),
-                      );
+                      print(GlobalState.add_cooking_class);
+
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      bool status = true;
+
+                      if (addCookingClassEvent2Controller.text.isEmpty) {
+                        BaseClass.showSB(
+                            msg: Constants.ADD_TITLE,
+                            context: context,
+                            type: Constants.FAILURE);
+                        status = false;
+                      } else if (addCookingClassEvent2Controller2
+                          .text.isEmpty) {
+                        BaseClass.showSB(
+                            msg: Constants.ADD_DESCRIPTION,
+                            context: context,
+                            type: Constants.FAILURE);
+                        status = false;
+                      }
+
+                      if (status) {
+                        if (addCookingClassEvent2Controller.text.isNotEmpty &&
+                            addCookingClassEvent2Controller2.text.isNotEmpty) {
+                          GlobalState.add_cooking_class.update("Nome",
+                              (value) => addCookingClassEvent2Controller.text);
+                          GlobalState.add_cooking_class.update("Descrizione_it",
+                              (value) => addCookingClassEvent2Controller2.text);
+                          // if (GlobalState.body_map
+                          //               .containsKey("Nome"))
+                          //             GlobalState.body_map.update(
+                          //                 "Nome", (value) => addCookingClassEvent2Controller.text);
+                          //           else
+                          //             GlobalState.body_map.putIfAbsent(
+                          //                 "Nome", () => addCookingClassEvent2Controller.text);
+
+                          //     if (GlobalState.body_map
+                          //               .containsKey("Descrizione_it"))
+                          //             GlobalState.body_map.update(
+                          //                 "Descrizione_it", (value) => addCookingClassEvent2Controller2.text);
+                          //           else
+                          //             GlobalState.body_map.putIfAbsent(
+                          //                 "Descrizione_it", () => addCookingClassEvent2Controller2.text);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddCookingClassEvent3()),
+                          );
+                        } else {
+                          // status = false;
+                          BaseClass.showSB(
+                              msg: "SomeThing Missing",
+                              context: context,
+                              type: Constants.FAILURE);
+                        }
+                      }
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => AddCookingClassEvent3()),
+                      // );
                     }),
                   ),
                 ),

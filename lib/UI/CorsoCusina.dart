@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:givestarreviews/givestarreviews.dart';
 import 'package:intl/intl.dart';
 import 'package:air_home_retaurant/ModelClasses/ReviewModal.dart';
@@ -362,10 +363,19 @@ class _CorsoCusina extends State<CorsoCusina> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ///HomeRestaurant1
-
+                    /// HomeRestaurant1
                     InkWell(
                       onTap: (){
+                          if(hostInfo == null){
+                                  Fluttertoast.showToast(
+                      msg: "Wait to LOAD",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                              }else
                           Navigator.push(context, MaterialPageRoute(builder: (_)=> Chat2(hostInfo['ID'],  {"name":hostInfo['Nome'],"picture":hostInfo['UrlFoto']})));
                       },
                       child: Padding(

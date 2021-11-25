@@ -275,18 +275,7 @@ class _PaymentCorsoCusina extends State<PaymentCorsoCusina> {
                 decoration: BoxDecoration(color: Color(0xFFF1F1F1)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // Container(
-                    //   child: Align(
-                    //     alignment: Alignment.centerLeft,
-                    //     child: _myWidget.myText(
-                    //         Constants.PAYMENT_CUSINA_ONLINE_ON_DEMAND_LABEL3,
-                    //         15.0,
-                    //         FontWeight.bold,
-                    //         1,
-                    //         Colors.black),
-                    //   ),
-                    // ),
+                  children: [                  
                     TableCalendar(
                       selectedDayPredicate: (day) => isSameDay(day, _focusedDay),
                       firstDay: DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day),

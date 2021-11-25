@@ -379,13 +379,7 @@ class _MyProfile extends State<MyProfile> {
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<ListItem>(
                               hint: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                // child: Text(
-                                //   _selectedLanguage.name,
-                                //   style: TextStyle(
-                                //       fontSize: 12,
-                                //       fontWeight: FontWeight.bold),
-                                // ),
+                                padding: EdgeInsets.all(8.0),                        
                               ),
                               onChanged: (newValue) {
                                 setState(() {
@@ -394,13 +388,7 @@ class _MyProfile extends State<MyProfile> {
                                 });
                               },
                               items: _selectedLanguageMenuList,
-                              value: _selectedLanguage,
-                              // items: languageList.map((String item) {
-                              //   return DropdownMenuItem<String>(
-                              //     value: item,
-                              //     child: Text("$item"),
-                              //   );
-                              // }).toList(),
+                              value: _selectedLanguage,                            
                             ),
                           ),
                         ),
