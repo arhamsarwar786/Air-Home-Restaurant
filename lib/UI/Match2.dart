@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
 import 'package:air_home_retaurant/Utils/BaseClass.dart';
@@ -10,6 +11,9 @@ import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+import 'MainScreen.dart';
 
 class Match2 extends StatefulWidget {
   @override
@@ -29,6 +33,7 @@ class _Match2 extends State<Match2> {
 // 3 Citta'
 // 4 Campagna 
 
+  List<XFile> imageFileList = [];
 
   List<ListItem> _dropdownItems = [
     ListItem(1, "First Value"),
@@ -306,14 +311,22 @@ class _Match2 extends State<Match2> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    //luqman
-                                    BaseClass.showSB(
-                                        msg: Constants.EMAIL_EMPTY_STRING_ERROR,
-                                        context: context,
-                                        type: Constants.SUCCESS);
+                                  onTap: () async{                              
+                                   final ImagePicker imagePicker =
+                                        ImagePicker();
+                                    final List<XFile> selectedImages =
+                                        await imagePicker.pickMultiImage();
+                                    if (selectedImages.length >= 2) {
+                                      imageFileList.addAll(selectedImages);
+                                    } else {
+                                      BaseClass.showSB(
+                                          msg: Constants.ADD_IMAGE_2,
+                                          context: context,
+                                          type: Constants.FAILURE);
+                                    }                                    
+                                    setState(() {});
                                   },
-                                  child: Container(
+                                child: Container(
                                     child: DottedBorder(
                                       color: Colors.black38,
                                       strokeWidth: 1,
@@ -323,15 +336,67 @@ class _Match2 extends State<Match2> {
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                         ),
-                                        child: Center(
-                                            child: Container(
-                                                height: 80,
-                                                width: 80,
-                                                child: Image.asset(
-                                                    "assets/images/camera.png"))),
+                                        child: imageFileList.isNotEmpty
+                                            ? ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: imageFileList.length,
+                                                itemBuilder: (context, i) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Container(
+                                                      // width: 100,
+                                                      child: Stack(
+                                                        children: [
+                                                          Image.file(
+                                                            File(
+                                                                imageFileList[i]
+                                                                    .path),
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          Positioned(
+                                                            top: 0,
+                                                            right: 0,
+                                                            child: Container(
+                                                                decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            15)),
+                                                                child: InkWell(
+                                                                    onTap: () {
+                                                                      setState(
+                                                                          () {
+                                                                        imageFileList
+                                                                            .removeAt(i);
+                                                                      });
+                                                                    },
+                                                                    child: Image
+                                                                        .asset(
+                                                                      "assets/images/delete-red.png",
+                                                                      height:
+                                                                          15,
+                                                                      width: 15,
+                                                                    ))),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                })
+                                            : Center(
+                                                child: Container(
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Image.asset(
+                                                        "assets/images/camera.png"))),
                                       ),
                                     ),
                                   ),
+                               
                                 ),
                               ],
                             ),
@@ -462,7 +527,7 @@ class _Match2 extends State<Match2> {
             //     AddBlogPostResponseModel.fromJson(jsonDecode(response.body));
   print(response.body);
             if (response == "0") {
-              //email Or Password wrong
+              
               _progressDialog.dismissProgressDialog(context);
               BaseClass.showSB(
                   msg: "Something Went Wrong",
@@ -471,11 +536,11 @@ class _Match2 extends State<Match2> {
             } else {
               _progressDialog.dismissProgressDialog(context);
               BaseClass.showSB(
-                  msg: Constants.SUCCESSFULLY_PUBLISHED,
+                  msg: Constants.SUCCESSFULLY_PUBLISHED_MATCH,
                   context: context,
                   type: Constants.SUCCESS);
-              // Navigator.push(
-              //     context, MaterialPageRoute(builder: (_) => MainScreen()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => MainScreen()));
             }
           } else {
             //empty response

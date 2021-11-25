@@ -332,14 +332,7 @@ class _AddCookingClassEvent extends State<AddCookingClassEvent> {
                                   ),
                                   onChanged: (newValue) {
                                     setState(() {
-                                      _selectedLanguage = newValue;
-                                      // if (GlobalState.body_map
-                                      //             .containsKey("Lingua"))
-                                      //           GlobalState.body_map.update(
-                                      //               "Lingua", (value) => _selectedLanguage.value);
-                                      //         else
-                                      //           GlobalState.body_map.putIfAbsent(
-                                      //               "Lingua", () => _selectedLanguage.value);
+                                      _selectedLanguage = newValue;                                     
                                     });
                                   },
                                   items: _selectedLanguageMenuList,

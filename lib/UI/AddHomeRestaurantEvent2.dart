@@ -342,6 +342,7 @@ class _AddNewEvent2 extends State<AddNewEvent2> {
                                       ),
                                     ),
                                   ),
+                               
                                 ),
                               ],
                             ),

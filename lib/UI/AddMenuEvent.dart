@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:air_home_retaurant/UI/Allergies.dart';
 import 'package:air_home_retaurant/Utils/BaseClass.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
 import 'package:http/http.dart' as http;
@@ -27,9 +28,16 @@ class _AddMenuEvent extends State<AddMenuEvent> {
     ListItem(3, "Third Item"),
     ListItem(4, "Fourth Item")
   ];
+  ListItem _selectedLanguage;
+  List<DropdownMenuItem<ListItem>> _selectedLanguageMenuList = [];
 
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
   ListItem _selectedItem;
+  List<ListItem> _selectedItemDropDown = [
+    ListItem('IT', 'Italian'),
+    ListItem('US', 'English'),
+    ListItem('ES', 'Espanol'),
+  ];
 
   @override
   void initState() {
@@ -37,6 +45,9 @@ class _AddMenuEvent extends State<AddMenuEvent> {
     _myWidget = new MyWidget();
     _dropdownMenuItems = buildDropDownMenuItems(_dropdownItems);
     _selectedItem = _dropdownMenuItems[0].value;
+
+        _selectedLanguageMenuList = buildDropDownMenuItems(_selectedItemDropDown);
+    _selectedLanguage = _selectedLanguageMenuList[0].value;
     first = false;
     second = false;
     third = false;
@@ -137,7 +148,7 @@ class _AddMenuEvent extends State<AddMenuEvent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar(Constants.ADD_MENU_EVENT_APPBAR_TITLE, () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -176,7 +187,10 @@ class _AddMenuEvent extends State<AddMenuEvent> {
                           height: 40.0,
                           width: double.infinity,
                           child: _myWidget.selectCategory(
-                              Constants.ADD_MENU_EVENT_LABEL2, () {}),
+                              Constants.ADD_MENU_EVENT_LABEL2, () async{
+                               var getAllergies =await Navigator.push(context, MaterialPageRoute(builder: (_)=> Allergies()));
+                                GlobalState.add_Events.update("Allergie", (value) => getAllergies);
+                              }),
                         ),
                       ),
                     ),
@@ -192,6 +206,8 @@ class _AddMenuEvent extends State<AddMenuEvent> {
                               onChanged: (bool value) {
                                 setState(() {
                                   first = value;
+                                GlobalState.add_Events.update("PerFamiglie", (value) => first);
+
                                 });
                               },
                             ),
@@ -220,6 +236,8 @@ class _AddMenuEvent extends State<AddMenuEvent> {
                               onChanged: (bool value) {
                                 setState(() {
                                   second = value;
+                                GlobalState.add_Events.update("Nobambini", (value) => second);
+
                                 });
                               },
                             ),
@@ -256,21 +274,23 @@ class _AddMenuEvent extends State<AddMenuEvent> {
                                       height: 40.0,
                                       width: double.infinity,
                                       color: Colors.white,
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton<ListItem>(
-                                          value: _selectedItem,
-                                          items: _dropdownMenuItems,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _selectedItem = value;
-                                            });
-                                          },
-                                        ),
-                                      ),
+                                       child: DropdownButton<ListItem>(
+                                  hint: Padding(
+                                    padding: EdgeInsets.all(8.0),                        
+                                  ),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _selectedLanguage = newValue;                                     
+                                    });
+                                  },
+                                  items: _selectedLanguageMenuList,
+                                  value: _selectedLanguage,                            
+                                ),
+                              ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              
                               Flexible(
                                 flex: 1,
                                 child: Container(),
