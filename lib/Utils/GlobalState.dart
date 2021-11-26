@@ -7,6 +7,7 @@ import 'package:air_home_retaurant/ModelClasses/FbUser.dart';
 import 'package:air_home_retaurant/ModelClasses/MatchListResponseModel.dart';
 import 'package:air_home_retaurant/ModelClasses/Message.dart';
 import 'package:air_home_retaurant/ModelClasses/MessageRooms.dart';
+import 'package:air_home_retaurant/ModelClasses/NEW_MODEL.dart';
 import 'package:air_home_retaurant/ModelClasses/PostCategories.dart';
 import 'package:air_home_retaurant/ModelClasses/ReservationsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/ReviewModal.dart';
@@ -32,7 +33,10 @@ class GlobalState {
   static CategoryPostsModel chefDomicilioFavorites;
   static CategoryPostsModel tourGastronomiciFavorites;
 
-  /// SAVED FAVORITES MODAL
+  /// NEW MODEL 
+  /// 
+  static NewsModel newsModelData;
+  
 
   //// POSTS OF CATEGORIES
   static CategoryPostsModel corsiDiCusinaPosts;

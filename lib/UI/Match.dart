@@ -74,7 +74,7 @@ class _Match extends State<Match> {
                                 ),
                               ),
                               GlobalState.matchListResponseModel == null
-                                  ? CircularProgressIndicator()
+                                  ? CircularProgressIndicator(color: Colors.red,)
                                   : Container(
                                       height:
                                           MediaQuery.of(context).size.height /
@@ -91,7 +91,7 @@ class _Match extends State<Match> {
                                                 .matchListResponseModel.data;
                                             return matchlist(list[index]);
                                           }),
-                                    )
+                                    ),
                             ],
                           ),
                         ),
@@ -148,14 +148,14 @@ class _Match extends State<Match> {
     if (response != null) {
       log("fetch all reservations succeed");
       var match = MatchListResponseModel.fromJson(jsonDecode(response.body));
-      setState(() {
         GlobalState.matchListResponseModel = match;
-        BaseClass.showSB(
-            context: context,
-            msg: "${GlobalState.bloglistModel.data.length}",
-            type: Constants.SUCCESS);
-      });
+        // BaseClass.showSB(
+        //     context: context,
+        //     msg: "${GlobalState.bloglistModel.data.length}",
+        //     type: Constants.SUCCESS);
+      setState(() {
       list = match;
+      });
     }
     return list;
   }

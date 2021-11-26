@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:air_home_retaurant/ModelClasses/CategoryModal.dart';
+import 'package:air_home_retaurant/ModelClasses/NEW_MODEL.dart';
 import 'package:air_home_retaurant/ModelClasses/VendorModal.dart';
 import 'package:air_home_retaurant/UI/Login.dart';
 import 'package:air_home_retaurant/UI/MyReservations.dart';
@@ -50,7 +51,30 @@ class _MainScreen extends State<MainScreen> {
     }
     getUserProfile(context: context);
     getVendorProfile(context: context);
+    getNews(context: context);
   }
+
+
+  ///////////////////////
+  ///  GET NEWS
+  
+  Future getNews({@required BuildContext context}) async {
+    HttpServices httpServices = new HttpServices();
+    var res1 = await httpServices.getFutureJsonWithBody(
+        url: Constants.NEWS);
+    var response1 = await http.Response.fromStream(res1);
+    var resDec1 = jsonDecode(response1.body);
+    var response = resDec1;
+    if (response1.statusCode == 200) {
+      var responseList = NewsModel.fromJson(response);
+      if (responseList != null) {
+        GlobalState.newsModelData = responseList;        
+      } 
+    } else {
+      log("API STATUS CODE = ${response.statusCode}");
+    }
+  }
+
 
   //  User Profile Data Get
   getUserProfile({@required BuildContext context}) async {

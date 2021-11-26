@@ -615,6 +615,7 @@ class Constants {
   static const String ADD_EVENT = BASE_URL+"nuovoevento/";
   static const String ADD_ALL_Blog_API = BASE_URL+"blogadd/";
   static const String ADD_MATCH = BASE_URL+"matchadd/";
+  static const String NEWS = BASE_URL+"news/";
   static const String GET_ALL_Match_API = BASE_URL+"matchlista/";
   static const String GETChatListOfUser_API = BASE_URL+"chatlist/";
   static const String SendChatMessage_API = BASE_URL+"chatadd/";

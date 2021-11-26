@@ -495,8 +495,7 @@ class _Login extends State<Login> {
       {@required String email,
       @required String password,
       @required BuildContext context}) async {
-    _progressDialog.showProgressDialog(context,
-        textToBeDisplayed: Constants.PLEASE_WAIT);
+    _progressDialog.showProgressDialog(context);
     Map<String, dynamic> _body_map = new HashMap();
     _body_map['email'] = email;
     _body_map['password'] = password;
@@ -567,8 +566,7 @@ class _Login extends State<Login> {
 
   ///google signup
   Future<void> _googleSignIn(BuildContext context) async {
-    _progressDialog.showProgressDialog(context,
-        textToBeDisplayed: Constants.PLEASE_WAIT);
+    _progressDialog.showProgressDialog(context);
 
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     if (googleSignInAccount != null) {
@@ -627,8 +625,7 @@ class _Login extends State<Login> {
         "social": "W",
         "referrer": ""
     }*/
-    _progressDialog.showProgressDialog(context,
-        textToBeDisplayed: Constants.PLEASE_WAIT);
+    _progressDialog.showProgressDialog(context);
     Map<String, dynamic> _body_map = new HashMap();
     _body_map['email'] = email;
     _body_map['nome'] = fnam;
