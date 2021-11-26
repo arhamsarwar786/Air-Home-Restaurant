@@ -1,14 +1,11 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:air_home_retaurant/ModelClasses/CategoryPostsModel.dart';
 import 'package:air_home_retaurant/ModelClasses/FavoriteModel.dart';
 import 'package:air_home_retaurant/UI/E_Restaurant.dart';
 import 'package:air_home_retaurant/UI/TourGastronomico2.dart';
 import 'CorsoCusina.dart';
-import 'package:air_home_retaurant/UI/HomeRestaurantDetailScreen.dart';
-import 'package:air_home_retaurant/UI/HomeScreen.dart';
 import 'package:air_home_retaurant/UI/MainScreen.dart';
 import 'package:air_home_retaurant/Utils/APIServies.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
@@ -17,7 +14,6 @@ import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import 'HomeRestaurant.dart';

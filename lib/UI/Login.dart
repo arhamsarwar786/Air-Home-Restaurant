@@ -82,14 +82,94 @@ class _Login extends State<Login> {
     // }
   }
 
+// POPUP SHOW 
+
+ void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {        
+        return Material(
+          type: MaterialType.transparency,
+          child: Container(
+            alignment: Alignment.center,
+          margin: EdgeInsets.only(left: 0.0,right: 0.0),
+          child: Stack(
+              children: [
+              Container(
+                  padding: EdgeInsets.only(
+                  top: 10.0,
+                  ),
+                  margin: EdgeInsets.only(top: 13.0,right: 18.0,left: 18.0),
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: [
+                      BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 0.0,
+                          offset: Offset(0.0, 0.0),
+                      ),
+                      ]),
+                  child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                      SizedBox(
+                      height: 20.0,
+                      ),
+                      Center(
+                          child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: new Text("USER EXPIRED", style:TextStyle(fontSize: 30.0,color: Colors.white)),
+                          )//
+                      ),
+                      
+                      Center(
+                          child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: new Text("User May Deleted or Expired", style:TextStyle(fontSize: 13.0,color: Colors.white)),
+                          )//
+                      ),
+                    
+                  ],
+                  ),
+              ),
+              Positioned(
+                  right: 10.0,
+                  child: GestureDetector(
+                  onTap: (){
+                      Navigator.of(context).pop();
+                  },
+                  child: Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                      radius: 14.0,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.close, color: Colors.red),
+                      ),
+                  ),
+                  ),
+              ),
+              ],
+          ),
+          ),
+        ); },
+    );
+  }
   @override
   Widget build(BuildContext context) {
+    if (userExpire == true) {
+      Future.delayed(Duration.zero, () => _showDialog());
+      userExpire = false;
+    }
     return  WillPopScope(
       onWillPop: _onWillPop,
       child:  Scaffold(
-        floatingActionButton: FloatingActionButton(onPressed: (){
-          print(GlobalState.userId);
-        },),
+        // floatingActionButton: FloatingActionButton(onPressed: (){
+        //   print(GlobalState.userId);
+        // },),
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(
               0.0,
@@ -451,6 +531,7 @@ class _Login extends State<Login> {
               msg: Constants.SUCCESSFULLY_LOGGIN,
               context: context,
               type: Constants.SUCCESS);
+              toggle = true;
               Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

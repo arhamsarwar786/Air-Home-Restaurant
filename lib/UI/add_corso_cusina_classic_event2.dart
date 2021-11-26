@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:air_home_retaurant/UI/add_corso_cusina_classic_event3.dart';
 import 'package:air_home_retaurant/Utils/BaseClass.dart';
 import 'package:air_home_retaurant/Utils/GlobalState.dart';
@@ -6,6 +8,7 @@ import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddCookingClassEvent2 extends StatefulWidget {
   @override
@@ -18,6 +21,7 @@ class _AddCookingClassEvent2 extends State<AddCookingClassEvent2> {
       addCookingClassEvent2Controller2;
 
   int value1, value2;
+  List<XFile> imageFileList = [];
 
   @override
   void initState() {
@@ -233,50 +237,98 @@ class _AddCookingClassEvent2 extends State<AddCookingClassEvent2> {
                                 "Enter the description of your cooking class here"),
                           ),
                         ),
-                        Container(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 10.0),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
+                        InkWell(
+                          onTap: ()async{
+                             final ImagePicker imagePicker =
+                                        ImagePicker();
+
+                                    final List<XFile> selectedImages =
+                                        await imagePicker.pickMultiImage();
+                                    if (selectedImages.length >= 2) {
+                                      imageFileList.addAll(selectedImages);
+                                    } else {
+                                      BaseClass.showSB(
+                                          msg: Constants.ADD_IMAGE_2,
+                                          context: context,
+                                          type: Constants.FAILURE);
+                                    }
+                                    print("Image List Length:" +
+                                        imageFileList.length.toString());
+                                    setState(() {});
+                                    print(imageFileList);
+                          },
+                         child: Container(
+                                    child: DottedBorder(
+                                      color: Colors.black38,
+                                      strokeWidth: 1,
                                       child: Container(
-                                        child: _myWidget.myText(
-                                            "UPLOAD AT LEAST 2 IMAGES",
-                                            12,
-                                            FontWeight.bold,
-                                            1,
-                                            Colors.black),
+                                        height: 150,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                        ),
+                                        child: imageFileList.isNotEmpty
+                                            ? ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: imageFileList.length,
+                                                itemBuilder: (context, i) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Container(
+                                                      // width: 100,
+                                                      child: Stack(
+                                                        children: [
+                                                          Image.file(
+                                                            File(
+                                                                imageFileList[i]
+                                                                    .path),
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          Positioned(
+                                                            top: 0,
+                                                            right: 0,
+                                                            child: Container(
+                                                                decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            15)),
+                                                                child: InkWell(
+                                                                    onTap: () {
+                                                                      setState(
+                                                                          () {
+                                                                        imageFileList
+                                                                            .removeAt(i);
+                                                                      });
+                                                                    },
+                                                                    child: Image
+                                                                        .asset(
+                                                                      "assets/images/delete-red.png",
+                                                                      height:
+                                                                          15,
+                                                                      width: 15,
+                                                                    ))),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                })
+                                            : Center(
+                                                child: Container(
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: Image.asset(
+                                                        "assets/images/camera.png"))),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  child: DottedBorder(
-                                    color: Colors.black38,
-                                    strokeWidth: 1,
-                                    child: Container(
-                                      height: 150,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                      ),
-                                      child: Center(
-                                          child: Container(
-                                              height: 80,
-                                              width: 80,
-                                              child: Image.asset(
-                                                  "assets/images/camera.png"))),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                              
+                        
                         )
                       ],
                     ),

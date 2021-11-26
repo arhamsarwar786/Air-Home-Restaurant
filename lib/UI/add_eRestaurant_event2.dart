@@ -1,5 +1,6 @@
 import 'package:air_home_retaurant/ModelClasses/drop_down_model.dart';
 import 'package:air_home_retaurant/UI/add_eRestaurant_event3.dart';
+import 'package:air_home_retaurant/Utils/BaseClass.dart';
 import 'package:air_home_retaurant/Utils/MyWidgets.dart';
 import 'package:air_home_retaurant/Utils/constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +15,9 @@ class _AddERestaurantEvent2 extends State<AddERestaurantEvent2> {
   MyWidget _myWidget;
   TextEditingController addERestaurantEvent2Controller,
       addERestaurantEvent2Controller2,
-      addERestaurantEvent2Controller3;
+      addERestaurantEvent2Controller3,
+       addERestaurantEvent2Controller4,
+      addERestaurantEvent2Controller5;
   List<ListItem> _dropdownItems = [
     ListItem(1, "First Value"),
     ListItem(2, "Second Item"),
@@ -33,6 +36,8 @@ class _AddERestaurantEvent2 extends State<AddERestaurantEvent2> {
     addERestaurantEvent2Controller = new TextEditingController();
     addERestaurantEvent2Controller2 = new TextEditingController();
     addERestaurantEvent2Controller3 = new TextEditingController();
+    addERestaurantEvent2Controller4 = new TextEditingController();
+    addERestaurantEvent2Controller5 = new TextEditingController();
     value2 = 1;
     value1 = 1;
 
@@ -44,7 +49,7 @@ class _AddERestaurantEvent2 extends State<AddERestaurantEvent2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _myWidget.myAppBar("Add e-Restaurant", () {
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }),
       body: Container(
         color: Color(0xFFF5F5F5),
@@ -274,31 +279,30 @@ class _AddERestaurantEvent2 extends State<AddERestaurantEvent2> {
                         Container(
                           child: Column(
                             children: [
-
                               Container(
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 5.0),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Container(
-                                      child: _myWidget.myText(
-                                          "OPTIONS",
-                                          12,
-                                          FontWeight.bold,
-                                          1,
-                                          Colors.black),
+                                      child: _myWidget.myText("OPTIONS", 12,
+                                          FontWeight.bold, 1, Colors.black),
                                     ),
                                   ),
                                 ),
                               ),
                               Container(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 10.0),
-                                  child: _myWidget.myText(Constants.E_RESTAURANT_EVENT2_OPTIONS_INFO, 12, FontWeight.bold, null, Colors.black)
-                                ),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 10.0),
+                                    child: _myWidget.myText(
+                                        Constants
+                                            .E_RESTAURANT_EVENT2_OPTIONS_INFO,
+                                        12,
+                                        FontWeight.bold,
+                                        null,
+                                        Colors.black)),
                               ),
-
                               Container(
                                 child: Padding(
                                   padding: const EdgeInsets.only(
@@ -308,24 +312,27 @@ class _AddERestaurantEvent2 extends State<AddERestaurantEvent2> {
                                       Container(
                                         decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(5)),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 10.0),
                                           child: _myWidget.myTextInput(
-                                              addERestaurantEvent2Controller2,
+                                              addERestaurantEvent2Controller4,
                                               1,
                                               "10"),
                                         ),
                                       ),
                                       Container(
                                         child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 5.0),
+                                          padding: const EdgeInsets.only(
+                                              bottom: 5.0),
                                           child: Align(
                                             alignment: Alignment.centerRight,
                                             child: Container(
                                               child: _myWidget.myText(
-                                                  "% on the total amount of the order for the cost of dishes", 10,
+                                                  "% on the total amount of the order for the cost of dishes",
+                                                  10,
                                                   FontWeight.normal,
                                                   1,
                                                   Colors.black38),
@@ -346,19 +353,21 @@ class _AddERestaurantEvent2 extends State<AddERestaurantEvent2> {
                                       Container(
                                         decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(5)),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 10.0),
                                           child: _myWidget.myTextInput(
-                                              addERestaurantEvent2Controller2,
+                                              addERestaurantEvent2Controller5,
                                               1,
                                               "10"),
                                         ),
                                       ),
                                       Container(
                                         child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 5.0),
+                                          padding: const EdgeInsets.only(
+                                              bottom: 5.0),
                                           child: Align(
                                             alignment: Alignment.centerRight,
                                             child: Container(
@@ -389,12 +398,58 @@ class _AddERestaurantEvent2 extends State<AddERestaurantEvent2> {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     child: _myWidget.btnMain("Continue", () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                AddERestaurantEvent3()),
-                      );
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      bool status = true;
+
+                      if (addERestaurantEvent2Controller.text.isEmpty) {
+                        BaseClass.showSB(
+                            msg: Constants.ADD_COURSE_NAME,
+                            context: context,
+                            type: Constants.FAILURE);
+                        status = false;
+                      } else if (addERestaurantEvent2Controller2.text.isEmpty) {
+                        BaseClass.showSB(
+                            msg: Constants.ADD_COURSE_Description,
+                            context: context,
+                            type: Constants.FAILURE);
+                        status = false;
+                      } else if (addERestaurantEvent2Controller3.text.isEmpty) {
+                        BaseClass.showSB(
+                            msg: Constants.ADD_COURSE_PRICE,
+                            context: context,
+                            type: Constants.FAILURE);
+                        status = false;
+                      }
+                       else if (addERestaurantEvent2Controller4.text.isEmpty) {
+                        BaseClass.showSB(
+                            msg: Constants.ADD_OPTION_PRICE1,
+                            context: context,
+                            type: Constants.FAILURE);
+                        status = false;
+                      }
+                       else if (addERestaurantEvent2Controller5.text.isEmpty) {
+                        BaseClass.showSB(
+                            msg: Constants.ADD_OPTION_PRICE2,
+                            context: context,
+                            type: Constants.FAILURE);
+                        status = false;
+                      }
+                      if (status) {
+                        if (addERestaurantEvent2Controller.text.isNotEmpty &&
+                            addERestaurantEvent2Controller2.text.isNotEmpty &&
+                            addERestaurantEvent2Controller3.text.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddERestaurantEvent3()),
+                          );
+                        } else {
+                          BaseClass.showSB(
+                              msg: "SomeThing Missing",
+                              context: context,
+                              type: Constants.FAILURE);
+                        }
+                      }
                     }),
                   ),
                 ),

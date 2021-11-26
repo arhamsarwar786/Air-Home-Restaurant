@@ -79,9 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   @override
-  Widget build(BuildContext context) {
-    
-
+  Widget build(BuildContext context) {  
     return Scaffold(
       body: Container(
         child: Center(
@@ -180,8 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _timer.cancel();
           toggle = true;
           var userBox = Hive.box('userIdBox');
-          if(userBox.get("userID") != null){
-            // _showDialog();
+          if(userBox.get("userID") != null){           
                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -202,32 +199,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<void> getAllPosts({@required BuildContext context}) async {
-    HttpServices httpServices = new HttpServices();
-    await httpServices.getJsonWithOutBody(
-        url: Constants.GET_ALL_POSTS_API,
-        onSuccess: (_streamedResponse) async {
-          var response = await http.Response.fromStream(_streamedResponse);
-          if (response != null) {
-            log("fetch all posts succeed");
-            var posts = CategoryPostsModel.fromJson(jsonDecode(response.body));
-            GlobalState.postsList = posts;
-            if (GlobalState.postsList.data != null) {
-              log("fetch all posts Length = ${GlobalState.postsList.data.length}");
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Login()),
-              );
-            }else{
-              log("Failed to fetch Posts");
-              log("Try again");
-              // getAllPosts(context: context);
-            }
-          }
-        },
-        onFailure: (_streamedResponse) {
-          log("All Post onFailure");
-          print("this is Failure result::${_streamedResponse.reasonPhrase}");
-        });
-  }
 }

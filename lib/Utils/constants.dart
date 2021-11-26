@@ -374,6 +374,16 @@ class Constants {
   static const String SUCCESSFULLY_PUBLISHED_MATCH = "Successfully ADDED MATCH";
   
 
+  /// ADD E-Restaurant in AirChef 
+  /// 
+  static const String ADD_NAME = "Add E-Restaurant Name";
+  static const String ADD_COURSE_NAME = "Add Course Main Name";
+  static const String ADD_COURSE_Description = "Add Course Main Description";
+  static const String ADD_COURSE_PRICE = "Add Price";
+  static const String ADD_OPTION_PRICE1 = "Add Option Price1";
+  static const String ADD_OPTION_PRICE2 = "Add Option Price2";
+  
+  
   ///  Allergies Success
   static const String SAVED_ALLERGIES = "Allergies SAVED";
 

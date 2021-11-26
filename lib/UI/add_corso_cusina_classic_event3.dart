@@ -254,7 +254,6 @@ class _AddCookingClassEvent3 extends State<AddCookingClassEvent3> {
                                 builder: (context) => MainScreen()),
                           );
                         } else {
-                          // status = false;
                           BaseClass.showSB(
                               msg: "SomeThing Missing",
                               context: context,
